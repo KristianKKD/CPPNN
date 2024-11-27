@@ -1,0 +1,10 @@
+^C:\USERS\KRABGOR\ONEDRIVE\PROGRAMMING\C++NN\BUILD\CMAKEFILES\72E200C450E98187BB404C6933BF96F8\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/KrabGor/OneDrive/Programming/C++NN -BC:/Users/KrabGor/OneDrive/Programming/C++NN/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CPPNN.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

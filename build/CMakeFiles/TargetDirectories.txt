@@ -1,0 +1,3 @@
+C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CMakeFiles/CPPNN.dir
+C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CMakeFiles/ZERO_CHECK.dir
