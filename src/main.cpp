@@ -50,15 +50,17 @@ map<string, int> IndexWords(string text) {
     return wordHashmap;
 }
 
-string GetNextWord(string text, int pos) {
+vector<string> GetNextNWords(string text, int pos, int n) {
     //we won't know if we are placed within a word
     //it's not worth going back to find the word so we need to find the next word after the next delimiter
     int lastStop = -1; 
 
+    vector<string> words;
+
     for (int i = pos; i < text.size(); i++) {
         char c = text[i];
 
-        if (IsDelimiter(c) || std::isdigit(c)) {
+        if (IsDelimiter(c) || std::isdigit(c) || i == 0) {
             if (lastStop == -1) { //first word
                 lastStop = i + 1;
                 continue;
@@ -72,11 +74,13 @@ string GetNextWord(string text, int pos) {
                 continue;
             //valid word
 
-            return word;
+            words.push_back(word);
+            if (words.size() >= n)
+                break;
         }
     }
 
-    return std::string();
+    return words;
 }
 
 int main() {
@@ -98,45 +102,69 @@ int main() {
     int wordCount = words.size(); //0-1 in float is within this range
 
     //setup training
-    int sentenceSize = 16; //16 word sentences max
-    int epochCount = 1;
+    int sentenceSize = 8; //16 word sentences max
+    int epochCount = 50;
     
     //build network
     NeuralNetwork* net = new NeuralNetwork(sentenceSize);
     net->AddLayers(10, 10);
-    net->Build(wordCount);
+    net->Build(sentenceSize);
+
+    vector<double> trainingError;
 
     for (int epoch = 0; epoch < epochCount; epoch++) {
-        //get a 'sentence'
-        //give model starting word
-        //ask to predict next word
-        //penalize for different words 
+        std::cout << "Epoch " << epoch << endl;
 
-        //get first word
+        //get random set of words, treat it as a target sentence
         double randPos = Library::RandomValue();
-        string startingWord = GetNextWord(text, std::round(randPos * text.size()));
-        // std::cout << startingWord << endl;
-        double wordVal = (double)indexedWords[startingWord]/wordCount; //CHECK IF THIS MATCHES WITH THE BELOW LOOP INDEXING
+        vector<string> targetWords = GetNextNWords(text, round(randPos * text.size()), sentenceSize);
+        vector<double> targetWordVals;
+        for (int i = 0; i < sentenceSize; i++)
+            targetWordVals.push_back((double)indexedWords[targetWords[i]]/wordCount);
 
+        //give a random subset of the sentence as input, the model must complete the sentence
+        int randCount = round((double)Library::RandomValue() * (sentenceSize - 1));
         vector<double> inputs(sentenceSize, 0);
-        inputs[0] = wordVal;
+        for (int i = 0; i < randCount; i++)
+            inputs[i] = targetWordVals[i];
 
-        for (int sentenceIndex = 1; sentenceIndex < sentenceSize; sentenceIndex++) {
+        //predict the rest of the sentence
+        for (int sentenceIndex = randCount; sentenceIndex < sentenceSize; sentenceIndex++) {
             vector<double> outputs = net->Output(inputs);
-            double outputVal = outputs[sentenceIndex];
-            inputs[sentenceIndex] = outputVal; //remember the word
 
-            // string nextWord = words[std::round(outputVal * wordCount)]; 
-            // std::cout << " " << outputVal;
+            double trainingErrorVal = net->CalculateMSE(outputs, targetWordVals);
+            if (epoch % 10 == 0)
+                std::cout << "Training error:" << trainingErrorVal << endl;
+
+            trainingError.push_back(trainingErrorVal);
+
+            net->BackpropogateLearn(outputs, targetWordVals);
+
+            inputs[sentenceIndex] = targetWordVals[sentenceIndex];
         }
-        
-        // std::cout << endl;
-        // for (int i = 0; i < sentenceSize; i++) {
-        //     std::cout << words[std::round(inputs[i] * wordCount)] << " ";
-        // }
-        // std::cout << endl;
     }
 
+    std::cout << "Finished training, starting error: " << trainingError[0] << ", new error: " << trainingError.back() << endl;
+
+    string line = "";
+    while (line != "exit") {
+        std::cout << "Enter input:";
+        getline(cin, line);
+
+        //collect inputs into a useable format
+        vector<string> uiWords = GetNextNWords(line, 0, sentenceSize - 1);
+        vector<double> uiInputVals;
+        for (int i = 0; i < uiWords.size(); i++)
+            uiInputVals.push_back((double)indexedWords[uiWords[i]]/wordCount);
+
+        vector<double> uiOutputs = net->Output(uiInputVals);
+
+        for (int i = uiWords.size(); i < sentenceSize; i++) { 
+            std::cout << words[std::round(uiOutputs[i] * wordCount)] << " ";
+        }
+        std::cout << endl;
+
+    }   
 
     return 0;
 }

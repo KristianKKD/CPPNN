@@ -142,28 +142,30 @@ public:
         }
     }
 
-    void BackpropogateLearn(const std::vector<double>& outputs, const std::vector<double>& targets) {
+    void BackpropogateLearn(const vector<double>& outputs, const vector<double>& targets) {
         // calculate deltas
         // output layer
-        std::vector<double> outputDeltas;
+
+        vector<double> outputDeltas;
         for (size_t i = 0; i < outputs.size(); i++) {
             double delta = (targets[i] - outputs[i]) * Library::DerActivationFunc(outputs[i]);
             outputDeltas.push_back(delta);
         }
 
         // hidden layers
-        std::vector<std::vector<double>> layerDeltas = {outputDeltas};
+        vector<vector<double>> layerDeltas = {outputDeltas};
         for (int layerIndex = static_cast<int>(layers.size()) - 2; layerIndex >= 0; layerIndex--) {
             const Layer& currentLayer = layers[layerIndex];
             const Layer& nextLayer = layers[layerIndex + 1];
-            std::vector<double> currentLayerDeltas;
+            vector<double> currentLayerDeltas;
 
             for (size_t currentLayerNodeIndex = 0; currentLayerNodeIndex < currentLayer.nodes.size(); currentLayerNodeIndex++) {
                 double nodeError = 0.0f;
 
                 for (size_t nextLayerNodeIndex = 0; nextLayerNodeIndex < nextLayer.nodes.size(); nextLayerNodeIndex++) {
-                    double delta = layerDeltas[0][nextLayerNodeIndex]; // 0 is used as we insert into pos 0 when updated
-                    nodeError += currentLayer.nodes[currentLayerNodeIndex].outgoingEdges[nextLayerNodeIndex].weight * delta; // how much this node connection contributed to the total error
+                    double delta = layerDeltas[layers.size() - 2 - layerIndex][nextLayerNodeIndex]; // 0 is used as we insert into pos 0 when updated
+                    if (currentLayer.nodes[currentLayerNodeIndex].outgoingEdges.size() > nextLayerNodeIndex)
+                        nodeError += currentLayer.nodes[currentLayerNodeIndex].outgoingEdges[nextLayerNodeIndex].weight * delta; // how much this node connection contributed to the total error
                 }
 
                 double nodeDelta = nodeError * Library::DerActivationFunc(currentLayer.nodes[currentLayerNodeIndex].value);
@@ -180,7 +182,7 @@ public:
 
             for (size_t currentLayerNodeIndex = 0; currentLayerNodeIndex < currentLayer.nodes.size(); currentLayerNodeIndex++) {
                 Node& n = currentLayer.nodes[currentLayerNodeIndex];
-                double nodeDelta = layerDeltas[layerIndex][currentLayerNodeIndex];
+                double nodeDelta = layerDeltas[layerIndex - 1][currentLayerNodeIndex];
 
                 n.bias += learningRate * nodeDelta;
 
@@ -189,5 +191,15 @@ public:
                         lastLayer.nodes[lastLayerNodeIndex].value * nodeDelta * learningRate; // modify connections from last layer nodes to the target node
             }
         }
+    }
+
+    double CalculateMSE(const vector<double>& outputs, const vector<double>& targets) {
+        double sum = 0;
+        for (int i = 0; i < targets.size(); i++) {
+            double error = targets[i] - outputs[i];
+            sum += error * error;
+        }
+
+        return sum / targets.size();
     }
 };
