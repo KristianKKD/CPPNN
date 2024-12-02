@@ -26,6 +26,19 @@ public:
     static double DerActivationFunc(double value) {
         return value * (1.0f - value); //sigmoid
     }
+
+    static double CalculateMSE(const vector<double>& outputs, const vector<double>& targets) {
+        if (outputs.size() != targets.size())
+            return Error("Output size(" + to_string(outputs.size()) + ") does not match target size(" + to_string(targets.size()) + ")!");
+        
+        double sum = 0;
+        for (int i = 0; i < targets.size(); i++) {
+            double error = targets[i] - outputs[i];
+            sum += error * error;
+        }
+
+        return sum / (double)targets.size();
+    }
 };
 const double Library::minVal = 0.0f;
 const double Library::maxVal = 1.0f;
@@ -93,6 +106,7 @@ public:
     std::vector<Layer> layers;
     double learningRate;
 
+
     NeuralNetwork(int inputCount, double lr = 0.01f) {
         this->layers = {Layer(0, inputCount, true)}; //input layer
         this->learningRate = lr;
@@ -125,7 +139,8 @@ public:
         return outputs;
     }
 
-    void RandomMutate(int learnCount, double learningRate) {
+    void RandomMutate(int modificationCount, double learningRate, const vector<double>& outputs, const vector<double>& targets,
+            double (*func)(const vector<double>&, const vector<double>&)) {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<int> layerDist(1, static_cast<int>(layers.size()) - 2);
@@ -133,12 +148,21 @@ public:
         std::uniform_int_distribution<int> edgeDist(0, static_cast<int>(layers[1].nodes[0].outgoingEdges.size()) - 1);
         std::uniform_real_distribution<double> weightDist(-learningRate, learningRate);
 
-        for (int i = 0; i < learnCount; i++) {
+        for (int i = 0; i < modificationCount; i++) {
+            double oldScore = func(outputs, targets); //less is better
+
             int layerIndex = layerDist(gen);
             int nodeIndex = nodeDist(gen);
             int edgeIndex = edgeDist(gen);
+
+            double oldVal = layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight;
             layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight += weightDist(gen);
             layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight = std::clamp(layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight, Library::minVal, Library::maxVal);
+        
+            double newScore = func(outputs, targets);
+
+            if (oldScore < newScore) //less is better
+                layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight = oldVal;
         }
     }
 
@@ -192,14 +216,5 @@ public:
             }
         }
     }
-
-    double CalculateMSE(const vector<double>& outputs, const vector<double>& targets) {
-        double sum = 0;
-        for (int i = 0; i < targets.size(); i++) {
-            double error = targets[i] - outputs[i];
-            sum += error * error;
-        }
-
-        return sum / targets.size();
-    }
 };
+

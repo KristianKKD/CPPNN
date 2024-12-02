@@ -16,9 +16,7 @@ void Log(string msg) {
 	msg = ReplaceAll(msg, "\n", " "); //remove common characters which would disrupt the logging
 	msg = ReplaceAll(msg, "\r", " ");
 
-	msg += "\n"; //as we removed ALL linebreaks above, we need to append a new one
-
-	std::cout << msg;
+	std::cout << msg << std::endl;
 }
 
 std::chrono::high_resolution_clock::time_point startTime, lastTime;
