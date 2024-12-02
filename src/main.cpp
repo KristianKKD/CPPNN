@@ -31,12 +31,12 @@ map<string, int> IndexWords(string text) {
     for (int i = 0; i < text.size(); i++) {
         char c = text[i];
 
-        if (IsDelimiter(c) || std::isdigit(c)) {
+        if (IsDelimiter(c) || std::isdigit(c) || i == text.size()) {
             //get word
             string word = text.substr(lastStop, i-lastStop);
             lastStop = i + 1;
             
-            if (word.size() == 0 || word.back() == '-' || word.back() == '\'' || word.front() == '\'') //invalid word
+            if (word.size() == 0 || word.back() == '-' || word.front() == '-' || word.back() == '\'' || word.front() == '\'') //invalid word
                 continue;
             //valid word
 
@@ -70,7 +70,7 @@ vector<string> GetNextNWords(string text, int pos, int n) {
             //valid word
 
             words.push_back(word);
-            if (words.size() >= n)
+            if (n > 0 && words.size() >= n)
                 break;
         }
     }
@@ -99,22 +99,104 @@ int main() {
         words.push_back(pair.first);
 
     int wordCount = words.size(); //0-1 in float is within this range
-    Log("Found " + to_string(wordCount) + " words!");
+    Log("Found " + to_string(wordCount) + " unique words!");
 
+    //ATTEMPT 2
     //setup training
-    int sentenceSize = 2; //16 word sentences max
-    int epochCount = 10000;
+    int batchSize = 4; //sentence size
+    int epochCount = 1;
     
+    //collect data for further processing
+    vector<string> allDataWords = GetNextNWords(text, 0, -1); //get all words
+    int datasetSize = allDataWords.size() - (allDataWords.size() % batchSize); //divisible by batchSize for batches
+    Log("Dataset is " + to_string(datasetSize) + " words long!");
+
+    //convert words to useable values for model
+    vector<double> allDataConverted;
+    for (int i = 0; i < datasetSize; i++)
+        allDataConverted.push_back((double)indexedWords[allDataWords[i]]/wordCount);
+   
+   //setup batches for training
+    double trainingPercentage = 0.8;
+    int trainingBatchCount = std::round((datasetSize / batchSize) * trainingPercentage);
+    
+    //collect the data into batches
+    Log("Creating batches...");
+    vector<vector<double>> batches;
+    for (int i = 0; i < datasetSize;) {
+        vector<double> subset(allDataConverted.begin() + i, allDataConverted.begin() + i + batchSize);
+        batches.push_back(subset);
+        i += batchSize;
+    }
+    Log("Finished creating batches...");
+    
+    //shuffle the batches
+    mt19937 g(Library::randomSeed);  // Mersenne Twister random number generator
+    shuffle(batches.begin(), batches.end(), g);
+
+    //split the batches into training and verification
+    vector<vector<double>> trainingBatches;
+    vector<vector<double>> verificationBatches;
+    trainingBatches.assign(batches.begin(), batches.begin() + trainingBatchCount);
+    verificationBatches.assign(batches.begin() + trainingBatchCount, batches.end());
+
     //build network
-    NeuralNetwork* net = new NeuralNetwork(sentenceSize);
+    NeuralNetwork* net = new NeuralNetwork(batchSize);
     net->AddLayers(10, 10);
-    net->Build(sentenceSize);
+    net->Build(batchSize);
     Log("Built network with " + to_string(net->layers.size()) + " layers!");
+   
+   //train
+    // for (int epoch = 0; epoch < epochCount; epoch++) {
+    //     Log("Epoch: " + to_string(epoch));
 
+    //     for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) { 
+    //         vector<double> targets = batches[batchIndex];
+    //         vector<double> inputs(batchSize, 0);
+
+    //         int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
+    //         for (int i = 0; i < randInputCount; i++)
+    //             inputs[i] = targets[i];
+            
+    //         vector<double> outputs = net->Output(inputs);
+    //         net->BackpropogateLearn(outputs, targets);
+    //     }
+    // }
+    
+    // double trainingErrorVal = Library::CalculateMSE(outputs, targets);
+    // if (epochCount > 10 && epoch % (int)std::round(epochCount/10.0) == 0 && batchIndex == 0)
+    //     Log("Epoch: " + to_string(epoch) + " - training error: " + to_string(trainingErrorVal));
+
+    //vector<double> trainingError = Train(text, indexedWords, net, wordCount, epochCount, sentenceSize);
+    //Log("Finished training, starting error: " + to_string(trainingError[0]) + ", new error: " + to_string(trainingError.back()));
+
+    string line = "";
+    while (line != "exit") {
+        Log("Enter input:");
+        getline(cin, line);
+
+        //collect inputs into a useable format
+        vector<string> uiWords = GetNextNWords(line, 0, -1);
+        vector<double> uiInputVals(batchSize, 0);
+        for (int i = 0; i < min((int)uiWords.size(), (int)batchSize); i++) {
+            Log(uiWords[i] + " - " + to_string((double)indexedWords[uiWords[i]]/wordCount));
+            uiInputVals[i] = (double)indexedWords[uiWords[i]] / wordCount;
+        }
+
+        vector<double> uiOutputs = net->Output(uiInputVals);
+
+        for (int i = uiWords.size(); i < batchSize; i++) 
+            std::cout << words[std::round(uiOutputs[i] * wordCount)] << " ";
+        std::cout << endl;
+
+    }   
+
+    return 0;
+}
+
+vector<double> Train(string text, map<string, int> indexedWords, NeuralNetwork* net, int wordCount, int epochCount, int sentenceSize) {
     vector<double> trainingError;
-
-    for (int epoch = 0; epoch < epochCount; epoch++) {
-
+     for (int epoch = 0; epoch < epochCount; epoch++) {
         //get random set of words, treat it as a target sentence
         double randPos = Library::RandomValue();
         vector<string> targetWords = GetNextNWords(text, round(randPos * text.size()), sentenceSize);
@@ -146,28 +228,5 @@ int main() {
             Log("Epoch: " + to_string(epoch) + " - training error: " + to_string(trainingErrorVal));
     }
 
-    Log("Finished training, starting error: " + to_string(trainingError[0]) + ", new error: " + to_string(trainingError.back()));
-
-    string line = "";
-    while (line != "exit") {
-        Log("Enter input:");
-        getline(cin, line);
-
-        //collect inputs into a useable format
-        vector<string> uiWords = GetNextNWords(line, 0, sentenceSize - 1);
-        vector<double> uiInputVals;
-        for (int i = 0; i < uiWords.size(); i++) {
-            Log(uiWords[i] + " - " + to_string((double)indexedWords[uiWords[i]]/wordCount));
-            uiInputVals.push_back((double)indexedWords[uiWords[i]]/wordCount);
-        }
-
-        vector<double> uiOutputs = net->Output(uiInputVals);
-
-        for (int i = uiWords.size(); i < sentenceSize; i++) 
-            std::cout << words[std::round(uiOutputs[i] * wordCount)] << " ";
-        std::cout << endl;
-
-    }   
-
-    return 0;
+    return trainingError;
 }

@@ -4,18 +4,21 @@
 
 class Library {
 public:
+    const static unsigned int randomSeed;
     const static double minVal;
     const static double maxVal;
 
+    static std::mt19937 generator;
+    static std::uniform_real_distribution<> distribution;
+
     static double RandomValue() {
-        // Create a random device and a Mersenne Twister random number generator
-        std::random_device rd;  // Obtain a random number from hardware
-        std::mt19937 gen(rd()); // Seed the generator
+        return distribution(generator);
+    }
 
-        std::uniform_real_distribution<> dis(minVal, maxVal);
-
-        float val = dis(gen);
-        return (double)val;
+    static void PrintVector(const vector<double>& vec) {
+        for (int i = 0; i < vec.size(); i++)
+            std::cout << vec[i] << " ";
+        std::cout << std::endl;
     }
 
     static double ActivationFunction(double value) {
@@ -40,8 +43,13 @@ public:
         return sum / (double)targets.size();
     }
 };
-const double Library::minVal = 0.0f;
-const double Library::maxVal = 1.0f;
+const unsigned int Library::randomSeed = 2;
+const double Library::minVal = 0.0;
+const double Library::maxVal = 1.0;
+
+std::mt19937 Library::generator(randomSeed); 
+std::uniform_real_distribution<> Library::distribution(Library::minVal, Library::maxVal);
+
 
 class Edge {
 public:
