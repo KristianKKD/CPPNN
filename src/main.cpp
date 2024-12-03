@@ -26,6 +26,7 @@ bool IsDelimiter(char c) {
 map<string, int> IndexWords(string text) {
     map<string, int> wordHashmap;
     int mapSize = 0;
+    text += " ";
     
     int lastStop = 0;
     for (int i = 0; i < text.size(); i++) {
@@ -54,6 +55,7 @@ vector<string> GetNextNWords(string text, int pos, int n) {
     //we won't know if we are placed within a word
     //it's not worth going back to find the word so we need to find the next word after the next delimiter
     int lastStop = pos; 
+    text += " ";
 
     vector<string> words;
 
@@ -88,6 +90,8 @@ int main() {
     if (text.size() <= 0)
         return Error("Failed to read " + path);
 
+    text = text.substr(0, 100);
+
     //find all words
     //convert them into an index (i.e. 1=the, 2=man)
     //replace the text with the indexed words (the,man = 1,2)
@@ -104,7 +108,7 @@ int main() {
     //ATTEMPT 2
     //setup training
     int batchSize = 4; //sentence size
-    int epochCount = 1;
+    int epochCount = 100;
     
     //collect data for further processing
     vector<string> allDataWords = GetNextNWords(text, 0, -1); //get all words
@@ -141,27 +145,37 @@ int main() {
     verificationBatches.assign(batches.begin() + trainingBatchCount, batches.end());
 
     //build network
-    NeuralNetwork* net = new NeuralNetwork(batchSize);
+    NeuralNetwork* net = new NeuralNetwork(batchSize, 0.001);
     net->AddLayers(10, 10);
     net->Build(batchSize);
     Log("Built network with " + to_string(net->layers.size()) + " layers!");
-   
-   //train
-    // for (int epoch = 0; epoch < epochCount; epoch++) {
-    //     Log("Epoch: " + to_string(epoch));
 
-    //     for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) { 
-    //         vector<double> targets = batches[batchIndex];
-    //         vector<double> inputs(batchSize, 0);
+    //train
+    for (int epoch = 0; epoch < epochCount; epoch++) {
+        Log("Epoch: " + to_string(epoch));
 
-    //         int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
-    //         for (int i = 0; i < randInputCount; i++)
-    //             inputs[i] = targets[i];
+        for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) {
+            Log("Batch: " + to_string(batchIndex));
+
+            vector<double> targets = batches[batchIndex];
+            vector<double> inputs(batchSize, 0);
+
+            int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
+            for (int i = 0; i < randInputCount; i++)
+                inputs[i] = targets[i];
             
-    //         vector<double> outputs = net->Output(inputs);
-    //         net->BackpropogateLearn(outputs, targets);
-    //     }
-    // }
+            vector<double> outputs = net->Output(inputs);
+            //Library::PrintVector(outputs);
+            //Library::PrintVector(targets);
+            //net->BackpropogateLearn(outputs, targets);
+            if (net->CheckForNaN())
+                std::cout << "fuck" << endl;
+            net->PrintNetwork();
+                
+            net->RandomMutate(10, net->learningRate, outputs, targets, &Library::CalculateMSE);
+           
+        }
+    }
     
     // double trainingErrorVal = Library::CalculateMSE(outputs, targets);
     // if (epochCount > 10 && epoch % (int)std::round(epochCount/10.0) == 0 && batchIndex == 0)

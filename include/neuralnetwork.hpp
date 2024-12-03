@@ -114,7 +114,6 @@ public:
     std::vector<Layer> layers;
     double learningRate;
 
-
     NeuralNetwork(int inputCount, double lr = 0.01f) {
         this->layers = {Layer(0, inputCount, true)}; //input layer
         this->learningRate = lr;
@@ -149,22 +148,20 @@ public:
 
     void RandomMutate(int modificationCount, double learningRate, const vector<double>& outputs, const vector<double>& targets,
             double (*func)(const vector<double>&, const vector<double>&)) {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<int> layerDist(1, static_cast<int>(layers.size()) - 2);
-        std::uniform_int_distribution<int> nodeDist(0, static_cast<int>(layers[1].nodes.size()) - 1);
-        std::uniform_int_distribution<int> edgeDist(0, static_cast<int>(layers[1].nodes[0].outgoingEdges.size()) - 1);
-        std::uniform_real_distribution<double> weightDist(-learningRate, learningRate);
-
+        if (outputs.size() != targets.size())
+            return (void)Error("Output size(" + to_string(outputs.size()) + ") does not match target size(" + to_string(targets.size()) + ")!");
+        
         for (int i = 0; i < modificationCount; i++) {
             double oldScore = func(outputs, targets); //less is better
 
-            int layerIndex = layerDist(gen);
-            int nodeIndex = nodeDist(gen);
-            int edgeIndex = edgeDist(gen);
+            int layerIndex = std::max(1, (int)std::round(Library::RandomValue() * layers.size() - 2));
+            int nodeIndex = std::max(0, (int)std::round(Library::RandomValue() * layers[i].nodes.size() - 1));
+            int edgeIndex = std::max(0, (int)std::round(Library::RandomValue() * layers[1].nodes[0].outgoingEdges.size() - 1));
+            double weightChange = (((Library::RandomValue() - (Library::maxVal / 2.0))) / (Library::maxVal / 2.0)) * learningRate;
 
             double oldVal = layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight;
-            layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight += weightDist(gen);
+
+            layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight += weightChange;
             layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight = std::clamp(layers[layerIndex].nodes[nodeIndex].outgoingEdges[edgeIndex].weight, Library::minVal, Library::maxVal);
         
             double newScore = func(outputs, targets);
@@ -196,11 +193,16 @@ public:
 
                 for (size_t nextLayerNodeIndex = 0; nextLayerNodeIndex < nextLayer.nodes.size(); nextLayerNodeIndex++) {
                     double delta = layerDeltas[layers.size() - 2 - layerIndex][nextLayerNodeIndex]; // 0 is used as we insert into pos 0 when updated
-                    if (currentLayer.nodes[currentLayerNodeIndex].outgoingEdges.size() > nextLayerNodeIndex)
+                    if (currentLayer.nodes[currentLayerNodeIndex].outgoingEdges.size() > nextLayerNodeIndex) {
+                        // if (currentLayer.nodes[currentLayerNodeIndex].outgoingEdges[nextLayerNodeIndex].weight > 1 || currentLayer.nodes[currentLayerNodeIndex].outgoingEdges[nextLayerNodeIndex].weight < -1) {
+                        //     std::cout << currentLayer.nodes[currentLayerNodeIndex].outgoingEdges[nextLayerNodeIndex].weight << std::endl;
+                        //     std::cout << delta << std::endl;
+                        // }
                         nodeError += currentLayer.nodes[currentLayerNodeIndex].outgoingEdges[nextLayerNodeIndex].weight * delta; // how much this node connection contributed to the total error
+                    }
                 }
 
-                double nodeDelta = nodeError * Library::DerActivationFunc(currentLayer.nodes[currentLayerNodeIndex].value);
+                double nodeDelta = nodeError * Library::DerActivationFunc(Library::ActivationFunction(currentLayer.nodes[currentLayerNodeIndex].value));
                 currentLayerDeltas.push_back(nodeDelta);
             }
 
@@ -216,13 +218,37 @@ public:
                 Node& n = currentLayer.nodes[currentLayerNodeIndex];
                 double nodeDelta = layerDeltas[layerIndex - 1][currentLayerNodeIndex];
 
-                n.bias += learningRate * nodeDelta;
+                n.bias += std::clamp(learningRate * nodeDelta, Library::minVal, Library::maxVal);
 
-                for (size_t lastLayerNodeIndex = 0; lastLayerNodeIndex < lastLayer.nodes.size(); lastLayerNodeIndex++)
+                for (size_t lastLayerNodeIndex = 0; lastLayerNodeIndex < lastLayer.nodes.size(); lastLayerNodeIndex++) {
                     lastLayer.nodes[lastLayerNodeIndex].outgoingEdges[currentLayerNodeIndex].weight +=
                         lastLayer.nodes[lastLayerNodeIndex].value * nodeDelta * learningRate; // modify connections from last layer nodes to the target node
+                    //lastLayer.nodes[lastLayerNodeIndex].outgoingEdges[currentLayerNodeIndex].weight = std::clamp(lastLayer.nodes[lastLayerNodeIndex].outgoingEdges[currentLayerNodeIndex].weight, Library::minVal, Library::maxVal);
+                }
             }
         }
+    }
+
+    void PrintNetwork(){
+        for (int i = 0; i < layers.size() - 1; i++) { //ignore output layer
+            Log("L" + to_string(i));
+            for (int j = 0; j < layers[i].nodes.size(); j++) {
+                Log("  N" + to_string(j) + " - B:" + to_string(layers[i].nodes[j].bias));
+                    for (int k = 0; k < layers[i].nodes[j].outgoingEdges.size(); k++) {
+                        Log("    E:" + to_string(layers[i].nodes[j].outgoingEdges[k].weight));
+                    }
+            }
+        }
+    }
+
+    bool CheckForNaN(){
+        for (int i = 0; i < layers.size() - 1; i++) //ignore output layer
+            for (int j = 0; j < layers[i].nodes.size(); j++)
+                    for (int k = 0; k < layers[i].nodes[j].outgoingEdges.size(); k++)
+                        if (std::isnan(layers[i].nodes[j].outgoingEdges[k].weight) || std::isinf((layers[i].nodes[j].outgoingEdges[k].weight)))
+                            return true;
+
+        return false;
     }
 };
 
