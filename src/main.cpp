@@ -80,17 +80,19 @@ vector<string> GetNextNWords(string text, int pos, int n) {
     return words;
 }
 
+#include <filesystem>
+
 int main() {
     //read text, minor formatting
-    string path = "C:/Users/KrabGor/OneDrive/Programming/C++NN/shakespeare.txt";
+    string path = "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\shakespeare.txt";
     string text = ReadFile(path);
     ToLower(text);
     text = ReplaceAll(text, "--", " ");
 
     if (text.size() <= 0)
-        return Error("Failed to read " + path);
+        return 1;
 
-    text = text.substr(0, 100);
+    text = text;
 
     //find all words
     //convert them into an index (i.e. 1=the, 2=man)
@@ -107,7 +109,7 @@ int main() {
 
     //ATTEMPT 2
     //setup training
-    int batchSize = 4; //sentence size
+    int batchSize = 6; //sentence size
     int epochCount = 100;
     
     //collect data for further processing
@@ -167,12 +169,12 @@ int main() {
             vector<double> outputs = net->Output(inputs);
             //Library::PrintVector(outputs);
             //Library::PrintVector(targets);
-            //net->BackpropogateLearn(outputs, targets);
+            net->BackpropogateLearn(outputs, targets, batchSize);
             if (net->CheckForNaN())
                 std::cout << "fuck" << endl;
-            net->PrintNetwork();
+            //net->PrintNetwork();
                 
-            net->RandomMutate(10, net->learningRate, outputs, targets, &Library::CalculateMSE);
+            //net->RandomMutate(10, net->learningRate, outputs, targets, &Library::CalculateMSE);
            
         }
     }
@@ -206,41 +208,4 @@ int main() {
     }   
 
     return 0;
-}
-
-vector<double> Train(string text, map<string, int> indexedWords, NeuralNetwork* net, int wordCount, int epochCount, int sentenceSize) {
-    vector<double> trainingError;
-     for (int epoch = 0; epoch < epochCount; epoch++) {
-        //get random set of words, treat it as a target sentence
-        double randPos = Library::RandomValue();
-        vector<string> targetWords = GetNextNWords(text, round(randPos * text.size()), sentenceSize);
-        vector<double> targetWordVals;
-        for (int i = 0; i < sentenceSize; i++)
-            targetWordVals.push_back((double)indexedWords[targetWords[i]]/wordCount);
-
-        //give a random subset of the sentence as input, the model must complete the sentence
-        int randCount = round((double)Library::RandomValue() * (sentenceSize - 1));
-        vector<double> inputs(sentenceSize, 0);
-        for (int i = 0; i < randCount; i++)
-            inputs[i] = targetWordVals[i];
-
-        //predict the rest of the sentence
-        vector<double> outputs;
-        for (int sentenceIndex = randCount; sentenceIndex < sentenceSize; sentenceIndex++) {
-            outputs = net->Output(inputs);
-            
-            net->BackpropogateLearn(outputs, targetWordVals);
-            //net->RandomMutate(10, net->learningRate, outputs, targetWordVals, &Library::CalculateMSE);
-
-            inputs[sentenceIndex] = targetWordVals[sentenceIndex];
-        }
-        
-        double trainingErrorVal = Library::CalculateMSE(outputs, targetWordVals);
-        trainingError.push_back(trainingErrorVal);
-
-        if (epochCount > 10 && epoch % (int)std::round(epochCount/10.0) == 0)
-            Log("Epoch: " + to_string(epoch) + " - training error: " + to_string(trainingErrorVal));
-    }
-
-    return trainingError;
 }

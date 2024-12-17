@@ -1,6 +1,6 @@
 # ninja log v6
-24	1017	7545052887584571	CMakeFiles/CPPNN.dir/src/stringtech.cpp.obj	db9b8826e1d10c35
-27	611	7547718520045068	CMakeFiles/CPPNN.dir/src/logging.cpp.obj	f66ef4b3dce4069a
-25	474	7547723518872116	CMakeFiles/CPPNN.dir/src/dataloader.cpp.obj	8c44201eaa21b27
-15	1203	7548948671380101	CMakeFiles/CPPNN.dir/src/main.cpp.obj	86f0b36cb14a2540
-1204	1578	7548948683261919	CPPNN.exe	b7b9ce4616c6102
+14	1747	7559829996463569	CMakeFiles/CPPNN.dir/src/stringtech.cpp.obj	df4ce5db0fa5e570
+4	639	7559858985974253	CMakeFiles/CPPNN.dir/src/dataloader.cpp.obj	79c141d9160e48a7
+7	1764	7559829996388343	CMakeFiles/CPPNN.dir/src/logging.cpp.obj	aedd7a523ebde4c2
+5	1365	7559862591901022	CMakeFiles/CPPNN.dir/src/main.cpp.obj	f5e5b9ef67303f2c
+1367	1753	7559862605510492	CPPNN.exe	b7b9ce4616c6102

@@ -1,26 +1,26 @@
 [
 {
-  "directory": "C:/Users/KrabGor/OneDrive/Programming/C++NN/build",
-  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -IC:/Users/KrabGor/OneDrive/Programming/C++NN/include -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj -c C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\main.cpp",
-  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\main.cpp",
+  "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\main.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\main.cpp",
   "output": "CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj"
 },
 {
-  "directory": "C:/Users/KrabGor/OneDrive/Programming/C++NN/build",
-  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -IC:/Users/KrabGor/OneDrive/Programming/C++NN/include -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\logging.cpp.obj -c C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\logging.cpp",
-  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\logging.cpp",
+  "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\logging.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\logging.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\logging.cpp",
   "output": "CMakeFiles\\CPPNN.dir\\src\\logging.cpp.obj"
 },
 {
-  "directory": "C:/Users/KrabGor/OneDrive/Programming/C++NN/build",
-  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -IC:/Users/KrabGor/OneDrive/Programming/C++NN/include -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj -c C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\dataloader.cpp",
-  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\dataloader.cpp",
+  "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\dataloader.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\dataloader.cpp",
   "output": "CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj"
 },
 {
-  "directory": "C:/Users/KrabGor/OneDrive/Programming/C++NN/build",
-  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -IC:/Users/KrabGor/OneDrive/Programming/C++NN/include -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\stringtech.cpp.obj -c C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\stringtech.cpp",
-  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C++NN\\src\\stringtech.cpp",
+  "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\stringtech.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\stringtech.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\stringtech.cpp",
   "output": "CMakeFiles\\CPPNN.dir\\src\\stringtech.cpp.obj"
 }
 ]

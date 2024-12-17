@@ -73,6 +73,13 @@
         "map": "cpp",
         "unordered_set": "cpp",
         "xhash": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "filesystem": "cpp",
+        "xlocmon": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "forward_list": "cpp",
+        "mutex": "cpp",
+        "semaphore": "cpp"
     }
 }
