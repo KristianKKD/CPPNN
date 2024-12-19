@@ -49,8 +49,15 @@ cmake_ninja_workdir = C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/build/
 
 build cmake_object_order_depends_target_CPPNN: phony || CMakeFiles/CPPNN.dir
 
-build CMakeFiles/CPPNN.dir/src/main.cpp.obj: CXX_COMPILER__CPPNN_unscanned_Debug C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/src/main.cpp || cmake_object_order_depends_target_CPPNN
-  DEP_FILE = CMakeFiles\CPPNN.dir\src\main.cpp.obj.d
+build CMakeFiles/CPPNN.dir/src/dataloader.cpp.obj: CXX_COMPILER__CPPNN_unscanned_Debug C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/src/dataloader.cpp || cmake_object_order_depends_target_CPPNN
+  DEP_FILE = CMakeFiles\CPPNN.dir\src\dataloader.cpp.obj.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -I"C:/Users/KrabGor/OneDrive/Programming/C  NN/include"
+  OBJECT_DIR = CMakeFiles\CPPNN.dir
+  OBJECT_FILE_DIR = CMakeFiles\CPPNN.dir\src
+
+build CMakeFiles/CPPNN.dir/src/library.cpp.obj: CXX_COMPILER__CPPNN_unscanned_Debug C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/src/library.cpp || cmake_object_order_depends_target_CPPNN
+  DEP_FILE = CMakeFiles\CPPNN.dir\src\library.cpp.obj.d
   FLAGS = -g -std=gnu++17
   INCLUDES = -I"C:/Users/KrabGor/OneDrive/Programming/C  NN/include"
   OBJECT_DIR = CMakeFiles\CPPNN.dir
@@ -63,8 +70,15 @@ build CMakeFiles/CPPNN.dir/src/logging.cpp.obj: CXX_COMPILER__CPPNN_unscanned_De
   OBJECT_DIR = CMakeFiles\CPPNN.dir
   OBJECT_FILE_DIR = CMakeFiles\CPPNN.dir\src
 
-build CMakeFiles/CPPNN.dir/src/dataloader.cpp.obj: CXX_COMPILER__CPPNN_unscanned_Debug C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/src/dataloader.cpp || cmake_object_order_depends_target_CPPNN
-  DEP_FILE = CMakeFiles\CPPNN.dir\src\dataloader.cpp.obj.d
+build CMakeFiles/CPPNN.dir/src/main.cpp.obj: CXX_COMPILER__CPPNN_unscanned_Debug C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/src/main.cpp || cmake_object_order_depends_target_CPPNN
+  DEP_FILE = CMakeFiles\CPPNN.dir\src\main.cpp.obj.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -I"C:/Users/KrabGor/OneDrive/Programming/C  NN/include"
+  OBJECT_DIR = CMakeFiles\CPPNN.dir
+  OBJECT_FILE_DIR = CMakeFiles\CPPNN.dir\src
+
+build CMakeFiles/CPPNN.dir/src/neuralnetwork.cpp.obj: CXX_COMPILER__CPPNN_unscanned_Debug C$:/Users/KrabGor/OneDrive/Programming/C$ $ NN/src/neuralnetwork.cpp || cmake_object_order_depends_target_CPPNN
+  DEP_FILE = CMakeFiles\CPPNN.dir\src\neuralnetwork.cpp.obj.d
   FLAGS = -g -std=gnu++17
   INCLUDES = -I"C:/Users/KrabGor/OneDrive/Programming/C  NN/include"
   OBJECT_DIR = CMakeFiles\CPPNN.dir
@@ -85,7 +99,7 @@ build CMakeFiles/CPPNN.dir/src/stringtech.cpp.obj: CXX_COMPILER__CPPNN_unscanned
 #############################################
 # Link the executable CPPNN.exe
 
-build CPPNN.exe: CXX_EXECUTABLE_LINKER__CPPNN_Debug CMakeFiles/CPPNN.dir/src/main.cpp.obj CMakeFiles/CPPNN.dir/src/logging.cpp.obj CMakeFiles/CPPNN.dir/src/dataloader.cpp.obj CMakeFiles/CPPNN.dir/src/stringtech.cpp.obj
+build CPPNN.exe: CXX_EXECUTABLE_LINKER__CPPNN_Debug CMakeFiles/CPPNN.dir/src/dataloader.cpp.obj CMakeFiles/CPPNN.dir/src/library.cpp.obj CMakeFiles/CPPNN.dir/src/logging.cpp.obj CMakeFiles/CPPNN.dir/src/main.cpp.obj CMakeFiles/CPPNN.dir/src/neuralnetwork.cpp.obj CMakeFiles/CPPNN.dir/src/stringtech.cpp.obj
   DEP_FILE = CMakeFiles\CPPNN.dir\link.d
   FLAGS = -g
   LINK_FLAGS = -Wl,--dependency-file,CMakeFiles\CPPNN.dir\link.d

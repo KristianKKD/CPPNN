@@ -12,11 +12,9 @@ namespace Neural {
             float* weights;
             float* biases;
         public:
-            NeuralNetwork(int inputCOunt, int outputCount, int hiddenLayerCount, int hiddenNodesPerLayer);
+            NeuralNetwork(int inputCount, int outputCount, int hiddenLayerCount, int hiddenNodesPerLayer);
             ~NeuralNetwork();
-            void Build();
             void Backpropogate();
-
-            float* Output(float* inputCount);
+            void FeedForward(const float* inputs, float* outputs);
     };
 }

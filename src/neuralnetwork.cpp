@@ -6,7 +6,19 @@
 using nn = Neural::NeuralNetwork;
 
 nn::NeuralNetwork(int inputCount, int outputCount, int hiddenLayerCount, int hiddenNodesPerLayer) {
-    
+    size_t weightSize = (nn::inputCount * hiddenNodesPerLayer) + 
+                            int(std::pow(nn::hiddenNodesPerLayer, nn::hiddenLayerCount)) * int(hiddenLayerCount > 1) + //if there are no connections, * 0
+                            (nn::outputCount * hiddenNodesPerLayer);
+    nn::weights = new float[weightSize]();
+
+    size_t biasSize = (nn::hiddenNodesPerLayer * nn::hiddenLayerCount) + nn::outputCount;
+    nn::biases = new float[biasSize]; //no input bias
+
+    for (int i = 0; i < weightSize; i++)
+        nn::weights[i] = Library::RandomValue();
+
+    for (int i = 0; i < biasSize; i++)
+        nn::biases[i] = Library::RandomValue();
 }
 
 nn::~NeuralNetwork() {
@@ -14,24 +26,17 @@ nn::~NeuralNetwork() {
     delete[] nn::biases;
 }
 
-void nn::Build() {
-    nn::weights = new float[(nn::inputCount * hiddenNodesPerLayer) + 
-                            int(std::pow(nn::hiddenNodesPerLayer, nn::hiddenLayerCount)) * int(hiddenLayerCount > 1) + //if there are no connections, * 0
-                            (nn::outputCount * hiddenNodesPerLayer)]();
-    nn::biases = new float[(nn::hiddenNodesPerLayer * nn::hiddenLayerCount) + nn::outputCount]; //no input bias
-}
-
 void nn::Backpropogate() {
 
 }
 
-float* nn::Output(float* inputCount) {
-    //feed forward output, returns the output layer activated values (a)
+void nn::FeedForward(const float* inputs, float* outputs) {
+    //feed forward input, returns the output layer activated values (a) into the outputs argument
 
     size_t nodeCount = nn::inputCount + (nn::hiddenNodesPerLayer* nn::hiddenLayerCount) + nn::outputCount;
     float* a = new float[nodeCount];
 
-    std::copy(inputCount, a, 0); //test
+    std::copy(inputs, inputs + nn::inputCount, a); //test
 
     //activate the layers using the previous nodes
     for (int layerIndex = (nn::inputCount); layerIndex < nn::hiddenLayerCount + 2; layerIndex++) { //+2 for input/output, don't try to activate the inputs
@@ -68,8 +73,8 @@ float* nn::Output(float* inputCount) {
         } //end of nodeIndex
     } //end of layerIndex
 
-    float* outputVals = new float[nn::outputCount];
-    std::copy(a, outputVals, nodeCount - nn::outputCount);
+    std::copy(a + nodeCount - 1 - nn::outputCount, a + nodeCount - 1, outputs); //test
+    delete[] a; //free memory
 
-    return outputVals;
+    return;
 }

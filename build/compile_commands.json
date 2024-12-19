@@ -1,9 +1,15 @@
 [
 {
   "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
-  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\main.cpp\"",
-  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\main.cpp",
-  "output": "CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj"
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\dataloader.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\dataloader.cpp",
+  "output": "CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj"
+},
+{
+  "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\library.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\library.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\library.cpp",
+  "output": "CMakeFiles\\CPPNN.dir\\src\\library.cpp.obj"
 },
 {
   "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
@@ -13,9 +19,15 @@
 },
 {
   "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
-  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\dataloader.cpp\"",
-  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\dataloader.cpp",
-  "output": "CMakeFiles\\CPPNN.dir\\src\\dataloader.cpp.obj"
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\main.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\main.cpp",
+  "output": "CMakeFiles\\CPPNN.dir\\src\\main.cpp.obj"
+},
+{
+  "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",
+  "command": "C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe -I\"C:/Users/KrabGor/OneDrive/Programming/C  NN/include\" -g -std=gnu++17 -o CMakeFiles\\CPPNN.dir\\src\\neuralnetwork.cpp.obj -c \"C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\neuralnetwork.cpp\"",
+  "file": "C:\\Users\\KrabGor\\OneDrive\\Programming\\C  NN\\src\\neuralnetwork.cpp",
+  "output": "CMakeFiles\\CPPNN.dir\\src\\neuralnetwork.cpp.obj"
 },
 {
   "directory": "C:/Users/KrabGor/OneDrive/Programming/C  NN/build",

@@ -10,9 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the executable target and source files
 add_executable(CPPNN
-    src/main.cpp
-    src/logging.cpp
     src/dataloader.cpp
+    src/library.cpp
+    src/logging.cpp
+    src/main.cpp
+    src/neuralnetwork.cpp
     src/stringtech.cpp
 )
 

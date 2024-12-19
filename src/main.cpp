@@ -1,8 +1,8 @@
-#include "shared.hpp"
+#include <neuralnetwork.hpp>
+#include <library.hpp>
 #include <map>
 #include <unordered_set>
-#include <neuralnetwork.hpp>
-#include <random>
+#include <algorithm>
 
 string ReadFile(string path);
 void ToLower(string& input);
@@ -10,6 +10,7 @@ void RemoveChar(string& text, char c);
 string ReplaceAll(string input, string oldstring, string newstring);
 
 using namespace std;
+using nn = Neural::NeuralNetwork;
 
 bool IsDelimiter(char c) {
     static const std::unordered_set<char> delimiters = {
@@ -118,19 +119,19 @@ int main() {
     Log("Dataset is " + to_string(datasetSize) + " words long!");
 
     //convert words to useable values for model
-    vector<double> allDataConverted;
+    vector<float> allDataConverted;
     for (int i = 0; i < datasetSize; i++)
-        allDataConverted.push_back((double)indexedWords[allDataWords[i]]/wordCount);
+        allDataConverted.push_back((float)indexedWords[allDataWords[i]]/wordCount);
    
    //setup batches for training
-    double trainingPercentage = 0.8;
+    float trainingPercentage = 0.8;
     int trainingBatchCount = std::round((datasetSize / batchSize) * trainingPercentage);
     
     //collect the data into batches
     Log("Creating batches...");
-    vector<vector<double>> batches;
+    vector<vector<float>> batches;
     for (int i = 0; i < datasetSize;) {
-        vector<double> subset(allDataConverted.begin() + i, allDataConverted.begin() + i + batchSize);
+        vector<float> subset(allDataConverted.begin() + i, allDataConverted.begin() + i + batchSize);
         batches.push_back(subset);
         i += batchSize;
     }
@@ -141,16 +142,19 @@ int main() {
     shuffle(batches.begin(), batches.end(), g);
 
     //split the batches into training and verification
-    vector<vector<double>> trainingBatches;
-    vector<vector<double>> verificationBatches;
+    vector<vector<float>> trainingBatches;
+    vector<vector<float>> verificationBatches;
     trainingBatches.assign(batches.begin(), batches.begin() + trainingBatchCount);
     verificationBatches.assign(batches.begin() + trainingBatchCount, batches.end());
 
     //build network
-    NeuralNetwork* net = new NeuralNetwork(batchSize, 0.001);
-    net->AddLayers(10, 10);
-    net->Build(batchSize);
-    Log("Built network with " + to_string(net->layers.size()) + " layers!");
+    int hiddenNodesPerLayer = 10;
+    int hiddenLayers = 10;
+    Neural::NeuralNetwork* net = new Neural::NeuralNetwork(batchSize, batchSize, hiddenLayers, hiddenNodesPerLayer);
+    Log("Built network with " + to_string(hiddenLayers) + " layers!");
+
+    float* inputsArr = new float[batchSize];
+    float* outputsArr = new float[batchSize];
 
     //train
     for (int epoch = 0; epoch < epochCount; epoch++) {
@@ -159,33 +163,16 @@ int main() {
         for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) {
             Log("Batch: " + to_string(batchIndex));
 
-            vector<double> targets = batches[batchIndex];
-            vector<double> inputs(batchSize, 0);
-
             int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
-            for (int i = 0; i < randInputCount; i++)
-                inputs[i] = targets[i];
-            
-            vector<double> outputs = net->Output(inputs);
-            //Library::PrintVector(outputs);
-            //Library::PrintVector(targets);
-            net->BackpropogateLearn(outputs, targets, batchSize);
-            if (net->CheckForNaN())
-                std::cout << "fuck" << endl;
-            //net->PrintNetwork();
-                
-            //net->RandomMutate(10, net->learningRate, outputs, targets, &Library::CalculateMSE);
-           
+            for (int i = 0; i < batchSize; i++)
+                inputsArr[i] = ((i < randInputCount) ? batches[batchIndex][i] : 0); //if index is above randomCount, insert empty 'word', otherwise insert word from batch
+
+            net->FeedForward(inputsArr, outputsArr);
+            //net->BackpropogateLearn(outputs, batchSize, targets, batchSize);
         }
     }
     
-    // double trainingErrorVal = Library::CalculateMSE(outputs, targets);
-    // if (epochCount > 10 && epoch % (int)std::round(epochCount/10.0) == 0 && batchIndex == 0)
-    //     Log("Epoch: " + to_string(epoch) + " - training error: " + to_string(trainingErrorVal));
-
-    //vector<double> trainingError = Train(text, indexedWords, net, wordCount, epochCount, sentenceSize);
-    //Log("Finished training, starting error: " + to_string(trainingError[0]) + ", new error: " + to_string(trainingError.back()));
-
+    //test the network manually
     string line = "";
     while (line != "exit") {
         Log("Enter input:");
@@ -193,19 +180,22 @@ int main() {
 
         //collect inputs into a useable format
         vector<string> uiWords = GetNextNWords(line, 0, -1);
-        vector<double> uiInputVals(batchSize, 0);
         for (int i = 0; i < min((int)uiWords.size(), (int)batchSize); i++) {
-            Log(uiWords[i] + " - " + to_string((double)indexedWords[uiWords[i]]/wordCount));
-            uiInputVals[i] = (double)indexedWords[uiWords[i]] / wordCount;
+            Log(uiWords[i] + " - " + to_string((float)indexedWords[uiWords[i]]/wordCount));
+            inputsArr[i] = (float)indexedWords[uiWords[i]] / wordCount;
         }
 
-        vector<double> uiOutputs = net->Output(uiInputVals);
+        net->FeedForward(inputsArr, outputsArr);
 
         for (int i = uiWords.size(); i < batchSize; i++) 
-            std::cout << words[std::round(uiOutputs[i] * wordCount)] << " ";
+            std::cout << words[std::round(outputsArr[i] * wordCount)] << " ";
         std::cout << endl;
+    }
 
-    }   
+    //free memory
+    delete[] inputsArr;
+    delete[] outputsArr;
+    delete net;
 
     return 0;
 }
