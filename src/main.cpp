@@ -98,7 +98,7 @@ int main() {
     //find all words
     //convert them into an index (i.e. 1=the, 2=man)
     //replace the text with the indexed words (the,man = 1,2)
-    map<string, int> indexedWords = IndexWords(text);
+    map<string, int> indexedWords = IndexWords(text.substr(0, 5000)); ///////////////////////////////
 
     //convert the words to an easier to use format
     vector<string> words;
@@ -110,7 +110,7 @@ int main() {
 
     //ATTEMPT 2
     //setup training
-    int batchSize = 6; //sentence size
+    int batchSize = 3; //sentence size
     int epochCount = 100;
     
     //collect data for further processing
@@ -148,10 +148,13 @@ int main() {
     verificationBatches.assign(batches.begin() + trainingBatchCount, batches.end());
 
     //build network
-    int hiddenNodesPerLayer = 10;
-    int hiddenLayers = 10;
+    int hiddenNodesPerLayer = 2;
+    int hiddenLayers = 2;
     Neural::NeuralNetwork* net = new Neural::NeuralNetwork(batchSize, batchSize, hiddenLayers, hiddenNodesPerLayer);
     Log("Built network with " + to_string(hiddenLayers) + " layers!");
+
+    net->PrintNetwork();
+    return 0;
 
     float* inputsArr = new float[batchSize];
     float* outputsArr = new float[batchSize];
@@ -161,7 +164,7 @@ int main() {
         Log("Epoch: " + to_string(epoch));
 
         for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) {
-            Log("Batch: " + to_string(batchIndex));
+            //Log("Batch: " + to_string(batchIndex));
 
             int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
             for (int i = 0; i < batchSize; i++)

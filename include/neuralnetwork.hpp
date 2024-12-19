@@ -16,5 +16,6 @@ namespace Neural {
             ~NeuralNetwork();
             void Backpropogate();
             void FeedForward(const float* inputs, float* outputs);
+            void PrintNetwork();
     };
 }
