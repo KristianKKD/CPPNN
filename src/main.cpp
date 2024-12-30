@@ -93,8 +93,6 @@ int main() {
     if (text.size() <= 0)
         return 1;
 
-    text = text;
-
     //find all words
     //convert them into an index (i.e. 1=the, 2=man)
     //replace the text with the indexed words (the,man = 1,2)
@@ -105,13 +103,15 @@ int main() {
     for (const auto& pair : indexedWords)
         words.push_back(pair.first);
 
-    int wordCount = words.size(); //0-1 in float is within this range
+    int wordCount = words.size() - 1; //0-1 in float is within this range
     Log("Found " + to_string(wordCount) + " unique words!");
 
     //ATTEMPT 2
     //setup training
-    int batchSize = 3; //sentence size
+    int batchSize = 6; //sentence size
+    int mutationCount = 8;
     int epochCount = 100;
+    float learningRate = 0.1;
     
     //collect data for further processing
     vector<string> allDataWords = GetNextNWords(text, 0, -1); //get all words
@@ -148,39 +148,83 @@ int main() {
     verificationBatches.assign(batches.begin() + trainingBatchCount, batches.end());
 
     //build network
-    int hiddenNodesPerLayer = 2;
-    int hiddenLayers = 2;
-    Neural::NeuralNetwork* net = new Neural::NeuralNetwork(batchSize, batchSize, hiddenLayers, hiddenNodesPerLayer);
+    int hiddenNodesPerLayer = 4;
+    int hiddenLayers = 4;
+    Neural::NeuralNetwork* net = new Neural::NeuralNetwork(batchSize, batchSize, hiddenLayers, hiddenNodesPerLayer, learningRate);
     Log("Built network with " + to_string(hiddenLayers) + " layers!");
-
-    net->PrintNetwork();
-    return 0;
 
     float* inputsArr = new float[batchSize];
     float* outputsArr = new float[batchSize];
+    float* targetsArr = new float[batchSize];
+
+    Library::ResetArray(inputsArr, batchSize);
+    Library::ResetArray(outputsArr, batchSize);
+    Library::ResetArray(targetsArr, batchSize);
 
     //train
     for (int epoch = 0; epoch < epochCount; epoch++) {
         Log("Epoch: " + to_string(epoch));
 
+        //collect test results
+        vector<int> usedRandomNumbers;
+        float oldError = 0;
         for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) {
             //Log("Batch: " + to_string(batchIndex));
 
+            std::copy(batches[batchIndex].begin(), batches[batchIndex].begin(), targetsArr);
+
             int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
-            for (int i = 0; i < batchSize; i++)
+            for (int i = 0; i < batchSize; i++) {
                 inputsArr[i] = ((i < randInputCount) ? batches[batchIndex][i] : 0); //if index is above randomCount, insert empty 'word', otherwise insert word from batch
+                usedRandomNumbers.push_back(randInputCount);
+            }
 
             net->FeedForward(inputsArr, outputsArr);
-            //net->BackpropogateLearn(outputs, batchSize, targets, batchSize);
+            oldError += Library::CalculateMSE(outputsArr, batchSize, targetsArr, batchSize);
         }
+
+        //learn
+        float* oldWeights = net->StoachasticGradient(mutationCount);
+
+        //get new error rate
+        int randInputIndex = 0;
+        float newError = 0;
+        for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) {
+            //Log("Batch: " + to_string(batchIndex));
+
+            std::copy(batches[batchIndex].begin(), batches[batchIndex].begin(), targetsArr);
+
+            for (int i = 0; i < batchSize; i++)
+                inputsArr[i] = ((i < usedRandomNumbers[randInputIndex++]) ? batches[batchIndex][i] : 0); //if index is above randomCount, insert empty 'word', otherwise insert word from batch
+
+            net->FeedForward(inputsArr, outputsArr);
+            newError += Library::CalculateMSE(outputsArr, batchSize, targetsArr, batchSize);
+        }
+
+        if (newError > oldError)
+            net->CopyWeights(oldWeights);
+        
+        Log("Old Error:" + to_string(oldError) + " | New Error:" + to_string(newError));
+        //Log("Error: " + to_string(((newError > oldError)) ? oldError : newError));
     }
     
+    //free memory #1/2
+    delete[] targetsArr;
+
     //test the network manually
     string line = "";
     while (line != "exit") {
+        Library::ResetArray(inputsArr, batchSize);
+
         Log("Enter input:");
         getline(cin, line);
 
+        if (line == "print"){
+            net->PrintNetwork();
+            continue;
+        }
+
+        Log("INPUTS:");
         //collect inputs into a useable format
         vector<string> uiWords = GetNextNWords(line, 0, -1);
         for (int i = 0; i < min((int)uiWords.size(), (int)batchSize); i++) {
@@ -190,12 +234,12 @@ int main() {
 
         net->FeedForward(inputsArr, outputsArr);
 
+        Log("OUTPUTS:");
         for (int i = uiWords.size(); i < batchSize; i++) 
-            std::cout << words[std::round(outputsArr[i] * wordCount)] << " ";
-        std::cout << endl;
+            Log(words[std::round(outputsArr[i] * wordCount)] + " - " + to_string(outputsArr[i]));
     }
 
-    //free memory
+    //free memory #2/2
     delete[] inputsArr;
     delete[] outputsArr;
     delete net;

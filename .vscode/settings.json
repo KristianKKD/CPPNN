@@ -80,6 +80,10 @@
         "condition_variable": "cpp",
         "forward_list": "cpp",
         "mutex": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "locale": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp",
+        "xloctime": "cpp"
     }
 }

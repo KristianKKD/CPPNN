@@ -3,29 +3,31 @@
 #include <cmath>
 #include <algorithm>
 
+#include <iomanip>
+
 using nn = Neural::NeuralNetwork;
 
-nn::NeuralNetwork(int inputCount, int outputCount, int hiddenLayerCount, int hiddenNodesPerLayer) {
+nn::NeuralNetwork(int inputCount, int outputCount, int hiddenLayerCount, int hiddenNodesPerLayer, float learningRate) {
+    nn::learningRate = learningRate;
     nn::inputCount = inputCount;
     nn::outputCount = outputCount;
     nn::hiddenLayerCount = hiddenLayerCount;
     nn::hiddenNodesPerLayer = hiddenNodesPerLayer;
 
-    size_t weightSize = (nn::inputCount * hiddenNodesPerLayer) + 
+    nn::weightSize = (nn::inputCount * hiddenNodesPerLayer) + 
                             nn::hiddenNodesPerLayer * nn::hiddenNodesPerLayer * (nn::hiddenLayerCount - 1) * static_cast<int>(hiddenLayerCount > 1) + //if there are no connections, * 0
                             (nn::outputCount * hiddenNodesPerLayer);
 
-    nn::weights = new float[weightSize]();
+    nn::weights = new float[nn::weightSize]();
 
-    size_t biasSize = (nn::hiddenNodesPerLayer * nn::hiddenLayerCount) + nn::outputCount;
-    nn::biases = new float[biasSize]; //no input bias
+    nn::biasSize = (nn::hiddenNodesPerLayer * nn::hiddenLayerCount) + nn::outputCount;
+    nn::biases = new float[nn::biasSize]; //no input bias
 
-    for (int i = 0; i < weightSize; i++)
-        nn::weights[i] = Library::RandomValue();
+    for (int i = 0; i < nn::weightSize; i++)
+        nn::weights[i] = Library::RandomValue() * nn::learningRate;
 
-    for (int i = 0; i < biasSize; i++)
-        nn::biases[i] = Library::RandomValue();
-
+    for (int i = 0; i < nn::biasSize; i++)
+        nn::biases[i] = Library::RandomValue() * nn::learningRate;
 }
 
 nn::~NeuralNetwork() {
@@ -33,8 +35,36 @@ nn::~NeuralNetwork() {
     delete[] nn::biases;
 }
 
+void nn::CopyWeights(float* newWeights) {
+    std::copy(newWeights, newWeights + nn::weightSize, nn::weights);
+}
+
 void nn::Backpropogate() {
 
+}
+
+float* nn::StoachasticGradient(const size_t batchLearnSize) {
+    //randomly change batchLearnSize weights by learningRate
+    
+    float* oldWeights = new float[nn::weightSize]();
+    std::copy(nn::weights, nn::weights + nn::weightSize, oldWeights);
+
+    for (int i = 0; i < batchLearnSize; i++) {
+        //choose a random weight
+        int randIndex = static_cast<int>(round((Library::RandomValue() / Library::maxVal) * nn::weightSize)); 
+
+        //choose a direction for the weight change
+        int randDir = (((Library::RandomValue() / Library::maxVal) < 0.5) ? -1 : 1); 
+
+        //choose a random size for the change
+        float randChange = ((Library::RandomValue() / nn::learningRate) * nn::learningRate); 
+
+        //set new weight
+        nn:weights[randIndex] += randChange * randDir;
+        nn::weights[randIndex] = std::clamp(nn::weights[randIndex], Library::minVal, Library::maxVal); //clamp
+    }
+
+    return oldWeights;
 }
 
 void nn::FeedForward(const float* inputs, float* outputs) {
@@ -48,20 +78,43 @@ void nn::FeedForward(const float* inputs, float* outputs) {
     //add the inputs to the activated array
     for (int i = 0; i < nn::inputCount; i++)
         a[i] = Library::ActivationFunction(inputs[i]); //bias = 0
+        //a[i] = inputs[i];
 
-    int edgesUsed = 0; //really simple way to use every weight in the correct order, just count the weights as they are already sorted
-
-    for (int nodeIndex = nn::inputCount; nodeIndex < nodeCount; nodeIndex) {
+    //calculate outputs of nodes
+    for (int nodeIndex = nn::inputCount; nodeIndex < nodeCount; nodeIndex++) {
         //find the number of nodes in the previous layer
         size_t lastLayerNodeCount = nn::hiddenNodesPerLayer;
         if (nodeIndex < nn::inputCount + nn::hiddenNodesPerLayer) //input layer was last layer
             lastLayerNodeCount = nn::inputCount;
         
-        float sum = nn::biases[nodeIndex - nn::inputCount];
-        for (int connectionIndex = 0; connectionIndex < lastLayerNodeCount; connectionIndex++) //iterate over all incoming connections into this current node
-            sum += a[nodeIndex - lastLayerNodeCount + connectionIndex] * nn::weights[edgesUsed++];
+        //find info about the current layer this node is in
+        int layerId = 1 + std::floor((nodeIndex == nn::inputCount) ? 0 : ((nodeIndex - nn::inputCount) / nn::hiddenNodesPerLayer)); //1 = first hidden layer
+        int layerSize = nn::hiddenNodesPerLayer;
+        if (nodeIndex >= nodeCount - nn::outputCount) { //this is the output layer
+            layerSize = nn::outputCount;
+            layerId = nn::hiddenLayerCount + 1;
+        }
+        int layerSizeOffset = (nodeIndex - 1) % layerSize;
 
-        a[nodeIndex] = Library::ActivationFunction(std::clamp(sum, Library::minVal, Library::maxVal));
+        //calculate the number of weights already seen so we target the correct one
+        int pastWeightsOffset = (nn::inputCount * hiddenNodesPerLayer * (layerId > 1)) + //add input weights if we are past hidden layer 1
+                            nn::hiddenNodesPerLayer * nn::hiddenNodesPerLayer * std::max(layerId - 2, 0); //add number of layer weights past the first
+
+
+        float sum = nn::biases[nodeIndex - nn::inputCount]; //will be the sum of incoming connections, start with bias
+        // std::cout << std::setprecision(4) << std::fixed;
+        // std::cout << "N" << nodeIndex << " | B" << nodeIndex - nn::inputCount << ":" << nn::biases[nodeIndex - nn::inputCount] << std::endl;
+        for (int connectionIndex = 0; connectionIndex < lastLayerNodeCount; connectionIndex++) { //iterate over all incoming connections into this current node
+            int outputIndex = nodeIndex - lastLayerNodeCount - layerSizeOffset + connectionIndex;
+            int weightIndex = pastWeightsOffset + (connectionIndex * layerSize) + layerSizeOffset;
+
+            // std::cout << "  A" << outputIndex << ":" << a[outputIndex];
+            // std::cout << "      E" << weightIndex << ":" << nn::weights[weightIndex] << std::endl;
+            
+            sum += a[outputIndex] * nn::weights[weightIndex];
+        }
+        a[nodeIndex] = Library::ActivationFunction(sum);
+        //std::cout << "                      OUT: " << sum << " -> " << a[nodeIndex] << std::endl;
     }
 
     std::copy(a + nodeCount - 1 - nn::outputCount, a + nodeCount - 1, outputs); //test

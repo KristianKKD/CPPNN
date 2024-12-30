@@ -8,7 +8,8 @@ namespace Library {
 
     void PrintVector(const float* array, size_t arraySize);
     float CalculateMSE(const float* outputs, const size_t outputSize, const float* targets, const size_t targetSize);
-    float RandomValue();
+    float RandomValue(); //return value between minValue-maxValue
     float ActivationFunction(float value);
     float DerActivationFunction(float value);
+    void ResetArray(float* arr, size_t arrSize);
 };

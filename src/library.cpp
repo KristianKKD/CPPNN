@@ -35,10 +35,15 @@ float Library::RandomValue() {
 }
 
 float Library::ActivationFunction(float value) {
-    return std::clamp(1.0f / (1.0f + std::exp(-value)), Library::minVal, Library::maxVal); //sigmoid
-    //return std::max(0.0f, value); //ReLU
+    //return std::clamp(1.0f / (1.0f + std::exp(-value)) - (Library::maxVal/2), Library::minVal, Library::maxVal); //sigmoid
+    return std::max(0.0f, std::clamp(value, Library::minVal, Library::maxVal)); //ReLU
 }
 
 float Library::DerActivationFunction(float value) {
     return ActivationFunction(value) * (1.0f - ActivationFunction(value)); //sigmoid
+}
+
+void Library::ResetArray(float* arr, size_t arrSize) {
+    for (int i = 0; i < arrSize; i++) 
+        arr[i] = 0;
 }
