@@ -13,288 +13,174 @@ events:
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
       - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
       - "CMakeLists.txt:5 (project)"
     message: |
-      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-      Compiler: C:/Users/KrabGor/scoop/apps/gcc/current/bin/gcc.exe 
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler:  
       Build flags: 
       Id flags:  
       
       The output was:
       0
+      MSBuild version 17.12.12+1cce77968 for .NET Framework
+      Build started 05/01/25 12:01:09 AM.
+      
+      Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
+      PrepareForBuild:
+        Creating directory "Debug\\".
+        Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+        Creating directory "Debug\\CompilerIdCXX.tlog\\".
+      InitializeBuildStatus:
+        Creating "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+        Touching "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
+      ClCompile:
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+        CMakeCXXCompilerId.cpp
+      Link:
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
+        CompilerIdCXX.vcxproj -> C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCXX\\CompilerIdCXX.exe
+      PostBuildEvent:
+        for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+        :VCEnd
+        CMAKE_CXX_COMPILER=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\Hostx64\\x64\\cl.exe
+      FinalizeBuildStatus:
+        Deleting file "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
+        Touching "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.lastbuildstate".
+      Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCXX\\CompilerIdCXX.vcxproj" (default targets).
+      
+      Build succeeded.
+          0 Warning(s)
+          0 Error(s)
+      
+      Time Elapsed 00:00:00.51
       
       
-      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
       
-      The C compiler identification is GNU, found in:
-        C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/3.27.0-rc3/CompilerIdC/a.exe
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+      
+      The CXX compiler identification is MSVC, found in:
+        C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/3.27.0-rc3/CompilerIdCXX/CompilerIdCXX.exe
       
   -
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:53 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCUDACompiler.cmake:307 (CMAKE_DETERMINE_COMPILER_ID)"
       - "CMakeLists.txt:5 (project)"
     message: |
-      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-      Compiler: C:/Users/KrabGor/scoop/apps/gcc/current/bin/g++.exe 
+      Compiling the CUDA compiler identification source file "CMakeCUDACompilerId.cu" succeeded.
+      Compiler:  
       Build flags: 
-      Id flags:  
+      Id flags: --keep;--keep-dir;tmp -v
       
       The output was:
       0
+      MSBuild version 17.12.12+1cce77968 for .NET Framework
+      Build started 05/01/25 12:01:09 AM.
       
-      
-      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
-      
-      The CXX compiler identification is GNU, found in:
-        C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/3.27.0-rc3/CompilerIdCXX/a.exe
-      
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:5 (project)"
-    checks:
-      - "Detecting C compiler ABI info"
-    directories:
-      source: "C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-66fn9r"
-      binary: "C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-66fn9r"
-    cmakeVariables:
-      CMAKE_C_FLAGS: ""
-      CMAKE_C_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "CMAKE_C_ABI_COMPILED"
-      cached: true
-      stdout: |
-        Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-66fn9r'
+      Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj" on node 1 (default targets).
+      PrepareForBuild:
+        Creating directory "Debug\\".
+        Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+        Creating directory "Debug\\CompilerIdCUDA.tlog\\".
+      InitializeBuildStatus:
+        Creating "Debug\\CompilerIdCUDA.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+        Touching "Debug\\CompilerIdCUDA.tlog\\unsuccessfulbuild".
+      AddCudaCompileDeps:
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /D__CUDACC_VER_MAJOR__=12 /D__CUDACC_VER_MINOR__=6 /D_MBCS /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include" /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin" /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include" /I. /FIcuda_runtime.h /c C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu 
+      Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj" (1) is building "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj" (1:2) on node 1 (CudaBuildCore target(s)).
+      CudaBuildCore:
+        Compiling CUDA source file CMakeCUDACompilerId.cu...
+        Creating directory "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA\\x64\\Debug".
+        cmd.exe /C "C:\\Users\\KrabGor\\AppData\\Local\\Temp\\tmp063ccbcc75114edf8ef8fd6c429ec690.cmd"
+        "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe" -gencode=arch=compute_52,code=\\"sm_52,compute_52\\" --use-local-env -ccbin "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64" -x cu   -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include" -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include"  -G   --keep-dir CompilerIdCUDA\\x64\\Debug  -maxrregcount=0   --machine 64 --compile -cudart static -v -g  -D_MBCS -Xcompiler "/EHsc /W0 /nologo /Od /FS /Zi /RTC1 /MDd " -Xcompiler "/FdDebug\\vc143.pdb" -o C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA\\x64\\Debug\\CMakeCUDACompilerId.cu.obj "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu"
         
-        Run Build Command(s): C:/Users/KrabGor/scoop/shims/ninja.exe -v cmTC_29684
-        [1/2] C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe   -v -o CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj -c "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCCompilerABI.c"
-        Using built-in specs.
-        COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe
-        Target: x86_64-w64-mingw32
-        Configured with: ../src/configure --enable-languages=c,c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw
-        Thread model: posix
-        Supported LTO compression algorithms: zlib zstd
-        gcc version 13.2.0 (GCC) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_29684.dir/'
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/cc1.exe -quiet -v -iprefix C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/ -D_REENTRANT C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_29684.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccECKPs6.s
-        GNU C17 (GCC) version 13.2.0 (x86_64-w64-mingw32)
-        	compiled by GNU C version 13.2.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.24-GMP
-        
-        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include"
-        ignoring nonexistent directory "/e/temp/gcc/dest/e/temp/gcc/dest/lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include"
-        ignoring nonexistent directory "/e/temp/gcc/dest/mingw/include"
-        #include "..." search starts here:
-        #include <...> search starts here:
-         C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\include
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include
-        End of search list.
-        Compiler executable checksum: 57be99a5b99999b94eef0e4814eb03c2
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_29684.dir/'
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccECKPs6.s
-        GNU assembler version 2.41 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.41
-        COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/
-        LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../\x0d
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.'\x0d
-        [2/2] cmd.exe /C "cd . && C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe  -v   -Wl,--dependency-file,CMakeFiles\\cmTC_29684.dir\\link.d CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj -o cmTC_29684.exe -Wl,--out-implib,libcmTC_29684.dll.a -Wl,--major-image-version,0,--minor-image-version,0   && cd ."
-        Using built-in specs.
-        COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe
-        COLLECT_LTO_WRAPPER=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe
-        Target: x86_64-w64-mingw32
-        Configured with: ../src/configure --enable-languages=c,c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw
-        Thread model: posix
-        Supported LTO compression algorithms: zlib zstd
-        gcc version 13.2.0 (GCC) 
-        COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/
-        LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_29684.exe' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_29684.'
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/collect2.exe -plugin C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/liblto_plugin.dll -plugin-opt=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccM2l3Wa.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=/e/temp/gcc/dest -m i386pep -Bdynamic -o cmTC_29684.exe C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0 -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../.. --dependency-file CMakeFiles\\cmTC_29684.dir\\link.d CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj --out-implib libcmTC_29684.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o\x0d
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_29684.exe' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_29684.'\x0d
-        
-      exitCode: 0
-  -
-    kind: "message-v1"
-    backtrace:
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
-      - "CMakeLists.txt:5 (project)"
-    message: |
-      Parsed C implicit include dir info: rv=done
-        found start of include info
-        found start of implicit include info
-          add: [C:/Users/KrabGor/scoop/apps/gcc/current/include]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include]
-        end of search list found
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/current/include] ==> [C:/Users/KrabGor/scoop/apps/gcc/current/include]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/include]
-        implicit include dirs: [C:/Users/KrabGor/scoop/apps/gcc/current/include;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/include]
+        C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA>"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe" -gencode=arch=compute_52,code=\\"sm_52,compute_52\\" --use-local-env -ccbin "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64" -x cu   -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include" -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include"  -G   --keep-dir CompilerIdCUDA\\x64\\Debug  -maxrregcount=0   --machine 64 --compile -cudart static -v -g  -D_MBCS -Xcompiler "/EHsc /W0 /nologo /Od /FS /Zi /RTC1 /MDd " -Xcompiler "/FdDebug\\vc143.pdb" -o C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA\\x64\\Debug\\CMakeCUDACompilerId.cu.obj "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" 
+        #$ _NVVM_BRANCH_=nvvm
+        #$ _SPACE_= 
+        #$ _CUDART_=cudart
+        #$ _HERE_=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin
+        #$ _THERE_=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin
+        #$ _TARGET_SIZE_=
+        #$ _TARGET_DIR_=
+        #$ _TARGET_SIZE_=64
+        #$ _WIN_PLATFORM_=x64
+        #$ TOP=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/..
+        #$ CICC_PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../nvvm/bin
+        #$ NVVMIR_LIBRARY_DIR=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../nvvm/libdevice
+        #$ PATH=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../nvvm/bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../lib;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0\\x64;;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\bin\\NETFX 4.8 Tools\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0\\x86;;C:\\Program Files (x86)\\Windows Kits\\NETFXSDK\\4.8\\bin\\NETFX 4.8 Tools;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\tools;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\ide;C:\\Program Files (x86)\\HTML Help Workshop;;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64;C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\;C:\\WINDOWS\\Microsoft.NET\\Framework\\v4.0.30319\\;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin;C:\\WINDOWS\\Microsoft.NET\\Framework\\v4.0.30319\\;;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\VC\\VCPackages;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64\\;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\Tools;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Team Tools\\DiagnosticsHub\\Collector;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0\\\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\\\x64;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\\\MSBuild\\Current\\Bin\\amd64;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\libnvvp;;;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files\\Oculus\\Support\\oculus-runtime;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\dotnet\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\CMake\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files (x86)\\Heavyocity\\Heavyocity Portal;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2023.3.1\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.3.2\\;C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR;C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\;C:\\Users\\KrabGor\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\;C:\\Users\\KrabGor\\AppData\\Local\\Programs\\Python\\Python310\\;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\\\..\\extras\\CUPTI\\lib64;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin;C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\libnvvp;;;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files\\Oculus\\Support\\oculus-runtime;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\dotnet\\;C:\\Program Files\\PuTTY\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\CMake\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files (x86)\\Heavyocity\\Heavyocity Portal;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2023.3.1\\;C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2024.3.2\\;C:\\Program Files\\NVIDIA Corporation\\NVIDIA app\\NvDLISR;C:\\Program Fil;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe;
+        #$ INCLUDES="-IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../include"  
+        #$ LIBRARIES=  "/LIBPATH:C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../lib/x64"
+        #$ CUDAFE_FLAGS=--sdk_dir "C:\\Program Files (x86)\\Windows Kits\\10"
+        #$ PTXAS_FLAGS=
+        CMakeCUDACompilerId.cu
+        #$ resource file C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-8.res: [-D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP -EHsc -D__CUDACC__ -D__NVCC__ -D__CUDACC_DEBUG__  /EHsc /W0 /nologo /Od /FS /Zi /RTC1 /MDd /FdDebug\\vc143.pdb -I"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include" -I"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include" "-IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../include"    -D "_MBCS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=6 -D__CUDACC_VER_BUILD__=85 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=6 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" -Zi "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" ]
+        #$ cl.exe @"C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-8.res" > "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-6_CMakeCUDACompilerId.cpp4.ii" 
+        CMakeCUDACompilerId.cu
+        #$ erase C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-8.res
+        #$ cudafe++ --ms_c++14 --microsoft_version=1942 --msvc_target_version=1942 --compiler_bindir "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/HostX64/x64/../../../../../../.." --sdk_dir "C:/Program Files (x86)/Windows Kits/10/" --display_error_number --orig_src_file_name "C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/3.27.0-rc3/CompilerIdCUDA/CMakeCUDACompilerId.cu" --orig_src_path_name "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed --debug_mode --sdk_dir "C:\\Program Files (x86)\\Windows Kits\\10" --m64 --parse_templates --gen_c_file_name "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.cpp" --stub_file_name "tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.stub.c" --gen_module_id_file --module_id_file_name "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-5_CMakeCUDACompilerId.module_id" "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-6_CMakeCUDACompilerId.cpp4.ii" 
+        #$ resource file C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-10.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -E -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc -D__CUDACC__ -D__NVCC__ -D__CUDACC_DEBUG__  /EHsc /W0 /nologo /Od /FS /Zi /RTC1 /MDd /FdDebug\\vc143.pdb -I"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include" -I"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include" "-IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../include"    -D "_MBCS" -D__CUDACC_VER_MAJOR__=12 -D__CUDACC_VER_MINOR__=6 -D__CUDACC_VER_BUILD__=85 -D__CUDA_API_VER_MAJOR__=12 -D__CUDA_API_VER_MINOR__=6 -D__NVCC_DIAG_PRAGMA_SUPPORT__=1 -FI "cuda_runtime.h" -Zi "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" ]
+        #$ cl.exe @"C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-10.res" > "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-9_CMakeCUDACompilerId.cpp1.ii" 
+        CMakeCUDACompilerId.cu
+        #$ erase C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-10.res
+        #$ ""%CICC_PATH%\\cicc" --ms_c++14 --microsoft_version=1942 --msvc_target_version=1942 --compiler_bindir "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/bin/HostX64/x64/../../../../../../.." --sdk_dir "C:/Program Files (x86)/Windows Kits/10/" --display_error_number --orig_src_file_name "C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/3.27.0-rc3/CompilerIdCUDA/CMakeCUDACompilerId.cu" --orig_src_path_name "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CMakeCUDACompilerId.cu" --allow_managed --debug_mode --sdk_dir "C:\\Program Files (x86)\\Windows Kits\\10"  -arch compute_52 -m64 --no-version-ident -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 --include_file_name "tmpxft_00002274_00000000-4_CMakeCUDACompilerId.fatbin.c" -g -O0 -tused --module_id_file_name "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-5_CMakeCUDACompilerId.module_id" --gen_c_file_name "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.c" --stub_file_name "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.stub.c" --gen_device_file_name "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.gpu"  "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-9_CMakeCUDACompilerId.cpp1.ii" -o "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.ptx""
+        #$ ptxas -arch=sm_52 -m64 -g --dont-merge-basicblocks --return-at-end "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.ptx"  -o "C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-11_CMakeCUDACompilerId.sm_52.cubin" 
+        #$ fatbinary -64 --ident="C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/3.27.0-rc3/CompilerIdCUDA/CMakeCUDACompilerId.cu" --cmdline="-g --dont-merge-basicblocks --return-at-end " --cicc-cmdline="-ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 " -g "--image3=kind=elf,sm=52,file=C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-11_CMakeCUDACompilerId.sm_52.cubin" "--image3=kind=ptx,sm=52,file=C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-7_CMakeCUDACompilerId.ptx" --embedded-fatbin="C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-4_CMakeCUDACompilerId.fatbin.c" 
+        #$ erase C:/Users/KrabGor/AppData/Local/Temp/tmpxft_00002274_00000000-4_CMakeCUDACompilerId.fatbin
+        #$ resource file C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-12.res: [-D__CUDA_ARCH__=520 -D__CUDA_ARCH_LIST__=520 -D__NV_LEGACY_LAUNCH -nologo -c -TP  -DCUDA_DOUBLE_MATH_FUNCTIONS -EHsc /EHsc /W0 /nologo /Od /FS /Zi /RTC1 /MDd /FdDebug\\vc143.pdb -I"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include" -I"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include" "-IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../include"   -Zi "C:\\Users\\KrabGor\\AppData\\Local\\Temp\\tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.cpp" ]
+        #$ cl.exe @"C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-12.res" -Fo"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/3.27.0-rc3/CompilerIdCUDA/CompilerIdCUDA/x64/Debug/CMakeCUDACompilerId.cu.obj" 
+        tmpxft_00002274_00000000-7_CMakeCUDACompilerId.cudafe1.cpp
+        #$ erase C:\\Users\\KrabGor\\AppData\\Local\\Temp/tmpxft_00002274_00000000-12.res
+      Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj" (CudaBuildCore target(s)).
+      Link:
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCUDA.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\lib\\x64" cudart_static.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCUDA.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCUDA.lib" /MACHINE:X64 "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA\\x64\\Debug\\CMakeCUDACompilerId.cu.obj"
+           Creating library .\\CompilerIdCUDA.lib and object .\\CompilerIdCUDA.exp
+      LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj]
+        CompilerIdCUDA.vcxproj -> C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.exe
+      PostBuildEvent:
+        echo CMAKE_CUDA_COMPILER=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe
+        :VCEnd
+        CMAKE_CUDA_COMPILER=C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe
+      FinalizeBuildStatus:
+        Deleting file "Debug\\CompilerIdCUDA.tlog\\unsuccessfulbuild".
+        Touching "Debug\\CompilerIdCUDA.tlog\\CompilerIdCUDA.lastbuildstate".
+      Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj" (default targets).
       
+      Build succeeded.
+      
+      "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj" (default target) (1) ->
+      (Link target) -> 
+        LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\3.27.0-rc3\\CompilerIdCUDA\\CompilerIdCUDA.vcxproj]
+      
+          1 Warning(s)
+          0 Error(s)
+      
+      Time Elapsed 00:00:01.73
+      
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.exe"
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.exp"
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.lib"
+      
+      Compilation of the CUDA compiler identification source "CMakeCUDACompilerId.cu" produced "CompilerIdCUDA.vcxproj"
+      
+      The CUDA compiler identification is NVIDIA, found in:
+        C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/3.27.0-rc3/CompilerIdCUDA/CompilerIdCUDA.exe
       
   -
     kind: "message-v1"
     backtrace:
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCUDACompiler.cmake:579 (message)"
       - "CMakeLists.txt:5 (project)"
     message: |
-      Parsed C implicit link information:
-        link line regex: [^( *|.*[/\\])(ld\\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        ignore line: [Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-66fn9r']
-        ignore line: []
-        ignore line: [Run Build Command(s): C:/Users/KrabGor/scoop/shims/ninja.exe -v cmTC_29684]
-        ignore line: [[1/2] C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe   -v -o CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj -c "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCCompilerABI.c"]
-        ignore line: [Using built-in specs.]
-        ignore line: [COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe]
-        ignore line: [Target: x86_64-w64-mingw32]
-        ignore line: [Configured with: ../src/configure --enable-languages=c c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw]
-        ignore line: [Thread model: posix]
-        ignore line: [Supported LTO compression algorithms: zlib zstd]
-        ignore line: [gcc version 13.2.0 (GCC) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_29684.dir/']
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/cc1.exe -quiet -v -iprefix C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/ -D_REENTRANT C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_29684.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccECKPs6.s]
-        ignore line: [GNU C17 (GCC) version 13.2.0 (x86_64-w64-mingw32)]
-        ignore line: [	compiled by GNU C version 13.2.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.24-GMP]
-        ignore line: []
-        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include"]
-        ignore line: [ignoring nonexistent directory "/e/temp/gcc/dest/e/temp/gcc/dest/lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include"]
-        ignore line: [ignoring nonexistent directory "/e/temp/gcc/dest/mingw/include"]
-        ignore line: [#include "..." search starts here:]
-        ignore line: [#include <...> search starts here:]
-        ignore line: [ C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\include]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include]
-        ignore line: [End of search list.]
-        ignore line: [Compiler executable checksum: 57be99a5b99999b94eef0e4814eb03c2]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_29684.dir/']
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccECKPs6.s]
-        ignore line: [GNU assembler version 2.41 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.41]
-        ignore line: [COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/]
-        ignore line: [LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../\x0d]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.'\x0d]
-        ignore line: [[2/2] cmd.exe /C "cd . && C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe  -v   -Wl --dependency-file CMakeFiles\\cmTC_29684.dir\\link.d CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj -o cmTC_29684.exe -Wl --out-implib libcmTC_29684.dll.a -Wl --major-image-version 0 --minor-image-version 0   && cd ."]
-        ignore line: [Using built-in specs.]
-        ignore line: [COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\gcc.exe]
-        ignore line: [COLLECT_LTO_WRAPPER=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe]
-        ignore line: [Target: x86_64-w64-mingw32]
-        ignore line: [Configured with: ../src/configure --enable-languages=c c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw]
-        ignore line: [Thread model: posix]
-        ignore line: [Supported LTO compression algorithms: zlib zstd]
-        ignore line: [gcc version 13.2.0 (GCC) ]
-        ignore line: [COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/]
-        ignore line: [LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_29684.exe' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_29684.']
-        link line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/collect2.exe -plugin C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/liblto_plugin.dll -plugin-opt=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccM2l3Wa.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=/e/temp/gcc/dest -m i386pep -Bdynamic -o cmTC_29684.exe C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0 -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../.. --dependency-file CMakeFiles\\cmTC_29684.dir\\link.d CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj --out-implib libcmTC_29684.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o\x0d]
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/collect2.exe] ==> ignore
-          arg [-plugin] ==> ignore
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/liblto_plugin.dll] ==> ignore
-          arg [-plugin-opt=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe] ==> ignore
-          arg [-plugin-opt=-fresolution=C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccM2l3Wa.res] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmoldname] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingwex] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmsvcrt] ==> ignore
-          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
-          arg [-plugin-opt=-pass-through=-ladvapi32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lshell32] ==> ignore
-          arg [-plugin-opt=-pass-through=-luser32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmoldname] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingwex] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmsvcrt] ==> ignore
-          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
-          arg [--sysroot=/e/temp/gcc/dest] ==> ignore
-          arg [-m] ==> ignore
-          arg [i386pep] ==> ignore
-          arg [-Bdynamic] ==> search dynamic
-          arg [-o] ==> ignore
-          arg [cmTC_29684.exe] ==> ignore
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o]
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o] ==> obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../..] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../..]
-          arg [--dependency-file] ==> ignore
-          arg [CMakeFiles\\cmTC_29684.dir\\link.d] ==> ignore
-          arg [CMakeFiles/cmTC_29684.dir/CMakeCCompilerABI.c.obj] ==> ignore
-          arg [--out-implib] ==> ignore
-          arg [libcmTC_29684.dll.a] ==> ignore
-          arg [--major-image-version] ==> ignore
-          arg [0] ==> ignore
-          arg [--minor-image-version] ==> ignore
-          arg [0] ==> ignore
-          arg [-lmingw32] ==> lib [mingw32]
-          arg [-lgcc] ==> lib [gcc]
-          arg [-lmoldname] ==> lib [moldname]
-          arg [-lmingwex] ==> lib [mingwex]
-          arg [-lmsvcrt] ==> lib [msvcrt]
-          arg [-lkernel32] ==> lib [kernel32]
-          arg [-lpthread] ==> lib [pthread]
-          arg [-ladvapi32] ==> lib [advapi32]
-          arg [-lshell32] ==> lib [shell32]
-          arg [-luser32] ==> lib [user32]
-          arg [-lkernel32] ==> lib [kernel32]
-          arg [-lmingw32] ==> lib [mingw32]
-          arg [-lgcc] ==> lib [gcc]
-          arg [-lmoldname] ==> lib [moldname]
-          arg [-lmingwex] ==> lib [mingwex]
-          arg [-lmsvcrt] ==> lib [msvcrt]
-          arg [-lkernel32] ==> lib [kernel32]
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o] ==> obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o]
-        remove lib [msvcrt]
-        remove lib [msvcrt]
-        collapse obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib/crt2.o]
-        collapse obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o]
-        collapse obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../..] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib]
-        implicit libs: [mingw32;gcc;moldname;mingwex;kernel32;pthread;advapi32;shell32;user32;kernel32;mingw32;gcc;moldname;mingwex;kernel32]
-        implicit objs: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib/crt2.o;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o]
-        implicit dirs: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib]
-        implicit fwks: []
+      Parsed CUDA nvcc include information:
+        found 'INCLUDES=' string: ["-IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin/../include"  ]
+      
       
       
   -
@@ -306,258 +192,229 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-3n76xt"
-      binary: "C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-3n76xt"
+      source: "C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-kv9yjm"
+      binary: "C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-kv9yjm"
     cmakeVariables:
-      CMAKE_CXX_FLAGS: ""
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_CUDA_ARCHITECTURES: "52"
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /GR /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-3n76xt'
+        Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-kv9yjm'
         
-        Run Build Command(s): C:/Users/KrabGor/scoop/shims/ninja.exe -v cmTC_bbbed
-        [1/2] C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe   -v -o CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj -c "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp"
-        Using built-in specs.
-        COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe
-        Target: x86_64-w64-mingw32
-        Configured with: ../src/configure --enable-languages=c,c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw
-        Thread model: posix
-        Supported LTO compression algorithms: zlib zstd
-        gcc version 13.2.0 (GCC) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bbbed.dir/'
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/cc1plus.exe -quiet -v -iprefix C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/ -D_REENTRANT C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_bbbed.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o C:\\Users\\KrabGor\\AppData\\Local\\Temp\\cc7a5qbp.s
-        GNU C++17 (GCC) version 13.2.0 (x86_64-w64-mingw32)
-        	compiled by GNU C version 13.2.0, GMP version 6.3.0, MPFR version 4.2.1, MPC version 1.3.1, isl version isl-0.24-GMP
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_18192.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        MSBuild version 17.12.12+1cce77968 for .NET Framework
+        Build started 05/01/25 12:01:11 AM.
         
-        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/x86_64-w64-mingw32"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/backward"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include"
-        ignoring nonexistent directory "/e/temp/gcc/dest/e/temp/gcc/dest/lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed"
-        ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include"
-        ignoring nonexistent directory "/e/temp/gcc/dest/mingw/include"
-        #include "..." search starts here:
-        #include <...> search starts here:
-         C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\include
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/x86_64-w64-mingw32
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/backward
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include
-        End of search list.
-        Compiler executable checksum: aa8d155dea9d0b877613f1961dc4601a
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bbbed.dir/'
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj C:\\Users\\KrabGor\\AppData\\Local\\Temp\\cc7a5qbp.s
-        GNU assembler version 2.41 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.41
-        COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/
-        LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../\x0d
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.'\x0d
-        [2/2] cmd.exe /C "cd . && C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe  -v   -Wl,--dependency-file,CMakeFiles\\cmTC_bbbed.dir\\link.d CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_bbbed.exe -Wl,--out-implib,libcmTC_bbbed.dll.a -Wl,--major-image-version,0,--minor-image-version,0   && cd ."
-        Using built-in specs.
-        COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe
-        COLLECT_LTO_WRAPPER=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe
-        Target: x86_64-w64-mingw32
-        Configured with: ../src/configure --enable-languages=c,c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw
-        Thread model: posix
-        Supported LTO compression algorithms: zlib zstd
-        gcc version 13.2.0 (GCC) 
-        COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/
-        LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bbbed.exe' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_bbbed.'
-         C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/collect2.exe -plugin C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/liblto_plugin.dll -plugin-opt=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccVMcAcu.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=/e/temp/gcc/dest -m i386pep -Bdynamic -o cmTC_bbbed.exe C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0 -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../.. --dependency-file CMakeFiles\\cmTC_bbbed.dir\\link.d CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj --out-implib libcmTC_bbbed.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o\x0d
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bbbed.exe' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_bbbed.'\x0d
+        Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv9yjm\\cmTC_18192.vcxproj" on node 1 (default targets).
+        PrepareForBuild:
+          Creating directory "cmTC_18192.dir\\Debug\\".
+          Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+          Creating directory "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv9yjm\\Debug\\".
+          Creating directory "cmTC_18192.dir\\Debug\\cmTC_18192.tlog\\".
+        InitializeBuildStatus:
+          Creating "cmTC_18192.dir\\Debug\\cmTC_18192.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_18192.dir\\Debug\\cmTC_18192.tlog\\unsuccessfulbuild".
+        ClCompile:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_18192.dir\\Debug\\\\" /Fd"cmTC_18192.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
+          Microsoft (R) C/C++ Optimizing Compiler Version 19.42.34435 for x64
+          Copyright (C) Microsoft Corporation.  All rights reserved.
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_18192.dir\\Debug\\\\" /Fd"cmTC_18192.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
+          CMakeCXXCompilerABI.cpp
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv9yjm\\Debug\\cmTC_18192.exe" /INCREMENTAL /ILK:"cmTC_18192.dir\\Debug\\cmTC_18192.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-kv9yjm/Debug/cmTC_18192.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-kv9yjm/Debug/cmTC_18192.lib" /MACHINE:X64  /machine:x64 cmTC_18192.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_18192.vcxproj -> C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv9yjm\\Debug\\cmTC_18192.exe
+        FinalizeBuildStatus:
+          Deleting file "cmTC_18192.dir\\Debug\\cmTC_18192.tlog\\unsuccessfulbuild".
+          Touching "cmTC_18192.dir\\Debug\\cmTC_18192.tlog\\cmTC_18192.lastbuildstate".
+        Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-kv9yjm\\cmTC_18192.vcxproj" (default targets).
+        
+        Build succeeded.
+            0 Warning(s)
+            0 Error(s)
+        
+        Time Elapsed 00:00:00.40
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:5 (project)"
+    checks:
+      - "Detecting CUDA compiler ABI info"
+    directories:
+      source: "C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0"
+      binary: "C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0"
+    cmakeVariables:
+      CMAKE_CUDA_ARCHITECTURES: "52"
+      CMAKE_CUDA_FLAGS: "-D_WINDOWS -Xcompiler=\" /GR /EHsc\""
+      CMAKE_CUDA_FLAGS_DEBUG: "-Xcompiler=\" -Zi -Ob0 -Od /RTC1\""
+      CMAKE_CUDA_RUNTIME_LIBRARY: "Static"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+    buildResult:
+      variable: "CMAKE_CUDA_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0'
+        
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_943fc.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        MSBuild version 17.12.12+1cce77968 for .NET Framework
+        Build started 05/01/25 12:01:12 AM.
+        
+        Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" on node 1 (default targets).
+        PrepareForBuild:
+          Creating directory "cmTC_943fc.dir\\Debug\\".
+          Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
+          Creating directory "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\Debug\\".
+          Creating directory "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\".
+        InitializeBuildStatus:
+          Creating "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\unsuccessfulbuild".
+        AddCudaCompileDeps:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /D__CUDACC_VER_MAJOR__=12 /D__CUDACC_VER_MINOR__=6 /D_WINDOWS /DCMAKE_INTDIR="Debug" /D_MBCS /DCMAKE_INTDIR="Debug" /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin" /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include" /I. /FIcuda_runtime.h /c "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu" 
+        Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (1) is building "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (1:2) on node 1 (CudaBuildCore target(s)).
+        CudaBuildCore:
+          Compiling CUDA source file ..\\..\\..\\..\\..\\..\\..\\..\\..\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu...
+          cmd.exe /C "C:\\Users\\KrabGor\\AppData\\Local\\Temp\\tmpbe0d9821919d4e9cbc1aaaddb2ed5f29.cmd"
+          "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe"  --use-local-env -ccbin "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64" -x cu    -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include"     --keep-dir cmTC_943fc\\x64\\Debug  -maxrregcount=0   --machine 64 --compile -cudart static --generate-code=arch=compute_52,code=[compute_52,sm_52] -Xcompiler="/EHsc -Zi -Ob0 -v" -g  -D_WINDOWS -D"CMAKE_INTDIR=\\"Debug\\"" -D_MBCS -D"CMAKE_INTDIR=\\"Debug\\"" -Xcompiler "/EHsc /W1 /nologo /Od /FS /Zi /RTC1 /MDd /GR" -Xcompiler "/FdcmTC_943fc.dir\\Debug\\vc143.pdb" -o cmTC_943fc.dir\\Debug\\CMakeCUDACompilerABI.obj "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu"
+          
+          C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0>"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe"  --use-local-env -ccbin "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64" -x cu    -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include"     --keep-dir cmTC_943fc\\x64\\Debug  -maxrregcount=0   --machine 64 --compile -cudart static --generate-code=arch=compute_52,code=[compute_52,sm_52] -Xcompiler="/EHsc -Zi -Ob0 -v" -g  -D_WINDOWS -D"CMAKE_INTDIR=\\"Debug\\"" -D_MBCS -D"CMAKE_INTDIR=\\"Debug\\"" -Xcompiler "/EHsc /W1 /nologo /Od /FS /Zi /RTC1 /MDd /GR" -Xcompiler "/FdcmTC_943fc.dir\\Debug\\vc143.pdb" -o cmTC_943fc.dir\\Debug\\CMakeCUDACompilerABI.obj "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu" 
+        cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          CMakeCUDACompilerABI.cu
+        cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          CMakeCUDACompilerABI.cu
+          CMakeCUDACompilerABI.cu
+        cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          tmpxft_000029d0_00000000-7_CMakeCUDACompilerABI.cudafe1.cpp
+        Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (CudaBuildCore target(s)).
+        Link:
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\Debug\\cmTC_943fc.exe" /INCREMENTAL /ILK:"cmTC_943fc.dir\\Debug\\cmTC_943fc.ilk" /NOLOGO /LIBPATH:"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\lib\\x64" cudadevrt.lib cudart_static.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.lib" /MACHINE:X64  /machine:x64 -v cmTC_943fc.dir\\Debug\\CMakeCUDACompilerABI.obj
+        LINK : warning LNK4044: unrecognized option '/v'; ignored [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+             Creating library C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.lib and object C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.exp
+        LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          cmTC_943fc.vcxproj -> C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\Debug\\cmTC_943fc.exe
+        FinalizeBuildStatus:
+          Deleting file "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\unsuccessfulbuild".
+          Touching "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\cmTC_943fc.lastbuildstate".
+        Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (default targets).
+        
+        Build succeeded.
+        
+        "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (default target) (1) ->
+        "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (CudaBuildCore target) (1:2) ->
+        (CudaBuildCore target) -> 
+          cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+        
+        
+        "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (default target) (1) ->
+        (Link target) -> 
+          LINK : warning LNK4044: unrecognized option '/v'; ignored [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+          LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]
+        
+            5 Warning(s)
+            0 Error(s)
+        
+        Time Elapsed 00:00:01.73
         
       exitCode: 0
   -
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:5 (project)"
     message: |
-      Parsed CXX implicit include dir info: rv=done
-        found start of include info
-        found start of implicit include info
-          add: [C:/Users/KrabGor/scoop/apps/gcc/current/include]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/x86_64-w64-mingw32]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/backward]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed]
-          add: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include]
-        end of search list found
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/current/include] ==> [C:/Users/KrabGor/scoop/apps/gcc/current/include]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/include/c++/13.2.0]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/x86_64-w64-mingw32] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/include/c++/13.2.0/x86_64-w64-mingw32]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/backward] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/include/c++/13.2.0/backward]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed]
-        collapse include dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/include]
-        implicit include dirs: [C:/Users/KrabGor/scoop/apps/gcc/current/include;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/include/c++/13.2.0;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/include/c++/13.2.0/x86_64-w64-mingw32;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/include/c++/13.2.0/backward;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/include]
+      Parsed CUDA implicit include dir info: rv=start
+        warn: unable to parse implicit include dirs!
       
       
   -
     kind: "message-v1"
     backtrace:
       - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
-      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeTestCUDACompiler.cmake:19 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:5 (project)"
     message: |
-      Parsed CXX implicit link information:
-        link line regex: [^( *|.*[/\\])(ld\\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        ignore line: [Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/C  NN/build/CMakeFiles/CMakeScratch/TryCompile-3n76xt']
+      Parsed CUDA implicit link information:
+        link line regex: [^( *|.*[/\\])(link\\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: 'C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0']
         ignore line: []
-        ignore line: [Run Build Command(s): C:/Users/KrabGor/scoop/shims/ninja.exe -v cmTC_bbbed]
-        ignore line: [[1/2] C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe   -v -o CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj -c "C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp"]
-        ignore line: [Using built-in specs.]
-        ignore line: [COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe]
-        ignore line: [Target: x86_64-w64-mingw32]
-        ignore line: [Configured with: ../src/configure --enable-languages=c c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw]
-        ignore line: [Thread model: posix]
-        ignore line: [Supported LTO compression algorithms: zlib zstd]
-        ignore line: [gcc version 13.2.0 (GCC) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bbbed.dir/']
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/cc1plus.exe -quiet -v -iprefix C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/ -D_REENTRANT C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_bbbed.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o C:\\Users\\KrabGor\\AppData\\Local\\Temp\\cc7a5qbp.s]
-        ignore line: [GNU C++17 (GCC) version 13.2.0 (x86_64-w64-mingw32)]
-        ignore line: [	compiled by GNU C version 13.2.0  GMP version 6.3.0  MPFR version 4.2.1  MPC version 1.3.1  isl version isl-0.24-GMP]
+        ignore line: [Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_943fc.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n]
+        ignore line: [MSBuild version 17.12.12+1cce77968 for .NET Framework]
+        ignore line: [Build started 05/01/25 12:01:12 AM.]
         ignore line: []
-        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/x86_64-w64-mingw32"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/backward"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include"]
-        ignore line: [ignoring nonexistent directory "/e/temp/gcc/dest/e/temp/gcc/dest/lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed"]
-        ignore line: [ignoring duplicate directory "C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/../../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include"]
-        ignore line: [ignoring nonexistent directory "/e/temp/gcc/dest/mingw/include"]
-        ignore line: [#include "..." search starts here:]
-        ignore line: [#include <...> search starts here:]
-        ignore line: [ C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\include]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/x86_64-w64-mingw32]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../include/c++/13.2.0/backward]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/include-fixed]
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/include]
-        ignore line: [End of search list.]
-        ignore line: [Compiler executable checksum: aa8d155dea9d0b877613f1961dc4601a]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bbbed.dir/']
-        ignore line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj C:\\Users\\KrabGor\\AppData\\Local\\Temp\\cc7a5qbp.s]
-        ignore line: [GNU assembler version 2.41 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.41]
-        ignore line: [COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/]
-        ignore line: [LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../\x0d]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.'\x0d]
-        ignore line: [[2/2] cmd.exe /C "cd . && C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe  -v   -Wl --dependency-file CMakeFiles\\cmTC_bbbed.dir\\link.d CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_bbbed.exe -Wl --out-implib libcmTC_bbbed.dll.a -Wl --major-image-version 0 --minor-image-version 0   && cd ."]
-        ignore line: [Using built-in specs.]
-        ignore line: [COLLECT_GCC=C:\\Users\\KrabGor\\scoop\\apps\\gcc\\current\\bin\\g++.exe]
-        ignore line: [COLLECT_LTO_WRAPPER=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe]
-        ignore line: [Target: x86_64-w64-mingw32]
-        ignore line: [Configured with: ../src/configure --enable-languages=c c++ --build=x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-multilib --prefix=/e/temp/gcc/dest --with-sysroot=/e/temp/gcc/dest --disable-libstdcxx-pch --disable-libstdcxx-verbose --disable-nls --disable-shared --disable-win32-registry --enable-threads=posix --enable-libgomp --with-zstd=/c/mingw]
-        ignore line: [Thread model: posix]
-        ignore line: [Supported LTO compression algorithms: zlib zstd]
-        ignore line: [gcc version 13.2.0 (GCC) ]
-        ignore line: [COMPILER_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/bin/]
-        ignore line: [LIBRARY_PATH=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/]
-        ignore line: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bbbed.exe' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_bbbed.']
-        link line: [ C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/collect2.exe -plugin C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/liblto_plugin.dll -plugin-opt=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccVMcAcu.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lpthread -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmoldname -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=/e/temp/gcc/dest -m i386pep -Bdynamic -o cmTC_bbbed.exe C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0 -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib -LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../.. --dependency-file CMakeFiles\\cmTC_bbbed.dir\\link.d CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj --out-implib libcmTC_bbbed.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 -lpthread -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 -lgcc -lmoldname -lmingwex -lmsvcrt -lkernel32 C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o\x0d]
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/collect2.exe] ==> ignore
-          arg [-plugin] ==> ignore
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/liblto_plugin.dll] ==> ignore
-          arg [-plugin-opt=C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../libexec/gcc/x86_64-w64-mingw32/13.2.0/lto-wrapper.exe] ==> ignore
-          arg [-plugin-opt=-fresolution=C:\\Users\\KrabGor\\AppData\\Local\\Temp\\ccVMcAcu.res] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmoldname] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingwex] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmsvcrt] ==> ignore
-          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lpthread] ==> ignore
-          arg [-plugin-opt=-pass-through=-ladvapi32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lshell32] ==> ignore
-          arg [-plugin-opt=-pass-through=-luser32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
-          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmoldname] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmingwex] ==> ignore
-          arg [-plugin-opt=-pass-through=-lmsvcrt] ==> ignore
-          arg [-plugin-opt=-pass-through=-lkernel32] ==> ignore
-          arg [--sysroot=/e/temp/gcc/dest] ==> ignore
-          arg [-m] ==> ignore
-          arg [i386pep] ==> ignore
-          arg [-Bdynamic] ==> search dynamic
-          arg [-o] ==> ignore
-          arg [cmTC_bbbed.exe] ==> ignore
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o]
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o] ==> obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib]
-          arg [-LC:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../..] ==> dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../..]
-          arg [--dependency-file] ==> ignore
-          arg [CMakeFiles\\cmTC_bbbed.dir\\link.d] ==> ignore
-          arg [CMakeFiles/cmTC_bbbed.dir/CMakeCXXCompilerABI.cpp.obj] ==> ignore
-          arg [--out-implib] ==> ignore
-          arg [libcmTC_bbbed.dll.a] ==> ignore
-          arg [--major-image-version] ==> ignore
-          arg [0] ==> ignore
-          arg [--minor-image-version] ==> ignore
-          arg [0] ==> ignore
-          arg [-lstdc++] ==> lib [stdc++]
-          arg [-lmingw32] ==> lib [mingw32]
-          arg [-lgcc] ==> lib [gcc]
-          arg [-lmoldname] ==> lib [moldname]
-          arg [-lmingwex] ==> lib [mingwex]
-          arg [-lmsvcrt] ==> lib [msvcrt]
-          arg [-lkernel32] ==> lib [kernel32]
-          arg [-lpthread] ==> lib [pthread]
-          arg [-ladvapi32] ==> lib [advapi32]
-          arg [-lshell32] ==> lib [shell32]
-          arg [-luser32] ==> lib [user32]
-          arg [-lkernel32] ==> lib [kernel32]
-          arg [-lmingw32] ==> lib [mingw32]
-          arg [-lgcc] ==> lib [gcc]
-          arg [-lmoldname] ==> lib [moldname]
-          arg [-lmingwex] ==> lib [mingwex]
-          arg [-lmsvcrt] ==> lib [msvcrt]
-          arg [-lkernel32] ==> lib [kernel32]
-          arg [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o] ==> obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o]
-        remove lib [msvcrt]
-        remove lib [msvcrt]
-        collapse obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib/crt2.o]
-        collapse obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o]
-        collapse obj [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib/../lib] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../lib] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../../../x86_64-w64-mingw32/lib] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib]
-        collapse library dir [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/bin/../lib/gcc/x86_64-w64-mingw32/13.2.0/../../..] ==> [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib]
-        implicit libs: [stdc++;mingw32;gcc;moldname;mingwex;kernel32;pthread;advapi32;shell32;user32;kernel32;mingw32;gcc;moldname;mingwex;kernel32]
-        implicit objs: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib/crt2.o;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtbegin.o;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0/crtend.o]
-        implicit dirs: [C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc/x86_64-w64-mingw32/13.2.0;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib/gcc;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/x86_64-w64-mingw32/lib;C:/Users/KrabGor/scoop/apps/gcc/13.2.0/lib]
+        ignore line: [Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" on node 1 (default targets).]
+        ignore line: [PrepareForBuild:]
+        ignore line: [  Creating directory "cmTC_943fc.dir\\Debug\\".]
+        ignore line: [  Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.]
+        ignore line: [  Creating directory "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\Debug\\".]
+        ignore line: [  Creating directory "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\".]
+        ignore line: [InitializeBuildStatus:]
+        ignore line: [  Creating "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.]
+        ignore line: [  Touching "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\unsuccessfulbuild".]
+        ignore line: [AddCudaCompileDeps:]
+        ignore line: [  C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /D__CUDACC_VER_MAJOR__=12 /D__CUDACC_VER_MINOR__=6 /D_WINDOWS /DCMAKE_INTDIR="Debug" /D_MBCS /DCMAKE_INTDIR="Debug" /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin" /I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include" /I. /FIcuda_runtime.h /c "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu" ]
+        ignore line: [Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (1) is building "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (1:2) on node 1 (CudaBuildCore target(s)).]
+        ignore line: [CudaBuildCore:]
+        ignore line: [  Compiling CUDA source file ..\\..\\..\\..\\..\\..\\..\\..\\..\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu...]
+        ignore line: [  cmd.exe /C "C:\\Users\\KrabGor\\AppData\\Local\\Temp\\tmpbe0d9821919d4e9cbc1aaaddb2ed5f29.cmd"]
+        ignore line: [  "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe"  --use-local-env -ccbin "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64" -x cu    -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include"     --keep-dir cmTC_943fc\\x64\\Debug  -maxrregcount=0   --machine 64 --compile -cudart static --generate-code=arch=compute_52 code=[compute_52 sm_52] -Xcompiler="/EHsc -Zi -Ob0 -v" -g  -D_WINDOWS -D"CMAKE_INTDIR=\\"Debug\\"" -D_MBCS -D"CMAKE_INTDIR=\\"Debug\\"" -Xcompiler "/EHsc /W1 /nologo /Od /FS /Zi /RTC1 /MDd /GR" -Xcompiler "/FdcmTC_943fc.dir\\Debug\\vc143.pdb" -o cmTC_943fc.dir\\Debug\\CMakeCUDACompilerABI.obj "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu"]
+        ignore line: [  ]
+        ignore line: [  C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0>"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\bin\\nvcc.exe"  --use-local-env -ccbin "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64" -x cu    -I"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\include"     --keep-dir cmTC_943fc\\x64\\Debug  -maxrregcount=0   --machine 64 --compile -cudart static --generate-code=arch=compute_52 code=[compute_52 sm_52] -Xcompiler="/EHsc -Zi -Ob0 -v" -g  -D_WINDOWS -D"CMAKE_INTDIR=\\"Debug\\"" -D_MBCS -D"CMAKE_INTDIR=\\"Debug\\"" -Xcompiler "/EHsc /W1 /nologo /Od /FS /Zi /RTC1 /MDd /GR" -Xcompiler "/FdcmTC_943fc.dir\\Debug\\vc143.pdb" -o cmTC_943fc.dir\\Debug\\CMakeCUDACompilerABI.obj "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCUDACompilerABI.cu" ]
+        ignore line: [cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  CMakeCUDACompilerABI.cu]
+        ignore line: [cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  CMakeCUDACompilerABI.cu]
+        ignore line: [  CMakeCUDACompilerABI.cu]
+        ignore line: [cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  tmpxft_000029d0_00000000-7_CMakeCUDACompilerABI.cudafe1.cpp]
+        ignore line: [Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (CudaBuildCore target(s)).]
+        ignore line: [Link:]
+        ignore line: [  C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.42.34433\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\Debug\\cmTC_943fc.exe" /INCREMENTAL /ILK:"cmTC_943fc.dir\\Debug\\cmTC_943fc.ilk" /NOLOGO /LIBPATH:"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\lib\\x64" cudadevrt.lib cudart_static.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.lib" /MACHINE:X64  /machine:x64 -v cmTC_943fc.dir\\Debug\\CMakeCUDACompilerABI.obj]
+        ignore line: [LINK : warning LNK4044: unrecognized option '/v']
+        ignore line: [ ignored [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [     Creating library C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.lib and object C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CMakeScratch/TryCompile-nsiyl0/Debug/cmTC_943fc.exp]
+        ignore line: [LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs]
+        ignore line: [ use /NODEFAULTLIB:library [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  cmTC_943fc.vcxproj -> C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\Debug\\cmTC_943fc.exe]
+        ignore line: [FinalizeBuildStatus:]
+        ignore line: [  Deleting file "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\unsuccessfulbuild".]
+        ignore line: [  Touching "cmTC_943fc.dir\\Debug\\cmTC_943fc.tlog\\cmTC_943fc.lastbuildstate".]
+        ignore line: [Done Building Project "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (default targets).]
+        ignore line: []
+        ignore line: [Build succeeded.]
+        ignore line: []
+        ignore line: ["C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (default target) (1) ->]
+        ignore line: ["C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (CudaBuildCore target) (1:2) ->]
+        ignore line: [(CudaBuildCore target) -> ]
+        ignore line: [  cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  cl : Command line warning D9002: ignoring unknown option '-v' [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: []
+        ignore line: []
+        ignore line: ["C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj" (default target) (1) ->]
+        ignore line: [(Link target) -> ]
+        ignore line: [  LINK : warning LNK4044: unrecognized option '/v']
+        ignore line: [ ignored [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: [  LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs]
+        ignore line: [ use /NODEFAULTLIB:library [C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\build\\CMakeFiles\\CMakeScratch\\TryCompile-nsiyl0\\cmTC_943fc.vcxproj]]
+        ignore line: []
+        ignore line: [    5 Warning(s)]
+        ignore line: [    0 Error(s)]
+        ignore line: []
+        ignore line: [Time Elapsed 00:00:01.73]
+        ignore line: []
+        ignore line: []
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
         implicit fwks: []
       
       
