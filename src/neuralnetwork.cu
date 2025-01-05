@@ -51,14 +51,16 @@ Neural::NeuralNetwork::NeuralNetwork(int inputSize, int outputSize, int hiddenLa
 
     //initialize to random values
     for (int i = 0; i < weightSize; i++)
-        this->weights[i] = Library::RandomValue() * learningRate;
+        //this->weights[i] = Library::RandomValue() * learningRate;
+        this->weights[i] = i;
     for (int i = 0; i < biasSize; i++)
-        this->biases[i] = Library::RandomValue() * learningRate;
+        // this->biases[i] = Library::RandomValue() * learningRate;
+        this->biases[i] = i;
 
     //prefetch the data as we will be needing it soon
-    int device = 0;
-    cudaMemPrefetchAsync(weights, weightSize * sizeof(float), device);
-    cudaMemPrefetchAsync(biases, biasSize * sizeof(float), device);
+    // int device = 0;
+    // cudaMemPrefetchAsync(this->weights, weightSize * sizeof(float), device);
+    // cudaMemPrefetchAsync(this->biases, biasSize * sizeof(float), device);
 }
 
 Neural::NeuralNetwork::~NeuralNetwork() {
@@ -70,29 +72,29 @@ Neural::NeuralNetwork::~NeuralNetwork() {
 }
 
 void Neural::NeuralNetwork::CopyWeights(float* newWeights) {
-    //std::copy(newWeights, newWeights + nn::weightSize, nn::weights);
+    std::copy(newWeights, newWeights + this->weightSize, this->weights);
 }
 
 float* Neural::NeuralNetwork::StoachasticGradient(const size_t batchLearnSize) {
     // //randomly change batchLearnSize weights by learningRate
     
     float* oldWeights = new float[this->weightSize]();
-    // std::copy(nn::weights, nn::weights + nn::weightSize, oldWeights);
+    std::copy(this->weights, this->weights + this->weightSize, oldWeights);
 
-    // for (int i = 0; i < batchLearnSize; i++) {
-    //     //choose a random weight
-    //     int randIndex = static_cast<int>(round((Library::RandomValue() / Library::maxVal) * nn::weightSize)); 
+    for (int i = 0; i < batchLearnSize; i++) {
+        //choose a random weight
+        int randIndex = static_cast<int>(round((Library::RandomValue() / Library::maxVal) * this->weightSize)); 
 
-    //     //choose a direction for the weight change
-    //     int randDir = (((Library::RandomValue() / Library::maxVal) < 0.5) ? -1 : 1); 
+        //choose a direction for the weight change
+        int randDir = (((Library::RandomValue() / Library::maxVal) < 0.5) ? -1 : 1); 
 
-    //     //choose a random size for the change
-    //     float randChange = ((Library::RandomValue() / nn::learningRate) * nn::learningRate); 
+        //choose a random size for the change
+        float randChange = ((Library::RandomValue() / this->learningRate) * this->learningRate); 
 
-    //     //set new weight
-    //     nn::weights[randIndex] += randChange * randDir;
-    //     nn::weights[randIndex] = std::clamp(nn::weights[randIndex], Library::minVal, Library::maxVal); //clamp
-    // }
+        //set new weight
+        this->weights[randIndex] += randChange * randDir;
+        this->weights[randIndex] = std::clamp(this->weights[randIndex], Library::minVal, Library::maxVal); //clamp
+    }
 
     return oldWeights;
 }
@@ -110,8 +112,9 @@ __global__ void Forward(float* a, const float* weights, const float* biases,
                         int nodeCount, int inputSize, int outputSize, 
                         int hiddenLayerCount, int hiddenNodesPerLayer,
                         float minVal, float maxVal) {
-    int nodeIndex = blockIdx.x * blockDim.x + threadIdx.x;
-    if (nodeIndex >= nodeCount - inputSize)
+
+    int nodeIndex = blockIdx.x * blockDim.x + threadIdx.x + inputSize;
+    if (nodeIndex >= nodeCount)
         return;
     
     //find the number of nodes in the previous layer
@@ -120,26 +123,26 @@ __global__ void Forward(float* a, const float* weights, const float* biases,
         lastLayerNodeCount = inputSize;
     
     //find info about the current layer this node is in
-    int layerId = 1 + floorf((nodeIndex == inputSize) ? 0 : ((nodeIndex - inputSize) / hiddenNodesPerLayer)); //1 = first hidden layer
-    int layerSize = hiddenNodesPerLayer;
+    int layerId = 1 + floorf((nodeIndex - inputSize == 0) ? 0 : ((nodeIndex - inputSize) / hiddenNodesPerLayer)); //avoid divide by zero, 1 = first hidden layer
+    int layerSize = hiddenNodesPerLayer; //layerSize can only be hidden layer or output layer size
     if (nodeIndex >= nodeCount - outputSize) { //this is the output layer
         layerSize = outputSize;
         layerId = hiddenLayerCount + 1;
     }
     int layerSizeOffset = (nodeIndex - 1) % layerSize;
 
-    //calculate the number of weights already seen so we target the correct one
-    int layerIDVal = ((layerId - 2 > 0) ? layerId - 2 : 0);
+    //find the index of the weights needed to be used
+    int layerIDVal = ((layerId - 2 > 0) ? layerId - 2 : 0); //std::max(layerID, 0)
     int pastWeightsOffset = (inputSize * hiddenNodesPerLayer * (layerId > 1)) + //add input weights if we are past hidden layer 1
                         hiddenNodesPerLayer * hiddenNodesPerLayer * layerIDVal; //add number of layer weights past the first
 
     float sum = biases[nodeIndex - inputSize]; //will be the sum of incoming connections, start with bias
-    for (int connectionIndex = 0; connectionIndex < lastLayerNodeCount; connectionIndex++) { //iterate over all incoming connections into this current node
-        int outputIndex = nodeIndex - lastLayerNodeCount - layerSizeOffset + connectionIndex;
-        int weightIndex = pastWeightsOffset + (connectionIndex * layerSize) + layerSizeOffset;
+    // for (int connectionIndex = 0; connectionIndex < lastLayerNodeCount; connectionIndex++) { //iterate over all incoming connections into this current node
+    //     int outputIndex = nodeIndex - lastLayerNodeCount - layerSizeOffset + connectionIndex;
+    //     int weightIndex = pastWeightsOffset + (connectionIndex * layerSize) + layerSizeOffset;
 
-        sum += a[outputIndex] * weights[weightIndex];
-    }
+    //     sum += a[outputIndex] * weights[weightIndex];
+    // }
 
     Library::ActivationFunction(&sum, minVal, maxVal);
     a[nodeIndex] = sum;
@@ -151,20 +154,28 @@ void Neural::NeuralNetwork::FeedForward(const float* inputs, float* outputs) {
 
     int threadsPerBlock = 128;
     int blocksForInput = (this->inputSize + threadsPerBlock - 1) / threadsPerBlock;
+    int blocksForForward = (this->nodeCount - this->inputSize + threadsPerBlock - 1) / threadsPerBlock;
+    cudaError_t error;
 
     //send the input data to the CUDA memory
-    cudaMemcpy(this->inputs, inputs, this->inputSize * sizeof(float), cudaMemcpyHostToDevice);
+    error = cudaMemcpy(this->inputs, inputs, this->inputSize * sizeof(float), cudaMemcpyHostToDevice);
+    if (error != cudaSuccess)
+        return (void)Error("Failed to copy input array into CUDA memory");
     ActivateInputs<<<blocksForInput, threadsPerBlock>>>(this->a, this->inputs, this->inputSize, Library::minVal, Library::maxVal);
+    error = cudaDeviceSynchronize();
+    if (error != cudaSuccess)
+        return (void)Error("Failed to activate input array");
 
     //calculate outputs of nodes
-    for (int nodeIndex = this->inputSize; nodeIndex < nodeCount; nodeIndex++) {
-        Forward<<<1, threadsPerBlock>>>(this->a, this->weights, this->biases,
-                                        nodeCount, this->inputSize, this->outputSize,
-                                        this->hiddenLayerCount, this->hiddenNodesPerLayer,
-                                        Library::minVal, Library::maxVal);
-    }
+    Forward<<<blocksForForward, threadsPerBlock>>>(this->a, this->weights, this->biases,
+                    nodeCount, this->inputSize, this->outputSize,
+                    this->hiddenLayerCount, this->hiddenNodesPerLayer,
+                    Library::minVal, Library::maxVal);
 
-    cudaDeviceSynchronize();
+    error = cudaDeviceSynchronize();
+    if (error != cudaSuccess)
+        return (void)Error("Failed to feed forward all nodes");
+
     std::copy(this->a + nodeCount - 1 - this->outputSize, this->a + nodeCount - 1, outputs); //test
 
     return;

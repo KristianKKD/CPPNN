@@ -59,8 +59,7 @@ vector<string> GetNextNWords(string text, int pos, int n) {
     text += " ";
 
     vector<string> words;
-
-    for (int i = pos; i < text.size(); i++) {
+    for (int i = pos; i < text.size() && ((int)words.size() < n || n < 0); i++) {
         char c = text[i];
 
         if (IsDelimiter(c) || std::isdigit(c) || i == text.size()) {
@@ -68,13 +67,12 @@ vector<string> GetNextNWords(string text, int pos, int n) {
             string word = text.substr(lastStop, i-lastStop);
             lastStop = i + 1;
             
-            if (word.size() == 0 || word.back() == '-' || word.back() == '\'' || word.front() == '\'') //invalid word
+            //check for invalid word
+            if (word.size() == 0 || word.back() == '-' || word.back() == '\'' || word.front() == '\'') 
                 continue;
-            //valid word
 
+            //valid word, add to collection
             words.push_back(word);
-            if (n > 0 && words.size() >= n)
-                break;
         }
     }
 
@@ -86,7 +84,7 @@ int LearnText() {
     string path = "C:\\Users\\KrabGor\\OneDrive\\Programming\\CPPNN\\shakespeare.txt";
     string text = ReadFile(path);
     ToLower(text);
-    text = ReplaceAll(text, "--", " ");
+    text = ReplaceAll(text, "--", " ").substr(0, 5000);
 
     if (text.size() <= 0)
         return 1;
@@ -94,7 +92,7 @@ int LearnText() {
     //find all words
     //convert them into an index (i.e. 1=the, 2=man)
     //replace the text with the indexed words (the,man = 1,2)
-    map<string, int> indexedWords = IndexWords(text.substr(0, 5000)); ///////////////////////////////
+    map<string, int> indexedWords = IndexWords(text); 
 
     //convert the words to an easier to use format
     vector<string> words;
@@ -108,7 +106,7 @@ int LearnText() {
     //setup training
     int batchSize = 6; //sentence size
     int mutationCount = 8;
-    int epochCount = 2;
+    int epochCount = 100;
     float learningRate = 0.1;
     
     //collect data for further processing
@@ -133,7 +131,7 @@ int LearnText() {
         batches.push_back(subset);
         i += batchSize;
     }
-    Log("Finished creating batches...");
+    Log("Finished creating " + to_string(batches.size()) + " batches...");
     
     //shuffle the batches
     mt19937 g(Library::randomSeed);  // Mersenne Twister random number generator
@@ -168,8 +166,6 @@ int LearnText() {
         vector<int> usedRandomNumbers;
         float oldError = 0;
         for (int batchIndex = 0; batchIndex < batches.size(); batchIndex++) {
-            //Log("Batch: " + to_string(batchIndex));
-
             std::copy(batches[batchIndex].begin(), batches[batchIndex].begin(), targetsArr);
 
             int randInputCount = std::max(1, (int)round(Library::RandomValue() * batchSize) - 1);
@@ -181,12 +177,9 @@ int LearnText() {
             net->FeedForward(inputsArr, outputsArr);
             oldError += Library::CalculateMSE(outputsArr, batchSize, targetsArr, batchSize);
         }
-        StopTimer("FeedForward");
 
         //learn
-        StartTimer();
         float* oldWeights = net->StoachasticGradient(mutationCount);
-        StopTimer("Stochastic");
 
         //get new error rate
         int randInputIndex = 0;
