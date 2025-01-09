@@ -1,211 +1,169 @@
-#include <neuralnetwork.hpp>
-#include <library.cuh>
-#include <cmath>
-#include <algorithm>
-#include <iomanip>
-
-Neural::NeuralNetwork::NeuralNetwork(int inputSize, int outputSize, int hiddenLayerCount, int hiddenNodesPerLayer, float learningRate) {
-    this->learningRate = learningRate;
-    this->inputSize = inputSize;
-    this->outputSize = outputSize;
-    this->hiddenLayerCount = hiddenLayerCount;
-    this->hiddenNodesPerLayer = hiddenNodesPerLayer;
-
-    //find the number of values we need to generate
-    int weightSize = (inputSize * hiddenNodesPerLayer) + //input connections
-                            hiddenNodesPerLayer * hiddenNodesPerLayer * (hiddenLayerCount - 1) * static_cast<int>(hiddenLayerCount > 1) + //hidden connections //if there are no connections, * 0
-                            (outputSize * hiddenNodesPerLayer); //output connections
-    int biasSize = (hiddenNodesPerLayer * hiddenLayerCount) + outputSize; //no input bias
-    int nodeCount = this->inputSize + (this->hiddenNodesPerLayer * this->hiddenLayerCount) + this->outputSize;
-    this->weightSize = weightSize;
-    this->biasSize = biasSize;
-    this->nodeCount = nodeCount;
-
-    //allocate the memory
-    cudaError_t error;
-    error = cudaMallocManaged(&this->weights, weightSize * sizeof(float));
-    if (error != cudaSuccess) {
-        Error("Failed to allocate CUDA weights memory");
-        return;
-    }
-    error = cudaMallocManaged(&this->biases, biasSize * sizeof(float));
-    if (error != cudaSuccess) {
-        Error("Failed to allocate CUDA biases memory");
-        return;
-    }
-    error = cudaMallocManaged(&this->inputs, inputSize * sizeof(float));
-    if (error != cudaSuccess) {
-        Error("Failed to allocate CUDA memory for inputs");
-        return;
-    }
-    error = cudaMallocManaged(&this->outputs, outputSize * sizeof(float));
-    if (error != cudaSuccess) {
-        Error("Failed to allocate CUDA memory for outputs");
-        return;
-    }
-    error = cudaMallocManaged(&this->a, nodeCount * sizeof(float));
-    if (error != cudaSuccess) {
-        Error("Failed to allocate CUDA memory for (a) holding array");
-        return;
+#include "library.cuh"
+#include "neuralnetwork.cuh"
+  
+#define CUDACHECK(call) {                                                        \
+        cudaError_t err = call;                                                  \
+        if (err != cudaSuccess) {                                                \
+            std::cerr << "CUDA Error: " << cudaGetErrorString(err) << " at "     \
+                      << __FILE__ << ":" << __LINE__ << std::endl;               \
+            exit(EXIT_FAILURE);                                                  \
+        }                                                                        \
     }
 
-    //initialize to random values
-    for (int i = 0; i < weightSize; i++)
-        //this->weights[i] = Library::RandomValue() * learningRate;
-        this->weights[i] = i;
-    for (int i = 0; i < biasSize; i++)
-        // this->biases[i] = Library::RandomValue() * learningRate;
-        this->biases[i] = i;
 
-    //prefetch the data as we will be needing it soon
-    // int device = 0;
-    // cudaMemPrefetchAsync(this->weights, weightSize * sizeof(float), device);
-    // cudaMemPrefetchAsync(this->biases, biasSize * sizeof(float), device);
+NeuralNetwork::NeuralNetwork(int inputSize) {
+    this->weightCount = 0;
+    this->nodeCount = 0;
+    this->layerCount = 0;
+    this->AddLayer(inputSize);
 }
 
-Neural::NeuralNetwork::~NeuralNetwork() {
+NeuralNetwork::~NeuralNetwork() {
     cudaFree(this->weights);
-    cudaFree(this->biases);
-    cudaFree(this->inputs);
-    cudaFree(this->outputs);
-    cudaFree(this->a);
+    cudaFree(this->activatedOutputs);
 }
 
-void Neural::NeuralNetwork::CopyWeights(float* newWeights) {
-    std::copy(newWeights, newWeights + this->weightSize, this->weights);
+void NeuralNetwork::AddLayer(int size) {
+    int lastLayerSize = 0;
+    if (this->layerCount > 0)
+        lastLayerSize = this->layerSizes[this->layerCount - 1];
+
+    int newWeightCount = lastLayerSize * size;
+    this->weightCount += newWeightCount;
+
+    this->layerSizes[this->layerCount] = size;
+    this->layerCount++;
+    this->nodeCount += size;
 }
 
-float* Neural::NeuralNetwork::StoachasticGradient(const size_t batchLearnSize) {
-    // //randomly change batchLearnSize weights by learningRate
-    
-    float* oldWeights = new float[this->weightSize]();
-    std::copy(this->weights, this->weights + this->weightSize, oldWeights);
+__global__ void Sum(float* activatedOutputs, const float* weights, 
+                    const int layerSize, const int nextLayerSize,
+                    const int nodeOffset, const int weightOffset) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x; //this might cause an error if there aren't enough blocks/threads?
 
-    for (int i = 0; i < batchLearnSize; i++) {
-        //choose a random weight
-        int randIndex = static_cast<int>(round((Library::RandomValue() / Library::maxVal) * this->weightSize)); 
-
-        //choose a direction for the weight change
-        int randDir = (((Library::RandomValue() / Library::maxVal) < 0.5) ? -1 : 1); 
-
-        //choose a random size for the change
-        float randChange = ((Library::RandomValue() / this->learningRate) * this->learningRate); 
-
-        //set new weight
-        this->weights[randIndex] += randChange * randDir;
-        this->weights[randIndex] = std::clamp(this->weights[randIndex], Library::minVal, Library::maxVal); //clamp
-    }
-
-    return oldWeights;
-}
-
-__global__ void ActivateInputs(float* a, const float* inputs, int inputCount, float minVal, float maxVal) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < inputCount) {
-        float val = inputs[idx];
-        Library::ActivationFunction(&val, minVal, maxVal);
-        a[idx] = val;
-    }
-}
-
-__global__ void Forward(float* a, const float* weights, const float* biases, 
-                        int nodeCount, int inputSize, int outputSize, 
-                        int hiddenLayerCount, int hiddenNodesPerLayer,
-                        float minVal, float maxVal) {
-
-    int nodeIndex = blockIdx.x * blockDim.x + threadIdx.x + inputSize;
-    if (nodeIndex >= nodeCount)
+    if (i > layerSize * nextLayerSize - 1)
         return;
-    
-    //find the number of nodes in the previous layer
-    size_t lastLayerNodeCount = hiddenNodesPerLayer;
-    if (nodeIndex < inputSize + hiddenNodesPerLayer) //input layer was last layer
-        lastLayerNodeCount = inputSize;
-    
-    //find info about the current layer this node is in
-    int layerId = 1 + floorf((nodeIndex - inputSize == 0) ? 0 : ((nodeIndex - inputSize) / hiddenNodesPerLayer)); //avoid divide by zero, 1 = first hidden layer
-    int layerSize = hiddenNodesPerLayer; //layerSize can only be hidden layer or output layer size
-    if (nodeIndex >= nodeCount - outputSize) { //this is the output layer
-        layerSize = outputSize;
-        layerId = hiddenLayerCount + 1;
+
+    int layerSizeOffset = ((i == 0) ? 0 : i/layerSize); //periodic function
+    int targetIn = i - (layerSizeOffset * layerSize) + nodeOffset; //periodic in the range between min target node id and max target node id 
+    int targetWeight = i + weightOffset;
+    int targetNode = nodeOffset + layerSize + layerSizeOffset;
+
+    // printf("Thread %d:      LSO: %d     IN: %d      W: %d      OUT: %d ||| IN: %d      W: %d      OUT: %d\n", 
+    // i, layerSizeOffset, targetIn, targetWeight, targetNode,
+    // activatedOutputs[targetIn], weights[targetWeight], activatedOutputs[targetNode]);
+
+    printf("%d\n", activatedOutputs[0]);
+
+    activatedOutputs[targetNode] += activatedOutputs[targetIn] * weights[targetWeight];
+}
+
+__global__ void ActivateLayer(float* activatedOutputs, const int layerSize, const int nodeOffset, const float minVal, const float maxVal) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (i > layerSize)
+        return;
+
+    Library::ActivationFunction(&activatedOutputs[nodeOffset + i], minVal, maxVal);
+}
+
+void NeuralNetwork::Build(bool debug = false) {
+    //memory for the weights array
+    CUDACHECK(cudaMallocManaged(&this->weights, this->weightCount * sizeof(float)));
+
+    //randomly initialize weights
+    for (int i = 0; i < this->weightCount; i++)
+        this->weights[i] = ((debug) ? 1 : Library::RandomValue());
+
+    //weights work as follows in example:
+    //3 input size (0,1,2), 2 hidden size (3,4) 
+    //0->3 = E0, 1->3 = E1, 2->3 = E2
+    //0->4 = E3, 1->3 = E4, 2->3 = E5
+
+    //memory for the node outputs
+    CUDACHECK(cudaMallocManaged(&this->activatedOutputs, this->nodeCount * sizeof(float)));
+
+    //some calculations to save time later
+    int largestLayerSize = 0;
+    int largestLayerWeightCount = 0;
+    for (int i = 1; i < this->layerCount; i++) {
+        int layerSize = this->layerSizes[i];
+        if (layerSize > largestLayerSize)
+            largestLayerSize = layerSize;
+
+        int weightCount = layerSize * this->layerSizes[i - 1];
+        if (weightCount > largestLayerWeightCount)
+            largestLayerWeightCount = weightCount;
     }
-    int layerSizeOffset = (nodeIndex - 1) % layerSize;
-
-    //find the index of the weights needed to be used
-    int layerIDVal = ((layerId - 2 > 0) ? layerId - 2 : 0); //std::max(layerID, 0)
-    int pastWeightsOffset = (inputSize * hiddenNodesPerLayer * (layerId > 1)) + //add input weights if we are past hidden layer 1
-                        hiddenNodesPerLayer * hiddenNodesPerLayer * layerIDVal; //add number of layer weights past the first
-
-    float sum = biases[nodeIndex - inputSize]; //will be the sum of incoming connections, start with bias
-    // for (int connectionIndex = 0; connectionIndex < lastLayerNodeCount; connectionIndex++) { //iterate over all incoming connections into this current node
-    //     int outputIndex = nodeIndex - lastLayerNodeCount - layerSizeOffset + connectionIndex;
-    //     int weightIndex = pastWeightsOffset + (connectionIndex * layerSize) + layerSizeOffset;
-
-    //     sum += a[outputIndex] * weights[weightIndex];
-    // }
-
-    Library::ActivationFunction(&sum, minVal, maxVal);
-    a[nodeIndex] = sum;
+    this->largestLayerSize = largestLayerSize;
+    this->largestLayerWeightCount = largestLayerWeightCount;
 }
 
-void Neural::NeuralNetwork::FeedForward(const float* inputs, float* outputs) {
-    //feed forward input, returns the output layer activated values (a) into the outputs argument
-    //node value (z) = sum of 
+void NeuralNetwork::FeedForward(float* inputArr, float* outputArr) {
+    //calculate the sizes of the CUDA blocks
+    int inputBlocksNeeded = (this->layerSizes[0] + THREADSPERBLOCK - 1) / THREADSPERBLOCK;
+    int sumBlocksNeeded = (this->largestLayerWeightCount + THREADSPERBLOCK - 1) / THREADSPERBLOCK;
+    int activationBlocksNeeded = (this->largestLayerSize + THREADSPERBLOCK - 1) / THREADSPERBLOCK;
 
-    int threadsPerBlock = 128;
-    int blocksForInput = (this->inputSize + threadsPerBlock - 1) / threadsPerBlock;
-    int blocksForForward = (this->nodeCount - this->inputSize + threadsPerBlock - 1) / threadsPerBlock;
-    cudaError_t error;
+    //copy the input into the relevant array, activate the values
+    std::copy(inputArr, inputArr + this->layerSizes[0], this->activatedOutputs);
+    CUDACHECK(cudaMemcpy(this->activatedOutputs, inputArr, this->layerSizes[0] * sizeof(float), cudaMemcpyHostToDevice));
+    CUDACHECK(cudaDeviceSynchronize());
 
-    //send the input data to the CUDA memory
-    error = cudaMemcpy(this->inputs, inputs, this->inputSize * sizeof(float), cudaMemcpyHostToDevice);
-    if (error != cudaSuccess)
-        return (void)Error("Failed to copy input array into CUDA memory");
-    ActivateInputs<<<blocksForInput, threadsPerBlock>>>(this->a, this->inputs, this->inputSize, Library::minVal, Library::maxVal);
-    error = cudaDeviceSynchronize();
-    if (error != cudaSuccess)
-        return (void)Error("Failed to activate input array");
+    for (int i = 0; i < this->layerSizes[0]; i++)
+        Log(to_string(i) + " : " + to_string(this->activatedOutputs[i]));
 
-    //calculate outputs of nodes
-    Forward<<<blocksForForward, threadsPerBlock>>>(this->a, this->weights, this->biases,
-                    nodeCount, this->inputSize, this->outputSize,
-                    this->hiddenLayerCount, this->hiddenNodesPerLayer,
-                    Library::minVal, Library::maxVal);
+    // ActivateLayer<<<inputBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->layerSizes[0], 0, Library::minVal, Library::maxVal); //activate the input layer
+    // error = cudaDeviceSynchronize();
+    // if (error != cudaSuccess)
+    //     return (void)Error("Failed to activate inputs");
 
-    error = cudaDeviceSynchronize();
-    if (error != cudaSuccess)
-        return (void)Error("Failed to feed forward all nodes");
+    //iterate over the nodes, saving all of their values into activatedOutputs, fn(sum * weights) + bias to calculate the next layer outs
+    int usedNodes = 0;
+    int usedWeights = 0;
+    for (int i = 0; i < this->layerCount - 1; i++) {
 
-    std::copy(this->a + nodeCount - 1 - this->outputSize, this->a + nodeCount - 1, outputs); //test
+        Log("----------------------------------------------");
+        // this->PrintNetwork();
 
-    return;
+        int layerSize = this->layerSizes[i];
+        int nextLayerSize = this->layerSizes[i + 1]; 
+        
+        //sum all the outputs * weights
+        Sum<<<sumBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->weights, layerSize, nextLayerSize, usedNodes, usedWeights); 
+        CUDACHECK(cudaDeviceSynchronize());
+
+        usedNodes += layerSize;
+        usedWeights += layerSize * nextLayerSize;
+
+        // //activate the next layer's outputs
+        // ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, layerSize, usedNodes, Library::minVal, Library::maxVal); 
+        // CUDACHECK(cudaDeviceSynchronize());
+    }
+
+    //output by copying the contents of the nodes in the output layer into the arr
+    int outputSize = this->layerSizes[this->layerCount];
+    for (int i = 0; i < outputSize; i++)
+        outputArr[i] = this->activatedOutputs[this->nodeCount - outputSize + i];
 }
 
-void Neural::NeuralNetwork::PrintNetwork() {
-    // int edgeSequentialIndex = 0; //to know which edge to display, count +1 every time we display a new one
-    // for (int layerIndex = 0; layerIndex < nn::hiddenLayerCount + 2; layerIndex++) {
-    //     std::cout << ((layerIndex == 0) ? "I" : ((layerIndex != 0 && layerIndex != nn::hiddenLayerCount + 2 - 1) ? "H" : "O"));
-    //     std::cout << "L" << layerIndex << std::endl;
+void NeuralNetwork::PrintNetwork() {
+    int seenNodes = 0;
+    int seenWeights = 0;
+    for (int layerIndex = 0; layerIndex < this->layerCount; layerIndex++) {
+        int layerSize = this->layerSizes[layerIndex];
 
-    //     int nodeCount = nn::hiddenNodesPerLayer;
-    //     if (layerIndex == 0) //input layer
-    //         nodeCount = nn::inputSize;
-    //     else if (layerIndex == nn::hiddenLayerCount + 2 - 1) //output layer
-    //         nodeCount = nn::outputSize;
+        for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++) {
+            Log("N" + to_string(seenNodes) + " - " + to_string(this->activatedOutputs[seenNodes]));
+            
+            if (this->layerCount > layerIndex + 1)
+                for (int edgeIndex = 0; edgeIndex < this->layerSizes[layerIndex + 1]; edgeIndex++)
+                    Log("   E" + to_string(nodeIndex + (edgeIndex * layerSize) + seenWeights) + " - " + to_string(this->weights[nodeIndex + (edgeIndex * layerSize) + seenWeights]));
 
-    //     for (int nodeIndex = 0; nodeIndex < nodeCount; nodeIndex++) {
-    //         std::cout << "  N" << nodeIndex << " - B:" << ((layerIndex == 0) ? 0 : nn::biases[(layerIndex - 1) * nn::hiddenNodesPerLayer + nodeIndex]) << std::endl;
+            seenNodes++;
+        } //nodes
 
-    //         int edgeCount = nn::hiddenNodesPerLayer;
-    //         if (layerIndex == nn::hiddenLayerCount) //the last hidden layer, layer before the output
-    //             edgeCount = nn::outputSize;
-    //         else if (layerIndex == nn::hiddenLayerCount + 2 - 1)
-    //             edgeCount = 0;
-
-    //         for (int edgeIndex = 0; edgeIndex < edgeCount; edgeIndex++)
-    //             std::cout << "          E" << edgeIndex << ":" << nn::weights[edgeSequentialIndex++] << std::endl;
-    //     }
-
-
-    // }
+        if (this->layerCount > layerIndex + 1)
+            seenWeights += layerSize * this->layerSizes[layerIndex + 1];
+    } //layers
 }

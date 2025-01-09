@@ -22,7 +22,7 @@ set(SOURCES
     src/logging.cpp
     src/neuralnetwork.cu
     src/stringtech.cpp
-    src/textlearn.cu
+    src/unittests.cu
 )
 
 #executable + sources
