@@ -4,8 +4,8 @@
 #include <cmath>
 
 std::mt19937 generator(Library::randomSeed);
-std::uniform_real_distribution<> distribution(Library::minVal, Library::maxVal);
+std::uniform_real_distribution<> distribution(0, 1);
 
-float Library::RandomValue() {
+float Library::RandomValue() { //generate a value between 0 and 1
     return distribution(generator);
 }

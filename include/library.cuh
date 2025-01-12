@@ -5,18 +5,11 @@
 
 namespace Library {
     const static unsigned int randomSeed = 2;
-    const static float minVal = -1;
-    const static float maxVal = 1;
+    const static unsigned int gpuDevice = 0;
 
-    float RandomValue(); //return value between minValue-maxValue
+    float RandomValue(); //return value between 0-1
 
-    __host__ __device__ inline void ActivationFunction(float* value, float minVal, float maxVal) {
-        // //clamp
-        // if (*value > maxVal)
-        //     *value = maxVal;
-        // if (*value < minVal)
-        //     *value = minVal;
-            
+    __host__ __device__ inline void ActivationFunction(float* value) {
         //*value = 1.0f / (1.0f + exp(-*value)) - maxVal/2; //sigmoid
         *value = std::fmax(0.0f, *value); //ReLU
     }
