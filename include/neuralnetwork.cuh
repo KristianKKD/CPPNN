@@ -1,6 +1,6 @@
 #define LIMITLAYERCOUNT 128 //for now, static limit of 128 layers
-#define THREADSPERBLOCK 128
-#define EPSILON 0.000001 //tiny value to prevent divide by zero errors
+#define THREADSPERBLOCK 256
+#define EPSILON 1e-7 //tiny value to prevent divide by zero errors
 
 class NeuralNetwork {
 public:

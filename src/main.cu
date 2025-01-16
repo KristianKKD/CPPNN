@@ -5,7 +5,6 @@
 int main() {
     TestFeedForward();
 
-
     // const int inputSize = 8;
     // const int hiddenLayerCount = 4;
     // const int hiddenNodesPerLayer = 4;
@@ -23,4 +22,6 @@ int main() {
 
     // for (int i = 0; i < outputSize; i++)
     //     Log(to_string(outputsArr[i]));
+
+    return 0;
 }

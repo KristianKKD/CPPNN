@@ -1,6 +1,7 @@
 #include <neuralnetwork.cuh>
 #include <shared.hpp>
 #include <assert.h>
+#include <library.cuh>
 
 void TestFeedForward() {
     const int inputSize = 3;
@@ -12,7 +13,7 @@ void TestFeedForward() {
     for (int i = 0; i < hiddenCount; i++)
         nn.AddLayer(hiddenSize);
     nn.AddLayer(outputSize);
-    nn.Build(); //assume that weights = 1 //note that we need to update this when bias added
+    nn.Build();
     
     assert(nn.layerCount == hiddenCount + 2);
     assert(nn.weightCount == (inputSize * hiddenSize + hiddenSize * hiddenSize * (hiddenCount - 1) + outputSize * hiddenSize));
@@ -27,8 +28,5 @@ void TestFeedForward() {
 
     float* outputsArr = new float[outputSize];
     nn.FeedForward(inputsArr, outputsArr);
-
-    for (int i = 0; i < nn.nodeCount; i++)
-        Log(to_string(i) + " : " + to_string(nn.activatedOutputs[i]));
-
 }
+

@@ -10,7 +10,8 @@ namespace Library {
     float RandomValue(); //return value between 0-1
 
     __host__ __device__ inline void ActivationFunction(float* value) {
-        //*value = 1.0f / (1.0f + exp(-*value)) - maxVal/2; //sigmoid
-        *value = std::fmax(0.0f, *value); //ReLU
+        printf("Activating: %f -> %f\n", *value, 1.0f / (1.0f + exp(-(*value))));
+        *value = 1.0f / (1.0f + exp(-(*value))); //sigmoid
+        //*value = std::fmax(0.0f, *value); //ReLU
     }
 };

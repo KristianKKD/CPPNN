@@ -1,4 +1,3 @@
-#cmake
 cmake_minimum_required(VERSION 3.18)
 
 #name
@@ -26,7 +25,7 @@ set(SOURCES
 )
 
 #executable + sources
-add_executable(CPPNN ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 #include directories
-target_include_directories(CPPNN PRIVATE include)
+target_include_directories(${PROJECT_NAME} PRIVATE include)

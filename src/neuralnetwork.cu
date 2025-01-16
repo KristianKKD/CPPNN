@@ -53,21 +53,25 @@ __global__ void Sum(float* activatedOutputs, const float* weights,
     int targetWeight = i + weightOffset; //0, 1, 2, 3, 4, 5
     int targetNode = layerSize + (i / layerSize) + nodeOffset; //3, 3, 3, 4, 4, 4 
     
-    atomicAdd(&activatedOutputs[targetNode], activatedOutputs[targetIn] * weights[targetWeight]);
+    float outputVal = activatedOutputs[targetIn] * weights[targetWeight];
 
-    printf("Thread %d:      IN[%d]:%f      W[%d]:%f      OUT[%d]:%f\n", 
+    atomicAdd(&activatedOutputs[targetNode], outputVal);
+
+    printf("Thread %d:      IN[%d]:%f      W[%d]:%f      OUT[%d]:%f     VAL:%f\n", 
             i, 
             targetIn, activatedOutputs[targetIn],
             targetWeight, weights[targetWeight],
-            targetNode, activatedOutputs[targetNode]);
+            targetNode, activatedOutputs[targetNode],
+            outputVal);
 }
 
 __global__ void ActivateLayer(float* activatedOutputs, const int layerSize, const int nodeOffset) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (i > layerSize)
+    if (i >= layerSize)
         return;
 
+    printf("Activating index %d from value %f\n", nodeOffset + i, activatedOutputs[nodeOffset + i]);
     Library::ActivationFunction(&activatedOutputs[nodeOffset + i]);
 }
 
@@ -75,8 +79,10 @@ void NeuralNetwork::Build() {
     //initialize cuda device
     cudaSetDevice(Library::gpuDevice); //maybe pointless?
 
-    //memory for the weights array
-    CUDACHECK(cudaMallocManaged(&this->weights, this->weightCount * sizeof(float)));
+    //memory allocation
+    CUDACHECK(cudaMallocManaged(&this->weights, this->weightCount * sizeof(float))); //weights
+    CUDACHECK(cudaMallocManaged(&this->biases, (this->nodeCount - this->layerSizes[0]) * sizeof(float))); //biases
+    CUDACHECK(cudaMallocManaged(&this->activatedOutputs, this->nodeCount * sizeof(float))); //node outputs
 
     //randomly initialize weights
     for (int i = 0; i < this->weightCount; i++) {
@@ -87,9 +93,6 @@ void NeuralNetwork::Build() {
             rand = 0.1;
         this->weights[i] = rand;
     }
-
-    //memory for the bias array
-    CUDACHECK(cudaMallocManaged(&this->biases, (this->nodeCount - this->layerSizes[0]) * sizeof(float)));
 
     //randomly initialize biases
     for (int i = 0; i < this->nodeCount - this->layerSizes[0]; i++) { //no bias for input layer
@@ -102,8 +105,10 @@ void NeuralNetwork::Build() {
         this->biases[i] = 0;
     }
 
-    //memory for the node outputs
-    CUDACHECK(cudaMallocManaged(&this->activatedOutputs, this->nodeCount * sizeof(float)));
+    for (int i = 0; i < this->layerCount; i++){
+        this->shifts[i] = 0;
+        this->scales[i] = 1;
+    }
 
     // //prefetch the data we know we will use soon for some small performance boost
     // CUDACHECK(cudaMemPrefetchAsync(this->activatedOutputs, this->nodeCount * sizeof(float), Library::gpuDevice));
@@ -155,44 +160,47 @@ void NeuralNetwork::FeedForward(float* inputArr, float* outputArr) {
         Sum<<<sumBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->weights, layerSize, nextLayerSize, usedNodes, usedWeights); 
         CUDACHECK(cudaDeviceSynchronize());
 
+        //indexing shortcut shenanigans
+        usedNodes += layerSize;
+        usedWeights += layerSize * nextLayerSize;
+
         //normalization layer
-        if (layerIndex == normalizationLayersUsed) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
+        if (true) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
             //calc mean
             float sum = 0;
-            for (int i = 0; i < layerSize; i++)
+            for (int i = 0; i < nextLayerSize; i++)
                 sum += this->activatedOutputs[usedNodes + i];
             if (sum == 0)
                 sum += EPSILON;
-            float mean = sum/(float)layerSize;
+            float mean = sum/(float)nextLayerSize;
 
             //calc std
             float variance = 0;
-            for (int i = 0; i < layerSize; i++) {
+            for (int i = 0; i < nextLayerSize; i++) {
                 float val = this->activatedOutputs[usedNodes + i];
                 variance += (val - mean) * (val - mean);
             }
             if (variance == 0)
                 variance += EPSILON;
-            float std = std::sqrt(variance/(float)layerSize);
+            float std = std::sqrt(variance/(float)nextLayerSize);
 
-            for (int i = 0; i < layerSize; i++) {
+            for (int i = 0; i < nextLayerSize; i++) {
                 float val = this->activatedOutputs[usedNodes + i];
                 float newVal = val - mean;
                 if (newVal == 0)
                     newVal += EPSILON;
                 
                 newVal = this->scales[normalizationLayersUsed] * (newVal/std) + this->shifts[normalizationLayersUsed];
+                this->activatedOutputs[usedNodes + i] = newVal;
+                Log("Normalized output " + to_string(usedNodes + i) + " from " + to_string(val) + " -> " + to_string(newVal));
             }
 
             normalizationLayersUsed++;
+            CUDACHECK(cudaDeviceSynchronize());
         }   
 
-        //indexing shortcut shenanigans
-        usedNodes += layerSize;
-        usedWeights += layerSize * nextLayerSize;
-
         //activate the next layer's outputs
-        ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, layerSize, usedNodes); 
+        ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes); 
         CUDACHECK(cudaDeviceSynchronize());
     }
 
