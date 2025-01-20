@@ -84,6 +84,9 @@
         "locale": "cpp",
         "xlocbuf": "cpp",
         "xlocmes": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "any": "cpp",
+        "csignal": "cpp",
+        "set": "cpp"
     }
 }

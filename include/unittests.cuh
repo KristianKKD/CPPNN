@@ -1,1 +1,2 @@
 void TestFeedForward();
+void TestPerformance();

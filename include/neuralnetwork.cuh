@@ -1,4 +1,4 @@
-#define LIMITLAYERCOUNT 128 //for now, static limit of 128 layers
+#define LIMITLAYERCOUNT 1024 //for now, static limit of 1024 layers
 #define THREADSPERBLOCK 256
 #define EPSILON 1e-7 //tiny value to prevent divide by zero errors
 
@@ -10,6 +10,11 @@ public:
     void Build(); //initialize all the values needed for training
     void FeedForward(float* inputArr, float* outputArr);
     void PrintNetwork();
+    void GradientDescent(int changeCount);
+
+    void NeuralNetwork::SetWeights(const float* hostWeights);
+    void NeuralNetwork::SetBiases(const float* hostBiases);
+
 
     //counting stuff
     int weightCount = 0;

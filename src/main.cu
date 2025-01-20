@@ -3,7 +3,7 @@
 #include <unittests.cuh>
 
 int main() {
-    TestFeedForward();
+    TestPerformance();
 
     // const int inputSize = 8;
     // const int hiddenLayerCount = 4;
