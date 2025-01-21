@@ -6,24 +6,22 @@ class NeuralNetwork {
 public:
     NeuralNetwork(int inputSize);
     ~NeuralNetwork();
-    void AddLayer(int size); //create a node layer (excluding input)
+    void AddLayer(int size, bool normalized = false); //create a node layer (excluding input)
     void Build(); //initialize all the values needed for training
     void FeedForward(float* inputArr, float* outputArr);
     void PrintNetwork();
     void GradientDescent(int changeCount);
-
-    void NeuralNetwork::SetWeights(const float* hostWeights);
-    void NeuralNetwork::SetBiases(const float* hostBiases);
-
+    void SetWeights(const float* hostWeights);
+    void SetBiases(const float* hostBiases);
 
     //counting stuff
-    int weightCount = 0;
-    int nodeCount = 0;
+    long long weightCount = 0;
+    long long nodeCount = 0;
     
     //layer stuff
     int layerCount = 1; //assuming input layer = 0
     int layerSizes[LIMITLAYERCOUNT]; //size in node count
-    int normLayerIndexes[LIMITLAYERCOUNT]; //positions of the normalization layers
+    bool normLayer[LIMITLAYERCOUNT]; //positions of the normalization layers (one = true, 0 = false)
 
     //values
     float* weights; //node connection weights

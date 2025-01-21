@@ -16,7 +16,7 @@ enable_language(CUDA)
 set(SOURCES
     src/main.cu
 
-    src/dataloader.cpp
+    src/io.cpp
     src/library.cu
     src/logging.cpp
     src/neuralnetwork.cu

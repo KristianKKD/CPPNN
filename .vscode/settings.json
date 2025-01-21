@@ -87,6 +87,8 @@
         "xloctime": "cpp",
         "any": "cpp",
         "csignal": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "ranges": "cpp",
+        "valarray": "cpp"
     }
 }
