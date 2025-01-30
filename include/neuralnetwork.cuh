@@ -10,9 +10,10 @@ public:
     void Build(); //initialize all the values needed for training
     void FeedForward(float* inputArr, float* outputArr);
     void PrintNetwork();
-    void GradientDescent(int changeCount);
+    void RandomGradientDescent(int changeCount);
     void SetWeights(const float* hostWeights);
     void SetBiases(const float* hostBiases);
+    void Backpropogate(float* preds, float* targets, float lr, float clippingMin, float clippingMax);
 
     //counting stuff
     long long weightCount = 0;
@@ -26,7 +27,8 @@ public:
     //values
     float* weights; //node connection weights
     float* biases; //base node value
-    float* activatedOutputs; //used in training and debugging
+    float* activatedOutputs; //output values of nodes
+    float* z; //pre-activation/normalization values of nodes
 
     //normalization params
     float scales[LIMITLAYERCOUNT]; //multiplied on the norm layer

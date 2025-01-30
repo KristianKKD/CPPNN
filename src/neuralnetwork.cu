@@ -71,6 +71,8 @@ __global__ void Sum(float* activatedOutputs, const float* weights,
     //         targetWeight, weights[targetWeight],
     //         targetNode, activatedOutputs[targetNode],
     //         outputVal);
+
+    //TODO, 2 NODES INTO SUB ARRAY FOR ALL TARGETS, COMBINE SUB ARRAYS
 }
 
 __global__ void ActivateLayer(float* activatedOutputs, const int layerSize, const long long nodeOffset) {
@@ -178,6 +180,10 @@ void NeuralNetwork::FeedForward(float* inputArr, float* outputArr) {
         usedNodes += layerSize;
         usedWeights += layerSize * nextLayerSize;
 
+        //save the pre-activation values for later use
+        for (int i = 0; i < nextLayerSize; i++)
+            this->z[i + usedNodes] = this->activatedOutputs[i + usedNodes];
+
         //normalization layer
         if (this->normLayer[layerIndex]) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
             //calc mean
@@ -256,7 +262,7 @@ void NeuralNetwork::SetBiases(const float* hostBiases) {
     CUDACHECK(cudaDeviceSynchronize());
 }
 
-void NeuralNetwork::GradientDescent(int changeCount) {
+void NeuralNetwork::RandomGradientDescent(int changeCount) {
     //make changeCount changes to a random weight
     for (int i = 0; i < changeCount; i++) {
         long long randIndex = std::round(Library::RandomValue() * (this->weightCount - 1));
@@ -271,4 +277,48 @@ void NeuralNetwork::GradientDescent(int changeCount) {
         delete val;
     }
     CUDACHECK(cudaDeviceSynchronize());
+}
+
+void NeuralNetwork::Backpropogate(float* preds, float* targets, float lr, float clippingMin, float clippingMax) { //assuming that this is called after FeedForward
+    int outputSize = this->layerSizes[this->layerCount - 1];
+    float cost = Library::MAE(preds, targets, outputSize);
+
+    vector<float> outputLoss;
+    for (int i = 0; i < outputSize; i++) {
+        float diff = preds[i] - targets[i];
+        outputLoss.push_back(diff);
+    }
+
+    vector<vector<float>> nodeLoss{outputLoss};
+    float* weightLossResult = new float[this->weightCount];
+    std::fill(weightLossResult, weightLossResult + this->weightCount, 0); //for debugging
+
+    int usedNodes = outputSize;
+    int usedWeights = 0;
+    for (int i = this->layerCount - 2; i > 0; i--) {
+        int layerSize = this->layerSizes[i];
+        int nextLayerSize = this->layerSizes[i + 1];
+        int layerWeightCount = layerSize*nextLayerSize;
+
+        //weights changes
+        for (int j = 0; j < layerWeightCount; j++) {
+            //error * node output * weight * lr
+            //maybe look into if we need to use derivatives?
+            int thisLayerNodeIndex = j % layerSize;
+            int nextLayerNodeIndex = (j == 0) ? 0 : (j / nextLayerSize);
+
+            float inputA = this->activatedOutputs[this->nodeCount- usedNodes - layerSize + thisLayerNodeIndex]; //incoming node val (activated)
+            int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + j;
+            float weight = this->weights[targetWeightIndex]; //target weight val
+
+            float outputLoss = nodeLoss[0][nextLayerNodeIndex];
+            float weightLoss = outputLoss * inputA * weight * lr;
+
+            weightLossResult[targetWeightIndex] = weightLoss;
+        }
+
+        usedNodes += layerSize;
+        usedWeights += layerWeightCount;
+    }
+
 }
