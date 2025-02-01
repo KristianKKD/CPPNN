@@ -281,42 +281,61 @@ void NeuralNetwork::RandomGradientDescent(int changeCount) {
 
 void NeuralNetwork::Backpropogate(float* preds, float* targets, float lr, float clippingMin, float clippingMax) { //assuming that this is called after FeedForward
     int outputSize = this->layerSizes[this->layerCount - 1];
-    float cost = Library::MAE(preds, targets, outputSize);
 
-    vector<float> outputLoss;
+    float* nodeError = new float[this->nodeCount];
     for (int i = 0; i < outputSize; i++) {
         float diff = preds[i] - targets[i];
-        outputLoss.push_back(diff);
+        nodeError[this->nodeCount - this->layerSizes[this->layerCount - 1] + i] = diff;
     }
 
-    vector<vector<float>> nodeLoss{outputLoss};
-    float* weightLossResult = new float[this->weightCount];
-    std::fill(weightLossResult, weightLossResult + this->weightCount, 0); //for debugging
+    //NEED TO CALCULATE WEIGHTS TO THE OUTPUT LAYER
+
+    //for debugging, later put this outside the function, these track the changes to be made at a learning iteration 
+    float* weightLoss = new float[this->weightCount];
+    std::fill(weightLoss, weightLoss + this->weightCount, 0); 
 
     int usedNodes = outputSize;
     int usedWeights = 0;
-    for (int i = this->layerCount - 2; i > 0; i--) {
-        int layerSize = this->layerSizes[i];
-        int nextLayerSize = this->layerSizes[i + 1];
-        int layerWeightCount = layerSize*nextLayerSize;
+    for (int layerIndex = this->layerCount - 2; layerIndex > 0; layerIndex--) { //start on the hidden layer behind output layer, move backwards
+        int layerSize = this->layerSizes[layerIndex];
+        int nextLayerSize = this->layerSizes[layerIndex + 1];
+        int layerWeightCount = layerSize * nextLayerSize;
 
-        //weights changes
-        for (int j = 0; j < layerWeightCount; j++) {
-            //error * node output * weight * lr
-            //maybe look into if we need to use derivatives?
-            int thisLayerNodeIndex = j % layerSize;
-            int nextLayerNodeIndex = (j == 0) ? 0 : (j / nextLayerSize);
+        //calculate hidden node error
+        for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++) {
+            int outputIndex = this->nodeCount - usedNodes + nodeIndex;
+            float outputError = nodeError[outputIndex]; 
 
-            float inputA = this->activatedOutputs[this->nodeCount- usedNodes - layerSize + thisLayerNodeIndex]; //incoming node val (activated)
-            int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + j;
-            float weight = this->weights[targetWeightIndex]; //target weight val
+            float errorSum = 0;
+            for (int weightIndex = 0; weightIndex < layerSize; weightIndex) {
+                int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + weightIndex;
+                float weight = this->weights[targetWeightIndex];
 
-            float outputLoss = nodeLoss[0][nextLayerNodeIndex];
-            float weightLoss = outputLoss * inputA * weight * lr;
+                errorSum += outputError * weight;
+            }
+            
+            int inputIndex = this->nodeCount - usedNodes - layerSize + nodeIndex;
+            float inputVal = this->activatedOutputs[inputIndex];
 
-            weightLossResult[targetWeightIndex] = weightLoss;
+            float outputError = errorSum * Library::DerActivationFunction(inputVal);
+            nodeError[inputIndex] = outputError;
+
+        }
+        
+        //calculate weight loss
+        for (int weightIndex = 0; weightIndex < layerWeightCount; weightIndex++) {
+            int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + weightIndex;
+
+            int inputIndex = this->nodeCount - usedNodes - layerSize + (weightIndex % layerSize);
+            int outputIndex = this->nodeCount - usedNodes + (weightIndex == 0) ? 0 : (layerSize / weightIndex);
+
+            float inputVal = this->activatedOutputs[inputIndex];
+            float outputError = nodeError[outputIndex]; 
+
+            weightLoss[targetWeightIndex] += inputVal * outputError;
         }
 
+        //indexing shenanigans
         usedNodes += layerSize;
         usedWeights += layerWeightCount;
     }
