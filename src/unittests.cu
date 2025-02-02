@@ -1,5 +1,6 @@
 #include <neuralnetwork.cuh>
 #include <shared.hpp>
+#include <library.cuh>
 #include <assert.h>
 #include <iostream>
 #include <cmath>
@@ -161,7 +162,7 @@ void TestPerformance() {
     nn.Build();
 
 
-    Log(to_string(nn.weightCount));
+    Log("Weight count: " + to_string(nn.weightCount));
 
     float inputsArr[inputSize];
     memset(inputsArr, 1, inputSize * sizeof(float));
@@ -171,6 +172,51 @@ void TestPerformance() {
     StartTimer();
     nn.FeedForward(inputsArr, outputsArr);
     StopTimer("Feedforward");
+
+    delete[] outputsArr;
+}
+
+void TestBackPropogation() {
+    //params
+    const int inputSize = 10;
+    const int hiddenCount = 5;
+    const int hiddenSize = 5;
+    const int outputSize = 10;
+    const int learningIterations = 2000;
+    const float learningRate = 0.02;
+
+    //create network
+    NeuralNetwork nn(inputSize);
+    for (int i = 0; i < hiddenCount; i++)
+        nn.AddLayer(hiddenSize);
+    nn.AddLayer(outputSize);
+    nn.Build();
+
+    //inputs
+    float inputsArr[inputSize];
+    for (int i = 0; i < inputSize; i++)
+        inputsArr[i] = Library::RandomValue();
+
+    //outputs
+    float* outputsArr = new float[outputSize];
+    memset(outputsArr, 0, outputSize * sizeof(float));
+
+    //targets
+    float targets[outputSize];
+    for (int i = 0; i < inputSize; i++)
+        targets[i] = Library::RandomValue();
+
+    nn.FeedForward(inputsArr, outputsArr);
+    float initialScore = Library::MSE(outputsArr, targets, outputSize);
+    Log("Initial score: " + to_string(initialScore));
+
+    for (int i = 0; i < learningIterations; i++) {
+        nn.FeedForward(inputsArr, outputsArr);
+        nn.Backpropogate(outputsArr, targets);
+        nn.ApplyGradients(learningRate);
+        float newScore = Library::MSE(outputsArr, targets, outputSize);
+        Log("Iteration " + to_string(i) + ": " + to_string(newScore));
+    }
 
     delete[] outputsArr;
 }

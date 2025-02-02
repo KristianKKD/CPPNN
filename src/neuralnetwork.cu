@@ -27,9 +27,11 @@ NeuralNetwork::~NeuralNetwork() {
     cudaFree(this->weights);
     cudaFree(this->biases);
     cudaFree(this->activatedOutputs);
+
+    delete[] weightDeltas;
 }
 
-void NeuralNetwork::AddLayer(int size, bool normalized = false) {
+void NeuralNetwork::AddLayer(int size, bool normalized) {
     int lastLayerSize = 0;
     if (this->layerCount > 0)
         lastLayerSize = this->layerSizes[this->layerCount - 1];
@@ -100,28 +102,33 @@ void NeuralNetwork::Build() {
     //randomly initialize weights
     for (long long i = 0; i < this->weightCount; i++) {
         float rand = Library::RandomValue();
-        if (rand > 0.5)
-            rand = 1;
-        else
-            rand = 0.1;
+        // if (rand > 0.5)
+        //     rand = 1;
+        // else
+        //     rand = 0.1;
         this->weights[i] = rand;
     }
 
     //randomly initialize biases
     for (int i = 0; i < this->nodeCount - this->layerSizes[0]; i++) { //no bias for input layer
-        // float rand = Library::RandomValue();
+        float rand = Library::RandomValue();
         // if (rand > 0.5)
         //     rand = 1;
         // else
         //     rand = 0.1;
-        // this->biases[i] = rand;
-        this->biases[i] = 0;
+        this->biases[i] = rand;
+        // this->biases[i] = 0;
     }
 
+    //initialize layer norm
     for (int i = 0; i < this->layerCount; i++){
         this->shifts[i] = 0;
         this->scales[i] = 1;
     }
+
+    //initialize gradient descent deltas
+    this->weightDeltas = new float[this->weightCount];
+    std::fill(this->weightDeltas, this->weightDeltas + this->weightCount, 0);
 
     // //prefetch the data we know we will use soon for some small performance boost
     // CUDACHECK(cudaMemPrefetchAsync(this->activatedOutputs, this->nodeCount * sizeof(float), Library::gpuDevice));
@@ -179,10 +186,6 @@ void NeuralNetwork::FeedForward(float* inputArr, float* outputArr) {
         //indexing shortcut shenanigans
         usedNodes += layerSize;
         usedWeights += layerSize * nextLayerSize;
-
-        //save the pre-activation values for later use
-        for (int i = 0; i < nextLayerSize; i++)
-            this->z[i + usedNodes] = this->activatedOutputs[i + usedNodes];
 
         //normalization layer
         if (this->normLayer[layerIndex]) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
@@ -279,60 +282,65 @@ void NeuralNetwork::RandomGradientDescent(int changeCount) {
     CUDACHECK(cudaDeviceSynchronize());
 }
 
-void NeuralNetwork::Backpropogate(float* preds, float* targets, float lr, float clippingMin, float clippingMax) { //assuming that this is called after FeedForward
-    int outputSize = this->layerSizes[this->layerCount - 1];
-
-    float* nodeError = new float[this->nodeCount];
-    for (int i = 0; i < outputSize; i++) {
-        float diff = preds[i] - targets[i];
-        nodeError[this->nodeCount - this->layerSizes[this->layerCount - 1] + i] = diff;
+void NeuralNetwork::ApplyGradients(float learningRate) {
+    for (int weightIndex = 0; weightIndex < this->weightCount; weightIndex++) {
+        float delta = this->weightDeltas[weightIndex];
+        float weight = this->weights[weightIndex];
+        this->weights[weightIndex] -= this->weightDeltas[weightIndex] * learningRate;
+        float a = this->weights[weightIndex];
+        float b = 1;
     }
 
-    //NEED TO CALCULATE WEIGHTS TO THE OUTPUT LAYER
+    std::fill(this->weightDeltas, this->weightDeltas + this->weightCount, 0);
+}
 
-    //for debugging, later put this outside the function, these track the changes to be made at a learning iteration 
-    float* weightLoss = new float[this->weightCount];
-    std::fill(weightLoss, weightLoss + this->weightCount, 0); 
+void NeuralNetwork::Backpropogate(float* preds, float* targets) { //assuming that this is called after FeedForward
+    int outputSize = this->layerSizes[this->layerCount - 1];
+    float* nodeError = new float[this->nodeCount];
+    std::fill(nodeError, nodeError + this->nodeCount, 0);
+
+    for (int i = 0; i < outputSize; i++) {
+        int index = this->nodeCount - this->layerSizes[this->layerCount - 1] + i;
+        float error = (preds[i] - targets[i]);
+        nodeError[index] = error;
+    }
 
     int usedNodes = outputSize;
     int usedWeights = 0;
-    for (int layerIndex = this->layerCount - 2; layerIndex > 0; layerIndex--) { //start on the hidden layer behind output layer, move backwards
+    for (int layerIndex = this->layerCount - 2; layerIndex >= 0; layerIndex--) { //start on the hidden layer behind output layer, move backwards
         int layerSize = this->layerSizes[layerIndex];
-        int nextLayerSize = this->layerSizes[layerIndex + 1];
+        int nextLayerSize = (layerIndex == this->layerCount - 1) ? 0 : this->layerSizes[layerIndex + 1]; //avoid indexing error
         int layerWeightCount = layerSize * nextLayerSize;
 
         //calculate hidden node error
-        for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++) {
-            int outputIndex = this->nodeCount - usedNodes + nodeIndex;
-            float outputError = nodeError[outputIndex]; 
+        if (layerIndex != this->layerCount - 1) //don't recalculate the output error
+            for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++) {
+                float errorSum = 0;
+                for (int weightIndex = 0; weightIndex < nextLayerSize; weightIndex++) {
+                    int outputIndex = this->nodeCount - usedNodes + weightIndex;
+                    int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + nodeIndex + weightIndex * layerSize;
 
-            float errorSum = 0;
-            for (int weightIndex = 0; weightIndex < layerSize; weightIndex) {
-                int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + weightIndex;
-                float weight = this->weights[targetWeightIndex];
+                    float weight = this->weights[targetWeightIndex];
 
-                errorSum += outputError * weight;
+                    errorSum += nodeError[outputIndex] * weight;
+                }
+                
+                int inputIndex = this->nodeCount - usedNodes - layerSize + nodeIndex;
+                float inputVal = this->activatedOutputs[inputIndex];
+
+                nodeError[inputIndex] = errorSum * Library::DerActivationFunction(inputVal);
             }
-            
-            int inputIndex = this->nodeCount - usedNodes - layerSize + nodeIndex;
-            float inputVal = this->activatedOutputs[inputIndex];
-
-            float outputError = errorSum * Library::DerActivationFunction(inputVal);
-            nodeError[inputIndex] = outputError;
-
-        }
         
         //calculate weight loss
         for (int weightIndex = 0; weightIndex < layerWeightCount; weightIndex++) {
-            int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + weightIndex;
-
             int inputIndex = this->nodeCount - usedNodes - layerSize + (weightIndex % layerSize);
-            int outputIndex = this->nodeCount - usedNodes + (weightIndex == 0) ? 0 : (layerSize / weightIndex);
+            int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + weightIndex;
+            int outputIndex = this->nodeCount - usedNodes + ((weightIndex == 0) ? 0 : (layerSize / weightIndex));
 
             float inputVal = this->activatedOutputs[inputIndex];
             float outputError = nodeError[outputIndex]; 
 
-            weightLoss[targetWeightIndex] += inputVal * outputError;
+            this->weightDeltas[targetWeightIndex] += inputVal * outputError;
         }
 
         //indexing shenanigans
@@ -340,4 +348,5 @@ void NeuralNetwork::Backpropogate(float* preds, float* targets, float lr, float 
         usedWeights += layerWeightCount;
     }
 
+    delete[] nodeError;
 }

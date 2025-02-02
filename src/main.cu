@@ -3,7 +3,7 @@
 #include <unittests.cuh>
 
 int main() {
-    TestPerformance();
+    TestBackPropogation();
 
     // const int inputSize = 8;
     // const int hiddenLayerCount = 4;
@@ -23,5 +23,6 @@ int main() {
     // for (int i = 0; i < outputSize; i++)
     //     Log(to_string(outputsArr[i]));
 
+    Log("Finished!");
     return 0;
 }

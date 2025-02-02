@@ -13,7 +13,8 @@ public:
     void RandomGradientDescent(int changeCount);
     void SetWeights(const float* hostWeights);
     void SetBiases(const float* hostBiases);
-    void Backpropogate(float* preds, float* targets, float lr, float clippingMin, float clippingMax);
+    void Backpropogate(float* preds, float* targets);
+    void ApplyGradients(float learningRate);
 
     //counting stuff
     long long weightCount = 0;
@@ -24,11 +25,13 @@ public:
     int layerSizes[LIMITLAYERCOUNT]; //size in node count
     bool normLayer[LIMITLAYERCOUNT]; //positions of the normalization layers (one = true, 0 = false)
 
+    //learning stuff
+    float* weightDeltas;
+
     //values
     float* weights; //node connection weights
     float* biases; //base node value
     float* activatedOutputs; //output values of nodes
-    float* z; //pre-activation/normalization values of nodes
 
     //normalization params
     float scales[LIMITLAYERCOUNT]; //multiplied on the norm layer
