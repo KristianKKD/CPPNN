@@ -12,3 +12,5 @@ using std::vector;
 
 int Error(string msg);
 void Log(string msg);
+void StartTimer();
+void StopTimer(string printText);

@@ -1,3 +1,3 @@
-C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CMakeFiles/CPPNN.dir
-C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CMakeFiles/edit_cache.dir
-C:/Users/KrabGor/OneDrive/Programming/C++NN/build/CMakeFiles/rebuild_cache.dir
+C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/CPPNN.dir
+C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/KrabGor/OneDrive/Programming/CPPNN/build/CMakeFiles/ZERO_CHECK.dir

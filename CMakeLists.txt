@@ -1,20 +1,31 @@
-# Specify the minimum version of CMake required
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
-# Name of the project
-project(CPPNN)
+#name
+project(CPPNN LANGUAGES CXX CUDA)
 
-# Specify the C++ standard
+#standards
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
-# Add the executable target and source files
-add_executable(CPPNN
-    src/main.cpp
+#properties
+enable_language(CUDA)
+
+#files
+set(SOURCES
+    src/main.cu
+
+    src/io.cpp
+    src/library.cu
     src/logging.cpp
-    src/dataloader.cpp
+    src/neuralnetwork.cu
     src/stringtech.cpp
+    src/unittests.cu
 )
 
-# Include directories for header files
-target_include_directories(CPPNN PRIVATE include)
+#executable + sources
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+#include directories
+target_include_directories(${PROJECT_NAME} PRIVATE include)
