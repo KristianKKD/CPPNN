@@ -10,7 +10,7 @@
         }                                                                        \
     }
 
-NeuralNetwork::NeuralNetwork(int inputSize) {
+NeuralNetwork::NeuralNetwork(int inputSize, OutputType type) {
     std::fill(this->layerSizes, this->layerSizes + LIMITLAYERCOUNT, 0); //tracking
     std::fill(this->normLayer, this->normLayer + LIMITLAYERCOUNT, false); //bool mask for normalization
     std::fill(this->scales, this->scales + LIMITLAYERCOUNT, 1); //* 1
@@ -21,6 +21,7 @@ NeuralNetwork::NeuralNetwork(int inputSize) {
     this->nodeCount = 0;
     this->layerCount = 0;
     this->AddLayer(inputSize);
+    this->outType = type;
 }
 
 NeuralNetwork::~NeuralNetwork() {
@@ -222,7 +223,9 @@ void NeuralNetwork::FeedForward(float* inputArr, float* outputArr) {
         }   
 
         //activate the next layer's outputs
-        ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes); 
+        if (layerIndex == this->layerCount - 2 && this->outType == OutputType::DefaultActivated)
+            ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes); 
+
         CUDACHECK(cudaDeviceSynchronize());
     }
 
@@ -232,6 +235,9 @@ void NeuralNetwork::FeedForward(float* inputArr, float* outputArr) {
         float val = this->activatedOutputs[this->nodeCount - outputSize + i];
         outputArr[i] = val;
     }
+
+    if (this->outType == OutputType::Softmax)
+        Library::Softmax(outputArr, outputSize);
 }
 
 void NeuralNetwork::PrintNetwork() {
@@ -282,13 +288,19 @@ void NeuralNetwork::RandomGradientDescent(int changeCount) {
     CUDACHECK(cudaDeviceSynchronize());
 }
 
-void NeuralNetwork::ApplyGradients(float learningRate) {
+void NeuralNetwork::ApplyGradients(float learningRate, int batches) {
+    if (batches <= 0)
+        return (void)Error("Invalid batch count: " + to_string(batches));
+
     for (int weightIndex = 0; weightIndex < this->weightCount; weightIndex++) {
         float delta = this->weightDeltas[weightIndex];
         float weight = this->weights[weightIndex];
-        this->weights[weightIndex] -= this->weightDeltas[weightIndex] * learningRate;
-        float a = this->weights[weightIndex];
-        float b = 1;
+        
+        float change = 0;
+        if (delta != 0 && learningRate != 0)
+            change = (delta * learningRate) / batches;
+
+        this->weights[weightIndex] -= change;
     }
 
     std::fill(this->weightDeltas, this->weightDeltas + this->weightCount, 0);

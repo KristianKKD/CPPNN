@@ -4,7 +4,13 @@
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(int inputSize);
+    enum OutputType{
+        Raw,
+        DefaultActivated,
+        Softmax,
+    };
+
+    NeuralNetwork(int inputSize, OutputType type=DefaultActivated);
     ~NeuralNetwork();
     void AddLayer(int size, bool normalized = false); //create a node layer (excluding input)
     void Build(); //initialize all the values needed for training
@@ -14,7 +20,10 @@ public:
     void SetWeights(const float* hostWeights);
     void SetBiases(const float* hostBiases);
     void Backpropogate(float* preds, float* targets);
-    void ApplyGradients(float learningRate);
+    void ApplyGradients(float learningRate, int batches);
+
+    //options
+    OutputType outType = DefaultActivated;
 
     //counting stuff
     long long weightCount = 0;

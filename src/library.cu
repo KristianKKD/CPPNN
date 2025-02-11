@@ -5,6 +5,8 @@
 
 std::mt19937 generator(Library::randomSeed);
 std::uniform_real_distribution<> distribution(0, 1);
+std::random_device rd;
+std::mt19937 gen(rd()); 
 
 float Library::RandomValue() { //generate a value between 0 and 1
     return distribution(generator);
@@ -36,4 +38,24 @@ float Library::MAE(float* preds, float* targets, int arrSize) {
 
 float Library::DerActivationFunction(float activatedValue) {
     return (activatedValue * (1 - activatedValue));
+}
+
+void Library::Softmax(float* values, int arrSize) {
+    float* exp = new float[arrSize];
+    float expSum = 0;
+    for (int i = 0; i < arrSize; i++) {
+        float e = std::exp(values[i]);
+        exp[i] = e;
+        expSum += e;
+    }
+
+    for (int i = 0; i < arrSize; i++)
+        values[i] = exp[i] / expSum;
+
+    delete exp;
+}
+
+int Library::SampleDistribution(float* probabilities, int arrSize) { //return index of probability chosen, selected based on weighted chance
+    std::discrete_distribution<int> dist(probabilities, probabilities + arrSize);
+    return dist(gen);
 }
