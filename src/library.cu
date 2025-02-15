@@ -59,3 +59,34 @@ int Library::SampleDistribution(float* probabilities, int arrSize) { //return in
     std::discrete_distribution<int> dist(probabilities, probabilities + arrSize);
     return dist(gen);
 }
+
+void Library::Normalize(float* arr, int arrSize, int startingPos) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
+     //calc mean
+     float sum = 0;
+     for (int sumIndex = 0; sumIndex < arrSize; sumIndex++)
+         sum += arr[startingPos + sumIndex];
+     if (sum == 0)
+         sum += EPSILON;
+     float mean = sum/(float)arrSize;
+
+     //calc std
+     float variance = 0;
+     for (int varIndex = 0; varIndex < arrSize; varIndex++) {
+         float val = arr[startingPos + varIndex];
+         variance += (val - mean) * (val - mean);
+     }
+     if (variance == 0)
+         variance += EPSILON;
+     float std = std::sqrt(variance/(float)arrSize);
+
+     for (int normIndex = 0; normIndex < arrSize; normIndex++) {
+         float val = arr[startingPos + normIndex];
+         float newVal = val - mean;
+         if (newVal == 0)
+             newVal += EPSILON;
+         
+         newVal = (newVal/std);
+         arr[startingPos + normIndex] = newVal;
+         //Log("Normalized " + to_string(startingPos + normIndex) + " from " + to_string(val) + " -> " + to_string(newVal));
+     }
+}

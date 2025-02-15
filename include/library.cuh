@@ -4,6 +4,8 @@
 #include "device_launch_parameters.h"
 
 namespace Library {
+#define EPSILON 1e-7 //tiny value to prevent divide by zero errors
+
     const static unsigned int randomSeed = 2;
     const static unsigned int gpuDevice = 0;
 
@@ -13,6 +15,7 @@ namespace Library {
     float DerActivationFunction(float value);
     void Softmax(float* values, int arrSize);
     int SampleDistribution(float* probabilities, int arrSize); //return index of probability chosen, selected based on weighted chance
+    void Normalize(float* arr, int arrSize, int startingPos = 0); //overwrite the array data with normalized data between the ranges provided
 
     __host__ __device__ inline void ActivationFunction(float* value) {
         //printf("Activating: %f -> %f\n", *value, 1.0f / (1.0f + exp(-(*value))));

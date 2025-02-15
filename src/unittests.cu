@@ -212,7 +212,14 @@ void TestBackPropogation() {
 
     for (int i = 0; i < learningIterations; i++) {
         nn.FeedForward(inputsArr, outputsArr);
-        nn.Backpropogate(outputsArr, targets);
+
+        vector<float> loss(outputSize, 0);
+        for (int i = 0; i < outputSize; i++) {
+            float error = (outputsArr[i] - targets[i]);
+            loss[i] = error;
+        }
+
+        nn.Backpropogate(loss.data());
         nn.ApplyGradients(learningRate, 1);
         float newScore = Library::MSE(outputsArr, targets, outputSize);
         Log("Iteration " + to_string(i) + ": " + to_string(newScore));

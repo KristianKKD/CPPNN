@@ -35,6 +35,15 @@ void GenerateGrid(float* grid, int rows, int columns, int agentPos, int loseVal,
     grid[gridSize - columns - 2] = winVal; //look for best reward which is placed away from starting pos
 }
 
+float RewardFunction(const float* grid, int agentPos, int time, float timePunish) {
+    float reward = 0;
+
+    reward += grid[agentPos];
+    reward -= time * timePunish;
+
+    return reward;
+}
+
 int main() {
     //environment params, generated per iteration
     const int rows = 6;
@@ -42,32 +51,57 @@ int main() {
     const int gridSize = rows*columns;
     const int loseVal = -1000;
     const int winVal = 1000;
+    const int timePunish = 1;
+
     float* grid = new float[gridSize];
 
-    //params
-    const int inputSize = gridSize; //6x6 cells
-    const int hiddenCount = 5;
-    const int hiddenSize = 5;
-    const int outputSize = 4; //left, right, up, down
+    //policy hyper params
+    const int pInputs = gridSize; //6x6 cells
+    const int pHiddenLayers = 5;
+    const int pHiddenSize = 5;
+    const int pOutputs = 4; //left, right, up, down
+    const int pBatchSize = 1; //iterations between updating the gradients
+
+    //value hyper params
+    const int vInputs = gridSize; //6x6 cells
+    const int vHiddenLayers = 2;
+    const int vHiddenSize = 5;
+    const int vOutputs = 1; //estimated reward
+    const int vBatchSize = 1; //iterations between updating the gradients
+
+    //learning hyper params
     const int learningIterations = 2000;
     const float learningRate = 0.02;
     const int timeCutoff = 100; //max steps per try 
 
     //create policy network
-    NeuralNetwork nn(inputSize, NeuralNetwork::OutputType::Softmax);
-    for (int i = 0; i < hiddenCount; i++)
-        nn.AddLayer(hiddenSize, true);
-    nn.AddLayer(outputSize);
-    nn.Build();
+    NeuralNetwork policyNet(pInputs, NeuralNetwork::OutputType::Softmax); //softmax for probability of selection of move
+    for (int i = 0; i < pHiddenLayers; i++)
+        policyNet.AddLayer(pHiddenSize, true);
+    policyNet.AddLayer(pOutputs);
+    policyNet.Build();
 
-    //create input arr
-    float inputsArr[inputSize];
+    //create value network
+    NeuralNetwork valueNet(vInputs);
+    for (int i = 0; i < vHiddenLayers; i++)
+        valueNet.AddLayer(vHiddenSize, false); //don't normalize the value net
+    valueNet.AddLayer(vOutputs);
+    valueNet.Build();
 
-    //create output arr
-    float outputsArr[outputSize];
-    memset(outputsArr, 0, outputSize * sizeof(float));
+    //create policy network output arr
+    float pOutputsArr[pOutputs];
+    memset(pOutputsArr, 0, pOutputs * sizeof(float));
+
+    //create value network output arr
+    float vOutputsArr[vOutputs];
+    memset(vOutputsArr, 0, vOutputs * sizeof(float));
+
+    NeuralNetwork oldPolicy = policyNet;
 
     for (int epoch = 0; epoch < learningIterations; epoch++) {
+        if (epoch % pBatchSize == 0)
+            policyNet.ApplyGradients(learningRate, pBatchSize);
+
         int agentPos = columns + 1; //set agent pos to the top left corner next to edges
         
         //create the grid
@@ -76,20 +110,34 @@ int main() {
         //draw initial grid
         DrawGrid(grid, rows, columns, agentPos, loseVal, winVal);
 
-        float reward = 0;
+        vector<vector<float>> states;
+        vector<float> rewards;
+        vector<float> chosenProbability;
+        vector<int> chosenOptionIndex;
+
         int time = 0;
+
         for (; time < timeCutoff; time++) {
+            //save current state
+            vector<float> state(grid, grid + gridSize);
+            states.push_back(state);
+
             //get probability distribution of moves
-            std::copy(grid, grid + gridSize, inputsArr); //copy state to network
-            nn.FeedForward(inputsArr, outputsArr);
+            std::copy(grid, grid + gridSize, state.data()); //copy state to network
+            policyNet.FeedForward(state.data(), pOutputsArr);
+            valueNet.FeedForward(state.data(), vOutputsArr);
 
             //print probability dist
             // for (int i = 0; i < outputSize; i++)
-            //     std::cout << outputsArr[i] << " ";
+            //     std::cout << pOutputsArr[i] << " ";
             // std::cout << std::endl;
 
             //select a move based on the probabilities
-            int chosenMove = Library::SampleDistribution(outputsArr, outputSize);
+            int chosenMove = Library::SampleDistribution(pOutputsArr, pOutputs);
+
+            //save this choice
+            chosenProbability.push_back(pOutputsArr[chosenMove]);
+            chosenOptionIndex.push_back(chosenMove);
 
             //map the move
             int newPos = 0;
@@ -115,14 +163,50 @@ int main() {
             //draw for visual representation
             DrawGrid(grid, rows, columns, agentPos, loseVal, winVal);
 
-            //accumulate the reward
-            reward += grid[newPos];
+            //save the reward
+            float reward = RewardFunction(grid, newPos, time, timePunish);
+            rewards[time] = reward;
+
+            //train the value network
+            float loss = Library::MAE(vOutputsArr, &reward, vOutputs);
+            valueNet.Backpropogate(&loss);
+            if (time % vBatchSize == 0)
+                valueNet.ApplyGradients(learningRate, vBatchSize);
 
             //find out if agent crashed into edge or touched the win
             if (grid[newPos] == loseVal || grid[newPos] == winVal)
                 break;
         }
+        
+        //calculate cumulative loss
+        vector<float> loss(pOutputs, 0);
+        for (int i = 0; i < time; i++) {
+            valueNet.FeedForward(states[i].data(), vOutputsArr);
+            float predicatedValue = vOutputsArr[0];
 
+            float advantage = rewards[i] - predicatedValue;
+
+            oldPolicy.FeedForward(states[i].data(), pOutputsArr);
+            float oldProbability = pOutputsArr[chosenOptionIndex[i]];
+            float newProbability = chosenProbability[i];
+
+            float ratio = newProbability/oldProbability;
+
+            float clippedLoss = std::min(ratio * advantage, std::clamp(ratio, 1- learningRate, 1 + learningRate) * advantage);
+            loss[chosenOptionIndex[i]] += clippedLoss;
+        }
+
+        //average loss
+        for (int i = 0; i < pOutputs; i++)
+            loss[i] = loss[i] / time;
+
+        policyNet.Backpropogate(loss.data());
+
+        if (epoch % pBatchSize == 0)
+            policyNet.ApplyGradients(learningRate, pBatchSize);
+
+        //save this policy as the old policy
+        oldPolicy = policyNet;
     }
 
     delete[] grid;
