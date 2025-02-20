@@ -56,7 +56,7 @@ void SaveNetwork(string path, NeuralNetwork* net) {
             if ((fs::status(path).permissions() & fs::perms::owner_write) == fs::perms::none)
                 return (void)Error("Cannot write to " + path + ", no permissions");
 
-            long long version = 1;
+            long long version = 2;
             long long checksum = 2; //static for now until i implement
 
             std::ofstream f(path);
@@ -77,12 +77,6 @@ void SaveNetwork(string path, NeuralNetwork* net) {
             
             for (size_t i = 0; i < LIMITLAYERCOUNT; i++)
                 f << net->normLayer[i] << ((i + 1 == LIMITLAYERCOUNT) ? "\n" : ",");
-                
-            for (size_t i = 0; i < LIMITLAYERCOUNT; i++)
-                f << net->scales[i] << ((i + 1 == LIMITLAYERCOUNT) ? "\n" : ",");
-
-            for (size_t i = 0; i < LIMITLAYERCOUNT; i++)
-                f << net->shifts[i] << ((i + 1 == LIMITLAYERCOUNT) ? "\n" : ",");
 
             f.close();
         }

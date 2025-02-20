@@ -20,6 +20,7 @@ set(SOURCES
     src/library.cu
     src/logging.cpp
     src/neuralnetwork.cu
+    src/reinforcement.cu
     src/stringtech.cpp
     src/unittests.cu
 )

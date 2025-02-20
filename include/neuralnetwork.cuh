@@ -1,3 +1,7 @@
+#pragma once
+
+#include <vector>
+
 #define LIMITLAYERCOUNT 1024 //for now, static limit of 1024 layers
 #define THREADSPERBLOCK 256
 
@@ -9,7 +13,7 @@ public:
         Softmax,
     };
 
-    NeuralNetwork(int inputSize, OutputType type=DefaultActivated);
+    NeuralNetwork(int inputSize, OutputType type = DefaultActivated, float weightInitMultiplier = 1, float biasInitMultiplier = 1);
     ~NeuralNetwork();
     NeuralNetwork& operator=(const NeuralNetwork& net); //copy the weights and biases of the network
     void AddLayer(int size, bool normalized = false); //create a node layer (excluding input)
@@ -19,28 +23,30 @@ public:
     void RandomGradientDescent(int changeCount);
     void SetWeights(const float* hostWeights);
     void SetBiases(const float* hostBiases);
-    void Backpropogate(const float* loss);
+    void Backpropagate(const float* loss);
     void ApplyGradients(float learningRate, int batches);
 
     //options
     OutputType outType = DefaultActivated;
+    float weightMultiplier = 1;
+    float biasMultiplier = 1;
 
     //counting stuff
     long long weightCount = 0;
+    long long biasCount = 0;
     long long nodeCount = 0;
+    int layerCount = 1; //assuming input layer = 0
     
     //layer stuff
-    int layerCount = 1; //assuming input layer = 0
-    int layerSizes[LIMITLAYERCOUNT]; //size in node count
-    bool normLayer[LIMITLAYERCOUNT]; //positions of the normalization layers (one = true, 0 = false)
-
-    //learning stuff
-    float* weightDeltas;
+    int layerSizes[LIMITLAYERCOUNT]{}; //size in node count
+    bool normLayer[LIMITLAYERCOUNT]{}; //positions of the normalization layers (one = true, 0 = false)
 
     //values
     float* weights; //node connection weights
     float* biases; //base node value
-    float* activatedOutputs; //output values of nodes
+    float* activatedOutputs; //activated output values of nodes
+    std::vector<float> preActivatedOutputs; //outputs of nodes before activation function
+    std::vector<float> weightDeltas; //accumulated changes from backpropogation per weight
    
     //we can save some time by calculating some things early
     int largestLayerSize = 0;

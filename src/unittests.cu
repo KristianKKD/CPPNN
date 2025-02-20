@@ -161,7 +161,6 @@ void TestPerformance() {
     nn.AddLayer(outputSize);
     nn.Build();
 
-
     Log("Weight count: " + to_string(nn.weightCount));
 
     float inputsArr[inputSize];
@@ -178,10 +177,10 @@ void TestPerformance() {
 
 void TestBackPropogation() {
     //params
-    const int inputSize = 10;
-    const int hiddenCount = 5;
-    const int hiddenSize = 5;
-    const int outputSize = 10;
+    const int inputSize = 2;
+    const int hiddenCount = 3;
+    const int hiddenSize = 3;
+    const int outputSize = 2;
     const int learningIterations = 2000;
     const float learningRate = 0.02;
 
@@ -213,13 +212,14 @@ void TestBackPropogation() {
     for (int i = 0; i < learningIterations; i++) {
         nn.FeedForward(inputsArr, outputsArr);
 
+        //manual loss calculation
         vector<float> loss(outputSize, 0);
-        for (int i = 0; i < outputSize; i++) {
-            float error = (outputsArr[i] - targets[i]);
-            loss[i] = error;
+        for (int j = 0; j < outputSize; j++) {
+            float error = (outputsArr[j] - targets[j]);
+            loss[j] = error;
         }
 
-        nn.Backpropogate(loss.data());
+        nn.Backpropagate(loss.data());
         nn.ApplyGradients(learningRate, 1);
         float newScore = Library::MSE(outputsArr, targets, outputSize);
         Log("Iteration " + to_string(i) + ": " + to_string(newScore));

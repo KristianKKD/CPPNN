@@ -1,6 +1,7 @@
 #include "library.cuh"
 #include "neuralnetwork.cuh"
-  
+#include "shared.hpp"  
+
 #define CUDACHECK(call) {                                                        \
         cudaError_t err = call;                                                  \
         if (err != cudaSuccess) {                                                \
@@ -10,24 +11,21 @@
         }                                                                        \
     }
 
-NeuralNetwork::NeuralNetwork(int inputSize, OutputType type) {
-    std::fill(this->layerSizes, this->layerSizes + LIMITLAYERCOUNT, 0); //tracking
-    std::fill(this->normLayer, this->normLayer + LIMITLAYERCOUNT, false); //bool mask for normalization
-    //weights/biases don't matter because we will change them anyway
-
+NeuralNetwork::NeuralNetwork(int inputSize, OutputType type, float weightInitMultiplier, float biasInitMultiplier) {
     this->weightCount = 0;
+    this->biasCount = 0;
     this->nodeCount = 0;
     this->layerCount = 0;
     this->AddLayer(inputSize);
     this->outType = type;
+    this->weightMultiplier = weightInitMultiplier;
+    this->biasMultiplier = biasInitMultiplier;
 }
 
 NeuralNetwork::~NeuralNetwork() {
     cudaFree(this->weights);
     cudaFree(this->biases);
     cudaFree(this->activatedOutputs);
-
-    delete[] weightDeltas;
 }
 
 NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& net) {
@@ -37,31 +35,34 @@ NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& net) {
     //copy vals
     this->outType = net.outType;
     this->weightCount = net.weightCount;
+    this->biasCount = net.biasCount;
     this->nodeCount = net.nodeCount;
     this->layerCount = net.layerCount;
     this->largestLayerSize = net.largestLayerSize;
     this->largestLayerWeightCount = net.largestLayerWeightCount;
+    //can ignore the weight/bias multipliers as they are for init
 
     //copy layer related stuff
     std::copy(std::begin(net.layerSizes), std::begin(net.layerSizes) + net.layerCount, std::begin(this->layerSizes));
     std::copy(std::begin(net.normLayer), std::begin(net.normLayer) + net.layerCount, std::begin(this->normLayer));
 
     //reset memory
-    cudaFree(this->weights);
-    cudaFree(this->biases);
-    cudaFree(this->activatedOutputs);
+    if (this->weights)
+        cudaFree(this->weights);
+    if (this->biases)
+        cudaFree(this->biases);
+    if (this->activatedOutputs)
+        cudaFree(this->activatedOutputs);
     
     //memory allocation
     CUDACHECK(cudaMallocManaged(&this->weights, this->weightCount * sizeof(float))); //weights
-    CUDACHECK(cudaMallocManaged(&this->biases, (this->nodeCount - this->layerSizes[0]) * sizeof(float))); //biases
+    CUDACHECK(cudaMallocManaged(&this->biases, this->biasCount * sizeof(float))); //biases
     CUDACHECK(cudaMallocManaged(&this->activatedOutputs, this->nodeCount * sizeof(float))); //node outputs
+    this->preActivatedOutputs.reserve(this->nodeCount);
 
     //copy memory
-    this->weights = new float[this->weightCount];
-    std::copy(net.weights, net.weights + weightCount, this->weights);
-    
-    this->biases = new float[this->nodeCount];
-    std::copy(net.biases, net.biases + nodeCount, this->biases);
+    CUDACHECK(cudaMemcpy(this->weights, net.weights, this->weightCount * sizeof(float), cudaMemcpyDeviceToDevice));
+    CUDACHECK(cudaMemcpy(this->biases, net.biases, this->biasCount * sizeof(float), cudaMemcpyDeviceToDevice));
 
     return *this;
 }
@@ -70,6 +71,9 @@ void NeuralNetwork::AddLayer(int size, bool normalized) {
     int lastLayerSize = 0;
     if (this->layerCount > 0)
         lastLayerSize = this->layerSizes[this->layerCount - 1];
+        
+    if (this->layerCount != 0)
+        this->biasCount += size;
 
     int newWeightCount = lastLayerSize * size;
     this->weightCount += newWeightCount;
@@ -131,38 +135,30 @@ void NeuralNetwork::Build() {
 
     //memory allocation
     CUDACHECK(cudaMallocManaged(&this->weights, this->weightCount * sizeof(float))); //weights
-    CUDACHECK(cudaMallocManaged(&this->biases, (this->nodeCount - this->layerSizes[0]) * sizeof(float))); //biases
+    CUDACHECK(cudaMallocManaged(&this->biases, this->biasCount * sizeof(float))); //biases
     CUDACHECK(cudaMallocManaged(&this->activatedOutputs, this->nodeCount * sizeof(float))); //node outputs
+
+    this->preActivatedOutputs = vector<float>(this->nodeCount, 0);
+    this->weightDeltas = vector<float>(this->weightCount, 0);
 
     //randomly initialize weights
     for (long long i = 0; i < this->weightCount; i++) {
-        float rand = Library::RandomValue();
-        // if (rand > 0.5)
-        //     rand = 1;
-        // else
-        //     rand = 0.1;
+        float rand = Library::RandomSignedValue(this->weightMultiplier);
         this->weights[i] = rand;
     }
+    Library::Normalize(this->weights, this->weightCount);
 
     //randomly initialize biases
-    for (int i = 0; i < this->nodeCount - this->layerSizes[0]; i++) { //no bias for input layer
-        float rand = Library::RandomValue();
-        // if (rand > 0.5)
-        //     rand = 1;
-        // else
-        //     rand = 0.1;
+    for (int i = 0; i < this->biasCount; i++) { //no bias for input layer
+        float rand = Library::RandomSignedValue(this->biasMultiplier);
         this->biases[i] = rand;
-        // this->biases[i] = 0;
     }
+    Library::Normalize(this->biases, this->biasCount);
 
-    //initialize gradient descent deltas
-    this->weightDeltas = new float[this->weightCount];
-    std::fill(this->weightDeltas, this->weightDeltas + this->weightCount, 0);
-
-    // //prefetch the data we know we will use soon for some small performance boost
+    // //prefetch the data we know we will use soon for some performance boost
     // CUDACHECK(cudaMemPrefetchAsync(this->activatedOutputs, this->nodeCount * sizeof(float), Library::gpuDevice));
     // CUDACHECK(cudaMemPrefetchAsync(this->weights, this->weightCount * sizeof(float), Library::gpuDevice));
-    // CUDACHECK(cudaMemPrefetchAsync(this->biases, (this->nodeCount - this->layerSizes[0]) * sizeof(float), Library::gpuDevice));
+    // CUDACHECK(cudaMemPrefetchAsync(this->biases, this->biasCount * sizeof(float), Library::gpuDevice));
 
     //some calculations to save time later
     int largestLayerSize = 0;
@@ -194,7 +190,8 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
 
     //copy the input into the outputs array, fill other slots with biases
     CUDACHECK(cudaMemcpy(this->activatedOutputs, inputArr, this->layerSizes[0] * sizeof(float), cudaMemcpyHostToDevice));
-    CUDACHECK(cudaMemcpy(this->activatedOutputs + this->layerSizes[0], this->biases, (this->nodeCount - this->layerSizes[0]) * sizeof(float), cudaMemcpyHostToDevice));
+    CUDACHECK(cudaMemcpy(this->activatedOutputs + this->layerSizes[0], this->biases, this->biasCount * sizeof(float), cudaMemcpyHostToDevice));
+    std::copy(this->activatedOutputs, this->activatedOutputs + this->layerSizes[0], this->preActivatedOutputs.data());
     CUDACHECK(cudaDeviceSynchronize());
 
     //activate the input layer
@@ -222,6 +219,9 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
             CUDACHECK(cudaDeviceSynchronize());
         }   
 
+        //save the pre-activation values for later use
+        std::copy(this->activatedOutputs + usedNodes, this->activatedOutputs + usedNodes + nextLayerSize, this->preActivatedOutputs.data() + usedNodes);
+        
         //activate the next layer's outputs
         if (layerIndex == this->layerCount - 2 && this->outType == OutputType::DefaultActivated)
             ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes); 
@@ -232,6 +232,7 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
     //output by copying the contents of the nodes in the output layer into the arr
     int outputSize = this->layerSizes[this->layerCount - 1];
     for (int i = 0; i < outputSize; i++) {
+        vector<float> test(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
         float val = this->activatedOutputs[this->nodeCount - outputSize + i];
         outputArr[i] = val;
     }
@@ -267,18 +268,16 @@ void NeuralNetwork::SetWeights(const float* hostWeights) {
 }
 
 void NeuralNetwork::SetBiases(const float* hostBiases) {
-    CUDACHECK(cudaMemcpy(this->biases, hostBiases, (this->nodeCount - this->layerSizes[0]) * sizeof(float), cudaMemcpyHostToDevice));
+    CUDACHECK(cudaMemcpy(this->biases, hostBiases, this->biasCount * sizeof(float), cudaMemcpyHostToDevice));
     CUDACHECK(cudaDeviceSynchronize());
 }
 
 void NeuralNetwork::RandomGradientDescent(int changeCount) {
     //make changeCount changes to a random weight
     for (int i = 0; i < changeCount; i++) {
-        long long randIndex = std::round(Library::RandomValue() * (this->weightCount - 1));
+        long long randIndex = std::round(Library::RandomValue(this->weightCount - 1));
 
-        float randChange = Library::RandomValue();
-        float randDir = (Library::RandomValue() > 0.5) ? 1 :  -1;
-        randChange *= randDir;
+        float randChange = Library::RandomSignedValue();
 
         float* val = new float;
         *val = this->weights[randIndex] + randChange;
@@ -302,19 +301,24 @@ void NeuralNetwork::ApplyGradients(float learningRate, int batches) {
         //float weight = this->weights[weightIndex];
         
         float change = (delta * learningRate) / batches;
+        if (std::isnan(change))
+            return (void)std::runtime_error("fuck");
 
         this->weights[weightIndex] -= change;
     }
 
-    std::fill(this->weightDeltas, this->weightDeltas + this->weightCount, 0);
+    this->weightDeltas = vector<float>(this->weightCount, 0);
 }
 
-void NeuralNetwork::Backpropogate(const float* loss) { //assuming that this is called after FeedForward
+void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is called after FeedForward
     //TODO, UPDATE BIASES
 
     int outputSize = this->layerSizes[this->layerCount - 1];
-    float* nodeError = new float[this->nodeCount];
-    std::fill(nodeError, nodeError + this->nodeCount, 0);
+    vector<float> nodeError(this->nodeCount, 0);
+
+    vector<float> lwwww(loss, loss + outputSize);
+    vector<float> awwww(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
+    vector<float> wwwww(this->weights, this->weights + this->weightCount);
 
     for (int i = 0; i < outputSize; i++) {
         int index = this->nodeCount - this->layerSizes[this->layerCount - 1] + i;
@@ -325,44 +329,57 @@ void NeuralNetwork::Backpropogate(const float* loss) { //assuming that this is c
     int usedWeights = 0;
     for (int layerIndex = this->layerCount - 2; layerIndex >= 0; layerIndex--) { //start on the hidden layer behind output layer, move backwards
         int layerSize = this->layerSizes[layerIndex];
-        int nextLayerSize = (layerIndex == this->layerCount - 1) ? 0 : this->layerSizes[layerIndex + 1]; //avoid indexing error
+        int nextLayerSize = this->layerSizes[layerIndex + 1];
         int layerWeightCount = layerSize * nextLayerSize;
 
         //calculate hidden node error
-        if (layerIndex != this->layerCount - 1) //don't recalculate the output error
-            for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++) {
-                float errorSum = 0;
-                for (int weightIndex = 0; weightIndex < nextLayerSize; weightIndex++) {
-                    int outputIndex = this->nodeCount - usedNodes + weightIndex;
-                    int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + nodeIndex + weightIndex * layerSize;
+        for (int nodeIndex = 0; nodeIndex < layerSize; nodeIndex++) {
+            float errorSum = 0;
+            for (int weightIndex = 0; weightIndex < nextLayerSize; weightIndex++) {
+                int outputIndex = this->nodeCount - usedNodes + weightIndex;
+                int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + nodeIndex + weightIndex * layerSize;
 
-                    float weight = this->weights[targetWeightIndex];
+                float outputError = nodeError[outputIndex];
+                float weight = this->weights[targetWeightIndex];
 
-                    errorSum += nodeError[outputIndex] * weight;
-                }
-                
-                int inputIndex = this->nodeCount - usedNodes - layerSize + nodeIndex;
-                float inputVal = this->activatedOutputs[inputIndex];
+                errorSum += outputError * weight;
+                if (isnan(errorSum) || outputError > 99999999999 || outputError < -999999999)
+                    throw std::runtime_error("fuck");
 
-                nodeError[inputIndex] = errorSum * Library::DerActivationFunction(inputVal);
             }
+            
+            int inputIndex = this->nodeCount - usedNodes - layerSize + nodeIndex;
+            float inputVal = this->preActivatedOutputs[inputIndex];
+
+            float der = Library::DerActivationFunction(inputVal);
+            float error = errorSum * der;
+            nodeError[inputIndex] = error;
+
+            if (isnan(nodeError[inputIndex])  || nodeError[inputIndex] > 999999 || nodeError[inputIndex] < -999999)
+                throw std::runtime_error("fuck");
+        }
         
         //calculate weight loss
         for (int weightIndex = 0; weightIndex < layerWeightCount; weightIndex++) {
             int inputIndex = this->nodeCount - usedNodes - layerSize + (weightIndex % layerSize);
             int targetWeightIndex = this->weightCount - usedWeights - layerWeightCount + weightIndex;
-            int outputIndex = this->nodeCount - usedNodes + ((weightIndex == 0) ? 0 : (layerSize / weightIndex));
+            int outputIndex = this->nodeCount - usedNodes + ((weightIndex == 0) ? 0 : (weightIndex / layerSize));
 
             float inputVal = this->activatedOutputs[inputIndex];
             float outputError = nodeError[outputIndex]; 
 
-            this->weightDeltas[targetWeightIndex] += inputVal * outputError;
+            float delta = inputVal * outputError;
+            
+            if (isnan(delta + this->weightDeltas[targetWeightIndex]))
+                throw std::runtime_error("fuck");
+            if (std::isinf(delta))
+                throw std::runtime_error("fuck");
+
+            this->weightDeltas[targetWeightIndex] += delta;
         }
 
         //indexing shenanigans
         usedNodes += layerSize;
         usedWeights += layerWeightCount;
     }
-
-    delete[] nodeError;
 }

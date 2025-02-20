@@ -8,8 +8,13 @@ std::uniform_real_distribution<> distribution(0, 1);
 std::random_device rd;
 std::mt19937 gen(rd()); 
 
-float Library::RandomValue() { //generate a value between 0 and 1
-    return distribution(generator);
+float Library::RandomValue(float multiplier) { //generate a value between 0 and 1
+    return (distribution(generator) * multiplier);
+}
+
+float Library::RandomSignedValue(float multiplier) {
+    float rand = Library::RandomValue(multiplier);
+    return (Library::RandomValue() < 0.5f) ? -rand : rand;
 }
 
 float Library::MSE(float* preds, float* targets, int arrSize) {
@@ -36,8 +41,11 @@ float Library::MAE(float* preds, float* targets, int arrSize) {
     return sum;
 }
 
-float Library::DerActivationFunction(float activatedValue) {
-    return (activatedValue * (1 - activatedValue));
+float Library::DerActivationFunction(float preActivated) {
+    float activated = preActivated;
+    Library::ActivationFunction(&activated);
+    return (activated * (1 - activated));
+    //return 1;
 }
 
 void Library::Softmax(float* values, int arrSize) {
