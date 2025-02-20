@@ -177,17 +177,19 @@ void TestPerformance() {
 
 void TestBackPropogation() {
     //params
-    const int inputSize = 2;
-    const int hiddenCount = 3;
-    const int hiddenSize = 3;
-    const int outputSize = 2;
+    const int inputSize = 10;
+    const int hiddenCount = 8;
+    const int hiddenSize = 8;
+    const int outputSize = 10;
     const int learningIterations = 2000;
-    const float learningRate = 0.02;
+    const float learningRate = 0.05;
 
     //create network
-    NeuralNetwork nn(inputSize);
+    NeuralNetwork nn(inputSize, NeuralNetwork::OutputType::DefaultActivated);
+    nn.SetGradientClipping(1);
+    nn.SetGradientRegularization(0.01);
     for (int i = 0; i < hiddenCount; i++)
-        nn.AddLayer(hiddenSize);
+        nn.AddLayer(hiddenSize, true);
     nn.AddLayer(outputSize);
     nn.Build();
 
@@ -195,9 +197,10 @@ void TestBackPropogation() {
     float inputsArr[inputSize];
     for (int i = 0; i < inputSize; i++)
         inputsArr[i] = Library::RandomValue();
+    Library::Normalize(inputsArr, inputSize);
 
     //outputs
-    float* outputsArr = new float[outputSize];
+    float outputsArr[outputSize];
     memset(outputsArr, 0, outputSize * sizeof(float));
 
     //targets
@@ -222,9 +225,8 @@ void TestBackPropogation() {
         nn.Backpropagate(loss.data());
         nn.ApplyGradients(learningRate, 1);
         float newScore = Library::MSE(outputsArr, targets, outputSize);
-        Log("Iteration " + to_string(i) + ": " + to_string(newScore));
+        if (i % 100 == 0)
+            Log("Iteration " + to_string(i) + ": " + to_string(newScore));
     }
-
-    delete[] outputsArr;
 }
 

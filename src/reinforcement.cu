@@ -52,7 +52,7 @@ void GridWorld() {
     const float winVal = 50;
     const float generalVal = 1;
     const float timeVal = 2;
-    const int drawDelay = 100; //draw the grid every n training iterations
+    const int drawDelay = -100; //draw the grid every n training iterations
 
     vector<float> grid(gridSize);
 
@@ -61,31 +61,37 @@ void GridWorld() {
     const int pHiddenLayers = 5;
     const int pHiddenSize = 5;
     const int pOutputs = 4; //left, right, up, down
-    const int pBatchSize = 1; //iterations between updating the gradients
+    const int pBatchSize = 5; //iterations between updating the gradients
 
     //value hyper params
     const int vInputs = gridSize; //6x6 cells
     const int vHiddenLayers = 2;
     const int vHiddenSize = 5;
     const int vOutputs = 1; //estimated reward
-    const int vBatchSize = 1; //iterations between updating the gradients
+    const int vBatchSize = 5; //iterations between updating the gradients
 
     //learning hyper params
     const int learningIterations = 2000;
-    const float learningRate = 0.0001;
+    const float learningRate = 0.01;
     const int timeCutoff = 100; //max steps per try 
 
     //create policy network
-    NeuralNetwork policyNet(pInputs, NeuralNetwork::OutputType::Softmax, 0.1, 0.1); //softmax for probability of selection of move
+    NeuralNetwork policyNet(pInputs, NeuralNetwork::OutputType::Softmax); //softmax for probability of selection of move
+    policyNet.SetGradientClipping(1);
+    policyNet.SetGradientRegularization(0.1);
+    policyNet.SetInitMultipliers(1, 1);
     for (int i = 0; i < pHiddenLayers; i++)
         policyNet.AddLayer(pHiddenSize, true);
     policyNet.AddLayer(pOutputs);
     policyNet.Build();
 
     //create value network
-    NeuralNetwork valueNet(vInputs, NeuralNetwork::OutputType::DefaultActivated, 0.1, 0.1);
+    NeuralNetwork valueNet(vInputs, NeuralNetwork::OutputType::DefaultActivated);
     for (int i = 0; i < vHiddenLayers; i++)
         valueNet.AddLayer(vHiddenSize, false);
+    policyNet.SetGradientClipping(1);
+    policyNet.SetGradientRegularization(0.1);
+    policyNet.SetInitMultipliers(1, 1);
     valueNet.AddLayer(vOutputs);
     valueNet.Build();
 
@@ -107,7 +113,7 @@ void GridWorld() {
         GenerateGrid(grid, rows, columns, agentPos, loseVal, winVal, generalVal);
 
         //draw initial grid
-        if (epoch % drawDelay == 0)
+        if (epoch % drawDelay == 0  && drawDelay > 0)
             DrawGrid(grid, rows, columns, agentPos, loseVal, winVal);
 
         vector<vector<float>> states;
@@ -122,9 +128,12 @@ void GridWorld() {
             vector<float> state(grid);
             states.push_back(state);
 
+            vector<float> normalizedState(state);
+            Library::Normalize(normalizedState.data(), gridSize);
+
             //get probability distribution of moves
-            policyNet.FeedForward(state.data(), pOutputsArr.data());
-            valueNet.FeedForward(state.data(), vOutputsArr.data());
+            policyNet.FeedForward(normalizedState.data(), pOutputsArr.data());
+            valueNet.FeedForward(normalizedState.data(), vOutputsArr.data());
 
             //print probability dist
             // for (int i = 0; i < outputSize; i++)
@@ -160,7 +169,7 @@ void GridWorld() {
             agentPos = newPos; //it shouldn't be possible to go out of bounds of the array
             
             //draw for visual representation
-            if (epoch % drawDelay == 0)
+            if (epoch % drawDelay == 0 && drawDelay > 0)
                 DrawGrid(grid, rows, columns, agentPos, loseVal, winVal);
 
             //save the reward
@@ -173,8 +182,8 @@ void GridWorld() {
             valueNet.Backpropagate(&loss);
             if (time % vBatchSize == 0)
                 valueNet.ApplyGradients(learningRate, vBatchSize);
-            // if (time % 10 == 0)
-            //     Log(to_string(loss));
+            if (time % 10 == 0)
+                Log(to_string(loss));
 
             //find out if agent crashed into edge or touched the win
             if (grid[newPos] == loseVal || grid[newPos] == winVal)
@@ -184,12 +193,14 @@ void GridWorld() {
         //calculate cumulative loss
         vector<float> loss(pOutputs, 0);
         for (int i = 0; i < time; i++) {
-            valueNet.FeedForward(states[i].data(), vOutputsArr.data());
+            vector<float> normalizedState(states[i]);
+            Library::Normalize(normalizedState.data(), gridSize);
+            valueNet.FeedForward(normalizedState.data(), vOutputsArr.data());
             float predicatedValue = vOutputsArr[0];
 
             float advantage = rewards[i] - predicatedValue;
 
-            oldPolicy.FeedForward(states[i].data(), pOutputsArr.data());
+            oldPolicy.FeedForward(normalizedState.data(), pOutputsArr.data());
             float oldProbability = pOutputsArr[chosenOptionIndex[i]];
             float newProbability = chosenProbability[i];
 

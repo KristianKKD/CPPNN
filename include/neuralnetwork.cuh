@@ -13,12 +13,15 @@ public:
         Softmax,
     };
 
-    NeuralNetwork(int inputSize, OutputType type = DefaultActivated, float weightInitMultiplier = 1, float biasInitMultiplier = 1);
+    NeuralNetwork(int inputSize, OutputType type = DefaultActivated);
     ~NeuralNetwork();
     NeuralNetwork& operator=(const NeuralNetwork& net); //copy the weights and biases of the network
+    void SetInitMultipliers(float weightInitMultiplier = 1, float biasInitMultiplier = 1); //settings for build init
+    void SetGradientClipping(float weightClipping); //settings for backprop min/max vals
+    void SetGradientRegularization(float gradientMultiplier); //settings for backprop delta multipliers
     void AddLayer(int size, bool normalized = false); //create a node layer (excluding input)
     void Build(); //initialize all the values needed for training
-    void FeedForward(const float* inputArr, float* outputArr);
+    void FeedForward(const float* inputArr, float* outputArr); //output
     void PrintNetwork();
     void RandomGradientDescent(int changeCount);
     void SetWeights(const float* hostWeights);
@@ -28,8 +31,10 @@ public:
 
     //options
     OutputType outType = DefaultActivated;
-    float weightMultiplier = 1;
-    float biasMultiplier = 1;
+    float weightMult = 1; //multiplies during random init
+    float biasMult = 1;
+    float weightClipping = -1; //applied during backprop to stop changes too large, -1 = off
+    float gradientRegMult = -1; //applied when applying gradient deltas, -1 = off
 
     //counting stuff
     long long weightCount = 0;

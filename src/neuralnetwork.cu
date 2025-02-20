@@ -11,15 +11,13 @@
         }                                                                        \
     }
 
-NeuralNetwork::NeuralNetwork(int inputSize, OutputType type, float weightInitMultiplier, float biasInitMultiplier) {
+NeuralNetwork::NeuralNetwork(int inputSize, OutputType type) {
     this->weightCount = 0;
     this->biasCount = 0;
     this->nodeCount = 0;
     this->layerCount = 0;
     this->AddLayer(inputSize);
     this->outType = type;
-    this->weightMultiplier = weightInitMultiplier;
-    this->biasMultiplier = biasInitMultiplier;
 }
 
 NeuralNetwork::~NeuralNetwork() {
@@ -65,6 +63,19 @@ NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& net) {
     CUDACHECK(cudaMemcpy(this->biases, net.biases, this->biasCount * sizeof(float), cudaMemcpyDeviceToDevice));
 
     return *this;
+}
+
+void NeuralNetwork::SetInitMultipliers(float weightInitMultiplier, float biasInitMultiplier) {
+    this->weightMult = weightInitMultiplier;
+    this->biasMult = biasInitMultiplier;
+}
+
+void NeuralNetwork::SetGradientRegularization(float gradientMultiplier) {
+    this->gradientRegMult = gradientMultiplier;
+}
+
+void NeuralNetwork::SetGradientClipping(float weightClipping) {
+    this->weightClipping = weightClipping;
 }
 
 void NeuralNetwork::AddLayer(int size, bool normalized) {
@@ -143,14 +154,14 @@ void NeuralNetwork::Build() {
 
     //randomly initialize weights
     for (long long i = 0; i < this->weightCount; i++) {
-        float rand = Library::RandomSignedValue(this->weightMultiplier);
+        float rand = Library::RandomSignedValue(this->weightMult);
         this->weights[i] = rand;
     }
     Library::Normalize(this->weights, this->weightCount);
 
     //randomly initialize biases
     for (int i = 0; i < this->biasCount; i++) { //no bias for input layer
-        float rand = Library::RandomSignedValue(this->biasMultiplier);
+        float rand = Library::RandomSignedValue(this->biasMult);
         this->biases[i] = rand;
     }
     Library::Normalize(this->biases, this->biasCount);
@@ -304,6 +315,9 @@ void NeuralNetwork::ApplyGradients(float learningRate, int batches) {
         if (std::isnan(change))
             return (void)std::runtime_error("fuck");
 
+        if (this->gradientRegMult > 0)
+            change = change + this->gradientRegMult * this->weights[weightIndex];;
+
         this->weights[weightIndex] -= change;
     }
 
@@ -316,6 +330,7 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
     int outputSize = this->layerSizes[this->layerCount - 1];
     vector<float> nodeError(this->nodeCount, 0);
 
+    //debugging stuff (to see the values more easily)
     vector<float> lwwww(loss, loss + outputSize);
     vector<float> awwww(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
     vector<float> wwwww(this->weights, this->weights + this->weightCount);
@@ -369,6 +384,13 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
             float outputError = nodeError[outputIndex]; 
 
             float delta = inputVal * outputError;
+
+            if (this->weightClipping > 0)
+                if (delta > this->weightClipping)
+                    delta = this->weightClipping;
+                else if (delta < -this->weightClipping)
+                    delta = -this->weightClipping;
+
             
             if (isnan(delta + this->weightDeltas[targetWeightIndex]))
                 throw std::runtime_error("fuck");
