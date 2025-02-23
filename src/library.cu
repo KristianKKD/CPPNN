@@ -31,26 +31,19 @@ float Library::MSE(float* preds, float* targets, int arrSize) {
 }
 
 float Library::MAE(float* preds, float* targets, int arrSize) {
-    float sum = 0;
+    float sum = 0.0f;
     for (int i = 0; i < arrSize; i++)
         sum += std::abs(preds[i] - targets[i]);
 
-    if (arrSize != 0 && sum != 0)
+    if (arrSize != 0.0f && sum != 0.0f)
         sum /= arrSize;
 
     return sum;
 }
 
-float Library::DerActivationFunction(float preActivated) {
-    float activated = preActivated;
-    Library::ActivationFunction(&activated);
-    return (activated * (1 - activated));
-    //return 1;
-}
-
 void Library::Softmax(float* values, int arrSize) {
     float* exp = new float[arrSize];
-    float expSum = 0;
+    float expSum = 0.0f;
     for (int i = 0; i < arrSize; i++) {
         float e = std::exp(values[i]);
         exp[i] = e;
@@ -70,7 +63,7 @@ int Library::SampleDistribution(float* probabilities, int arrSize) { //return in
 
 void Library::Normalize(float* arr, int arrSize, int startingPos) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
      //calc mean
-     float sum = 0;
+     float sum = 0.0f;
      for (int sumIndex = 0; sumIndex < arrSize; sumIndex++)
          sum += arr[startingPos + sumIndex];
      if (sum == 0)
@@ -78,19 +71,19 @@ void Library::Normalize(float* arr, int arrSize, int startingPos) { //TODO, IMPL
      float mean = sum/(float)arrSize;
 
      //calc std
-     float variance = 0;
+     float variance = 0.0f;
      for (int varIndex = 0; varIndex < arrSize; varIndex++) {
          float val = arr[startingPos + varIndex];
          variance += (val - mean) * (val - mean);
      }
-     if (variance == 0)
+     if (variance == 0.0f)
          variance += EPSILON;
      float std = std::sqrt(variance/(float)arrSize);
 
      for (int normIndex = 0; normIndex < arrSize; normIndex++) {
          float val = arr[startingPos + normIndex];
          float newVal = val - mean;
-         if (newVal == 0)
+         if (newVal == 0.0f)
              newVal += EPSILON;
          
          newVal = (newVal/std);

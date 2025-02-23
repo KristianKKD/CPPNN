@@ -11,6 +11,19 @@ __host__ __device__ float sigmoid(float x) {
     return 1.0f / (1.0f + expf(-x));
 }
 
+void TestNormalize() {
+    int n = 100;
+
+    vector<float> pre;
+    pre.reserve(n);
+
+    for (int i = 0; i < n; i++)
+        pre.push_back(Library::RandomSignedValue() * 100);
+    Library::Normalize(pre.data(), n);
+
+    return;
+}
+
 void TestFeedForward() {
     std::cout << "Starting TestFeedForward..." << std::endl;
 
@@ -150,29 +163,37 @@ void TestFeedForward() {
 }
 
 void TestPerformance() {
-    const int inputSize = 1000;
-    const int hiddenCount = 1000;
-    const int hiddenSize = 1000;
-    const int outputSize = 1000;
+    const int inputSize = 100;
+    const int hiddenCount = 500;
+    const int hiddenSize = 500;
+    const int outputSize = 100;
 
     NeuralNetwork nn(inputSize);
     for (int i = 0; i < hiddenCount; i++)
-        nn.AddLayer(hiddenSize);
+        nn.AddLayer(hiddenSize, true);
     nn.AddLayer(outputSize);
+    nn.SetGradientClipping(.1);
+    nn.SetGradientRegularization(0.01);
+    nn.SetInitMultipliers(0.1, 0.1);
     nn.Build();
 
     Log("Weight count: " + to_string(nn.weightCount));
 
     float inputsArr[inputSize];
-    memset(inputsArr, 1, inputSize * sizeof(float));
-    float* outputsArr = new float[outputSize];
+    memset(inputsArr, .1, inputSize * sizeof(float));
+    float outputsArr[outputSize];
     memset(outputsArr, 0, outputSize * sizeof(float));
 
     StartTimer();
     nn.FeedForward(inputsArr, outputsArr);
     StopTimer("Feedforward");
 
-    delete[] outputsArr;
+    float loss[outputSize];
+    memset(loss, .1, outputSize * sizeof(float));
+
+    StartTimer();
+    nn.Backpropagate(loss);
+    StopTimer("Loss");
 }
 
 void TestBackPropogation() {

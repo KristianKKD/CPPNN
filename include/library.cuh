@@ -1,11 +1,8 @@
 #pragma once
 #include <random>
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
 
 namespace Library {
 #define EPSILON 1e-7 //tiny value to prevent divide by zero errors
-
     const static unsigned int randomSeed = 2;
     const static unsigned int gpuDevice = 0;
 
@@ -13,15 +10,8 @@ namespace Library {
     float RandomSignedValue(float multiplier = 1); //return a value between -1-1 * mult
     float MSE(float* preds, float* targets, int arrSize); //return scalar metric for error between two arrays
     float MAE(float* preds, float* targets, int arrSize);
-    float DerActivationFunction(float value);
     void Softmax(float* values, int arrSize);
     int SampleDistribution(float* probabilities, int arrSize); //return index of probability chosen, selected based on weighted chance
     void Normalize(float* arr, int arrSize, int startingPos = 0); //overwrite the array data with normalized data between the ranges provided
-
-    __host__ __device__ inline void ActivationFunction(float* value) {
-        //printf("Activating: %f -> %f\n", *value, 1.0f / (1.0f + exp(-(*value))));
-        *value = 1.0f / (1.0f + exp(-(*value))); //sigmoid
-        //*value = std::fmax(0.0f, *value); //ReLU
-    }
 
 };

@@ -1,12 +1,13 @@
 #include <shared.hpp>
 
 void GridWorld();
-void TestBackPropogation();
+void TestPerformance();
 
 
 int main() {
-    GridWorld();
+    //GridWorld();
     //TestBackPropogation();
+    TestPerformance();
 
     Log("Finished!");
     return 0;

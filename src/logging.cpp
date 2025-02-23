@@ -3,9 +3,6 @@
 
 string ReplaceAll(string input, string find, string replaceWith);
 
-string defaultValue = "-123456"; //used as a catch all error code for string related content
-int defaultInt = std::stoi(defaultValue);
-
 void Log(string msg) {
 	msg = ReplaceAll(msg, "\n", " "); //remove common characters which would disrupt the logging
 	msg = ReplaceAll(msg, "\r", " ");

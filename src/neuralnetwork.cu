@@ -78,6 +78,10 @@ void NeuralNetwork::SetGradientClipping(float weightClipping) {
     this->weightClipping = weightClipping;
 }
 
+void NeuralNetwork::SetActivationFunction(NeuralNetwork::ActivationType t) {
+    this->activation = t;
+}
+
 void NeuralNetwork::AddLayer(int size, bool normalized) {
     int lastLayerSize = 0;
     if (this->layerCount > 0)
@@ -127,14 +131,14 @@ __global__ void Sum(float* activatedOutputs, const float* weights,
     //TODO, 2 NODES INTO SUB ARRAY FOR ALL TARGETS, COMBINE SUB ARRAYS
 }
 
-__global__ void ActivateLayer(float* activatedOutputs, const int layerSize, const long long nodeOffset) {
+__global__ void ActivateLayer(float* activatedOutputs, const int layerSize, const long long nodeOffset, NeuralNetwork::ActivationType activationType) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (i >= layerSize)
         return;
 
     //printf("Activating index %d from value %f\n", nodeOffset + i, activatedOutputs[nodeOffset + i]);
-    Library::ActivationFunction(&activatedOutputs[nodeOffset + i]);
+    ActivationFunction(&activatedOutputs[nodeOffset + i], activationType);
 }
 
 void NeuralNetwork::Build() {
@@ -206,7 +210,7 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
     CUDACHECK(cudaDeviceSynchronize());
 
     //activate the input layer
-    ActivateLayer<<<inputBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->layerSizes[0], 0); 
+    ActivateLayer<<<inputBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->layerSizes[0], 0, this->activation); 
     CUDACHECK(cudaDeviceSynchronize());
 
     //iterate over the nodes, saving all of their values into activatedOutputs, fn(sum * weights) + bias to calculate the next layer outs
@@ -235,7 +239,7 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
         
         //activate the next layer's outputs
         if (layerIndex == this->layerCount - 2 && this->outType == OutputType::DefaultActivated)
-            ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes); 
+            ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes, this->activation); 
 
         CUDACHECK(cudaDeviceSynchronize());
     }
@@ -331,10 +335,11 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
     vector<float> nodeError(this->nodeCount, 0);
 
     //debugging stuff (to see the values more easily)
-    vector<float> lwwww(loss, loss + outputSize);
-    vector<float> awwww(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
-    vector<float> wwwww(this->weights, this->weights + this->weightCount);
+    vector<float> lossDEBUG(loss, loss + outputSize);
+    vector<float> activatedDEBUG(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
+    vector<float> weightsDEBUG(this->weights, this->weights + this->weightCount);
 
+    //apply the loss to the output nodes (for hidden node error calculations)
     for (int i = 0; i < outputSize; i++) {
         int index = this->nodeCount - this->layerSizes[this->layerCount - 1] + i;
         nodeError[index] = loss[i];
@@ -358,20 +363,22 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
                 float weight = this->weights[targetWeightIndex];
 
                 errorSum += outputError * weight;
-                if (isnan(errorSum) || outputError > 99999999999 || outputError < -999999999)
-                    throw std::runtime_error("fuck");
+                if (isnan(errorSum))
+                    throw std::runtime_error("Hidden node error sum exploded");
 
             }
             
             int inputIndex = this->nodeCount - usedNodes - layerSize + nodeIndex;
-            float inputVal = this->preActivatedOutputs[inputIndex];
+            float inputVal = this->activatedOutputs[inputIndex];
 
-            float der = Library::DerActivationFunction(inputVal);
+            float der = inputVal; //have to create a copy as the function modifies the input val
+            DerActivationFunction(&der, this->activation);
+
             float error = errorSum * der;
             nodeError[inputIndex] = error;
 
-            if (isnan(nodeError[inputIndex])  || nodeError[inputIndex] > 999999 || nodeError[inputIndex] < -999999)
-                throw std::runtime_error("fuck");
+            if (isnan(nodeError[inputIndex]))
+                throw std::runtime_error("Node error exploded");
         }
         
         //calculate weight loss
@@ -392,10 +399,8 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
                     delta = -this->weightClipping;
 
             
-            if (isnan(delta + this->weightDeltas[targetWeightIndex]))
-                throw std::runtime_error("fuck");
-            if (std::isinf(delta))
-                throw std::runtime_error("fuck");
+            if (isnan(delta + this->weightDeltas[targetWeightIndex]) || isinf(delta))
+                throw std::runtime_error("Weights exploded");
 
             this->weightDeltas[targetWeightIndex] += delta;
         }
