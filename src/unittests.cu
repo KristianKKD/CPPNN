@@ -249,5 +249,7 @@ void TestBackPropogation() {
         if (i % 100 == 0)
             Log("Iteration " + to_string(i) + ": " + to_string(newScore));
     }
+
+    nn.PrintNetwork();
 }
 

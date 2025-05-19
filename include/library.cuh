@@ -1,5 +1,4 @@
 #pragma once
-#include <random>
 
 namespace Library {
 #define EPSILON 1e-7 //tiny value to prevent divide by zero errors
@@ -13,5 +12,6 @@ namespace Library {
     void Softmax(float* values, int arrSize);
     int SampleDistribution(float* probabilities, int arrSize); //return index of probability chosen, selected based on weighted chance
     void Normalize(float* arr, int arrSize, int startingPos = 0); //overwrite the array data with normalized data between the ranges provided
+    float SumVector(float* arr, int arrSize);
 
 };

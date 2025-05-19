@@ -2,12 +2,14 @@
 
 void GridWorld();
 void TestPerformance();
+void TestBackPropogation();
 
 
 int main() {
+    Log("CPPNN - Kristian's neural network framework!");
     //GridWorld();
-    //TestBackPropogation();
-    TestPerformance();
+    TestBackPropogation();
+    //TestPerformance();
 
     Log("Finished!");
     return 0;

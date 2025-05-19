@@ -1,6 +1,7 @@
 #include <shared.hpp>
 #include <neuralnetwork.cuh>
 #include <library.cuh>
+#include <random>
 
 void DrawGrid(const vector<float> grid, int rows, int columns, int agentPos, int loseVal, int winVal) {
     for (int i = 0; i < rows; ++i) {
@@ -34,7 +35,7 @@ void GenerateGrid(vector<float>& grid, int rows, int columns, int agentPos, floa
     grid[gridSize - columns - 2] = winVal; //look for best reward which is placed away from starting pos
 }
 
-float RewardFunction(const vector<float> grid, int agentPos, int time, float timeVal, int rows, int columns) {
+float RewardFunction(const vector<float> grid, int agentPos, int time, float timeVal, int rows, int columns, float winValue) {
     float reward = 0;
     
     reward += grid[agentPos];
@@ -46,7 +47,7 @@ float RewardFunction(const vector<float> grid, int agentPos, int time, float tim
     int agentX = agentPos % columns;
     int agentY = agentPos / columns;
     float distance = abs(goalX - agentX) + abs(goalY - agentY);
-    reward += 1.0 / (1.0 + distance);
+    reward += winValue / (winValue + distance);
     
     return reward;
 }
@@ -55,7 +56,7 @@ void GridWorld() {
     //environment params, generated per iteration
     const int rows = 6;
     const int columns = 6;
-    const int gridSize = rows*columns;
+    const int gridSize = rows * columns;
     const float loseVal = -50;
     const float winVal = 25;
     const float generalVal = 0;
@@ -69,24 +70,24 @@ void GridWorld() {
     const int pHiddenLayers = 4;
     const int pHiddenSize = 4;
     const int pOutputs = 4; //left, right, up, down
-    const int pBatchSize = 10; //iterations between updating the gradients
+    const int pBatchSize = 5; //iterations between updating the gradients
 
     //value hyper params
     const int vInputs = gridSize; //6x6 cells
     const int vHiddenLayers = 4;
     const int vHiddenSize = 4;
     const int vOutputs = 1; //estimated reward
-    const int vBatchSize = 10; //iterations between updating the gradients
+    const int vBatchSize = 5; //iterations between updating the gradients
 
     //greed
-    const float greedChanceStart = 0.2;
+    const float greedChanceStart = 0.3;
     float greedChance = greedChanceStart;
-    float greedStep = 0.05;
+    float greedStep = 0.025;
 
     //learning hyper params
-    const int learningIterations = 10000;
-    const float learningRate = 0.01;
-    const int timeCutoff = 100; //max steps per try 
+    const int learningIterations = 50000;
+    const float learningRate = 0.0001;
+    const int timeCutoff = 15; //max steps per try 
 
     //create policy network
     NeuralNetwork policyNet(pInputs, NeuralNetwork::OutputType::Softmax); //softmax for probability of selection of move
@@ -146,6 +147,7 @@ void GridWorld() {
             vector<float> state(grid);
             states.push_back(state);
 
+            //normalize input state
             vector<float> normalizedState(state);
             Library::Normalize(normalizedState.data(), gridSize);
 
@@ -191,7 +193,7 @@ void GridWorld() {
                 DrawGrid(grid, rows, columns, agentPos, loseVal, winVal);
 
             //save the reward
-            float reward = RewardFunction(grid, newPos, time, timeVal, rows, columns);
+            float reward = RewardFunction(grid, newPos, time, timeVal, rows, columns, winVal);
             rewards.push_back(reward);
 
             //train the value network
@@ -200,9 +202,10 @@ void GridWorld() {
             valueNet.Backpropagate(&loss);
             if (time % vBatchSize == 0)
                 valueNet.ApplyGradients(learningRate, vBatchSize);
-            if (epoch % 50 == 0)
+            if (epoch % 200 == 0 && (grid[newPos] == loseVal || grid[newPos] == winVal))
                 Log("Epoch:" + to_string(epoch) + "/" + to_string(learningIterations) +
-                 ", Time:" + to_string(time) + "/" + to_string(timeCutoff) + ", Loss:" + to_string(loss));
+                ", Time:" + to_string(time) + "/" + to_string(timeCutoff) + ", ValueLoss:" + to_string(loss) +
+                ", PolicyReward:" + to_string(Library::SumVector(rewards.data(), rewards.size())));
 
             //find out if agent crashed into edge or touched the win
             if (grid[newPos] == loseVal || grid[newPos] == winVal)
@@ -212,17 +215,21 @@ void GridWorld() {
         //calculate cumulative loss
         vector<float> loss(pOutputs, 0);
         for (int i = 0; i < time; i++) {
+            //normalize input
             vector<float> normalizedState(states[i]);
             Library::Normalize(normalizedState.data(), gridSize);
-            valueNet.FeedForward(normalizedState.data(), vOutputsArr.data());
-            float predicatedValue = vOutputsArr[0];
 
+            //get the predicted loss
+            valueNet.FeedForward(normalizedState.data(), vOutputsArr.data());
+
+            //calculate advantage
+            float predicatedValue = vOutputsArr[0];
             float advantage = rewards[i] - predicatedValue;
 
+            //compare old policy prediction
             oldPolicy.FeedForward(normalizedState.data(), pOutputsArr.data());
             float oldProbability = pOutputsArr[chosenOptionIndex[i]];
             float newProbability = chosenProbability[i];
-
             float ratio = newProbability/oldProbability;
 
             float clippedLoss = std::min(ratio * advantage, std::clamp(ratio, 1- learningRate, 1 + learningRate) * advantage);

@@ -18,12 +18,16 @@ NeuralNetwork::NeuralNetwork(int inputSize, OutputType type) {
     this->layerCount = 0;
     this->AddLayer(inputSize);
     this->outType = type;
+
+    Log("Created neural network with input layer size: " + to_string(inputSize));
 }
 
 NeuralNetwork::~NeuralNetwork() {
     cudaFree(this->weights);
     cudaFree(this->biases);
     cudaFree(this->activatedOutputs);
+
+    Log("Destroying neural network!");
 }
 
 NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& net) {
@@ -62,24 +66,29 @@ NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& net) {
     CUDACHECK(cudaMemcpy(this->weights, net.weights, this->weightCount * sizeof(float), cudaMemcpyDeviceToDevice));
     CUDACHECK(cudaMemcpy(this->biases, net.biases, this->biasCount * sizeof(float), cudaMemcpyDeviceToDevice));
 
+    Log("Copying neural network!");
     return *this;
 }
 
 void NeuralNetwork::SetInitMultipliers(float weightInitMultiplier, float biasInitMultiplier) {
     this->weightMult = weightInitMultiplier;
     this->biasMult = biasInitMultiplier;
+    Log("Applying initialization multipliers to neural network! Weights: " + to_string(weightInitMultiplier) + " | Bias: " + to_string(biasInitMultiplier));
 }
 
 void NeuralNetwork::SetGradientRegularization(float gradientMultiplier) {
     this->gradientRegMult = gradientMultiplier;
+    Log("Applying gradient regularization to neural network of: " + to_string(gradientMultiplier));
 }
 
 void NeuralNetwork::SetGradientClipping(float weightClipping) {
     this->weightClipping = weightClipping;
+    Log("Applying gradient clipping to neural network of: " + to_string(weightClipping));
 }
 
 void NeuralNetwork::SetActivationFunction(NeuralNetwork::ActivationType t) {
     this->activation = t;
+    Log("Changed neural network activation function to type: " + to_string(t));
 }
 
 void NeuralNetwork::AddLayer(int size, bool normalized) {
@@ -97,6 +106,7 @@ void NeuralNetwork::AddLayer(int size, bool normalized) {
     this->normLayer[this->layerCount] = normalized;
     this->layerCount++;
     this->nodeCount += size;
+    Log("Added neural network layer of size: " + to_string(size));
 }
 
 __global__ void Sum(float* activatedOutputs, const float* weights, 
@@ -191,6 +201,7 @@ void NeuralNetwork::Build() {
     this->largestLayerWeightCount = largestLayerWeightCount;
 
     CUDACHECK(cudaDeviceSynchronize()); //finish operations
+    Log("Neural network built and ready for use!");
 }
 
 void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
@@ -257,6 +268,7 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
 }
 
 void NeuralNetwork::PrintNetwork() {
+    Log("Printing neural network!");
     int seenNodes = 0;
     int seenWeights = 0;
     for (int layerIndex = 0; layerIndex < this->layerCount; layerIndex++) {
@@ -280,11 +292,13 @@ void NeuralNetwork::PrintNetwork() {
 void NeuralNetwork::SetWeights(const float* hostWeights) {
     CUDACHECK(cudaMemcpy(this->weights, hostWeights, this->weightCount * sizeof(float), cudaMemcpyHostToDevice));
     CUDACHECK(cudaDeviceSynchronize());
+    Log("Applied pre-generated weights to neural network!");
 }
 
 void NeuralNetwork::SetBiases(const float* hostBiases) {
     CUDACHECK(cudaMemcpy(this->biases, hostBiases, this->biasCount * sizeof(float), cudaMemcpyHostToDevice));
     CUDACHECK(cudaDeviceSynchronize());
+    Log("Applied pre-generated biases to neural network!");
 }
 
 void NeuralNetwork::RandomGradientDescent(int changeCount) {

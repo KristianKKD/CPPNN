@@ -2,6 +2,7 @@
 #include <library.cuh>
 #include <algorithm>
 #include <cmath>
+#include <random>
 
 std::mt19937 generator(Library::randomSeed);
 std::uniform_real_distribution<> distribution(0, 1);
@@ -90,4 +91,12 @@ void Library::Normalize(float* arr, int arrSize, int startingPos) { //TODO, IMPL
          arr[startingPos + normIndex] = newVal;
          //Log("Normalized " + to_string(startingPos + normIndex) + " from " + to_string(val) + " -> " + to_string(newVal));
      }
+}
+
+float Library::SumVector(float* arr, int arrSize) {
+    float sum = 0;
+    for (int i = 0; i < arrSize; i++)
+        sum += arr[i];
+
+    return sum;
 }
