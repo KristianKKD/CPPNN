@@ -24,19 +24,19 @@ public:
     NeuralNetwork(int inputSize, OutputType type = DefaultActivated);
     ~NeuralNetwork();
     NeuralNetwork& operator=(const NeuralNetwork& net); //copy the weights and biases of the network
-    void SetInitMultipliers(float weightInitMultiplier = 1, float biasInitMultiplier = 1); //settings for build init
-    void SetGradientClipping(float weightClipping); //settings for backprop min/max vals
-    void SetGradientRegularization(float gradientMultiplier); //settings for backprop delta multipliers
-    void SetActivationFunction(ActivationType type);
-    void AddLayer(int size, bool normalized = false); //create a node layer (excluding input)
+    void SetInitMultipliers(const float weightInitMultiplier = 1, const float biasInitMultiplier = 1); //settings for build init
+    void SetGradientClipping(const float weightClipping); //settings for backprop min/max vals
+    void SetGradientRegularization(const float gradientMultiplier); //settings for backprop delta multipliers
+    void SetActivationFunction(const ActivationType type);
+    void AddLayer(const int size, const bool normalized = false); //create a node layer (excluding input)
     void Build(); //initialize all the values needed for training
     void FeedForward(const float* inputArr, float* outputArr); //output
     void PrintNetwork();
-    void RandomGradientDescent(int changeCount);
+    void RandomGradientDescent(const int changeCount);
     void SetWeights(const float* hostWeights);
     void SetBiases(const float* hostBiases);
     void Backpropagate(const float* loss);
-    void ApplyGradients(float learningRate, int batches);
+    void ApplyGradients(const float learningRate, const int batches);
 
     //options
     OutputType outType = DefaultActivated;
@@ -69,7 +69,7 @@ public:
     
 };
 
-__host__ __device__ inline void ActivationFunction(float* value, NeuralNetwork::ActivationType type) {
+__host__ __device__ inline void ActivationFunction(float* value, const NeuralNetwork::ActivationType type) {
     switch (type) {
         case NeuralNetwork::ReLU:
             *value = std::fmax(0.0f, *value);
@@ -83,7 +83,7 @@ __host__ __device__ inline void ActivationFunction(float* value, NeuralNetwork::
     }
 }
 
-__host__ __device__ inline void DerActivationFunction(float* activated, NeuralNetwork::ActivationType type) {
+__host__ __device__ inline void DerActivationFunction(float* activated, const NeuralNetwork::ActivationType type) {
     switch (type) {
         case NeuralNetwork::ReLU:
             *activated = (*activated > 0) ? 1.0f : 0.0f;

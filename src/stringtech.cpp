@@ -13,14 +13,12 @@ void RemoveChar(string& text, char c) {
     text.erase(std::remove(text.begin(), text.end(), c), text.end());
 }
 
-string ReplaceAll(string input, string oldstring, string newstring) {
-	string rString = input;
-	size_t pos = 0;
-
-	while ((pos = rString.find(oldstring, pos)) != string::npos) {
-		rString.replace(pos, oldstring.length(), newstring);
-		pos += newstring.length();
+void ReplaceAll(string& input, const vector<string> findTexts, const string newText) {
+	for (const string text : findTexts) {
+		size_t pos = 0;
+		while ((pos = input.find(text, pos)) != string::npos) {
+			input.replace(pos, text.length(), newText);
+			pos += newText.length();
+		}
 	}
-
-	return rString;
 }

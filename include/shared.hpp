@@ -10,7 +10,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-int Error(string msg);
-void Log(string msg);
+int Error(const string msg);
+void Log(const string msg);
 void StartTimer();
-void StopTimer(string printText);
+void StopTimer(const string printText);
