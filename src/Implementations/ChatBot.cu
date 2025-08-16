@@ -1,6 +1,6 @@
-#include <shared.hpp>
-#include <neuralnetwork.cuh>
-#include <library.cuh>
+#include "shared.hpp"
+#include "neuralnetwork.cuh"
+#include "library.hpp"
 #include <map>
 #include <tuple>
 #include <memory>

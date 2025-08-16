@@ -1,5 +1,5 @@
 #include "shared.hpp"
-#include <neuralnetwork.cuh>
+#include "neuralnetwork.cuh"
 #include <fstream>
 #include <filesystem>
 #include <map>

@@ -1,5 +1,3 @@
-#pragma once
-
 namespace Library {
 #define EPSILON 1e-7 //tiny value to prevent divide by zero errors
     const static unsigned int randomSeed = 2;

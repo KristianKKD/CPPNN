@@ -1,6 +1,6 @@
-#include <neuralnetwork.cuh>
-#include <shared.hpp>
-#include <library.cuh>
+#include "neuralnetwork.cuh"
+#include "library.hpp"
+#include "shared.hpp"
 #include <assert.h>
 #include <iostream>
 #include <cmath>

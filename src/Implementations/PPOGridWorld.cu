@@ -1,9 +1,9 @@
-#include <shared.hpp>
-#include <neuralnetwork.cuh>
-#include <library.cuh>
+#include "shared.hpp"
+#include "neuralnetwork.cuh"
+#include "library.hpp"
 #include <random>
 
-void DrawGrid(const vector<float> grid, int rows, int columns, int agentPos, int loseVal, int winVal) {
+void DrawGrid(const vector<float> grid, const int rows, const int columns, const int agentPos, const int loseVal, const int winVal) {
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
             int index = i * columns + j;
@@ -20,7 +20,7 @@ void DrawGrid(const vector<float> grid, int rows, int columns, int agentPos, int
     }
 }
 
-void GenerateGrid(vector<float>& grid, int rows, int columns, int agentPos, float loseVal, float winVal, float generalVal) {
+void GenerateGrid(vector<float>& grid, const int rows, const int columns, const int agentPos, const float loseVal, const float winVal, const float generalVal) {
     int gridSize = rows * columns;
     //generate the base grid
     for (int i = 0; i < gridSize; ++i) {
@@ -35,7 +35,7 @@ void GenerateGrid(vector<float>& grid, int rows, int columns, int agentPos, floa
     grid[gridSize - columns - 2] = winVal; //look for best reward which is placed away from starting pos
 }
 
-float RewardFunction(const vector<float> grid, int agentPos, int time, float timeVal, int rows, int columns, float winValue) {
+float RewardFunction(const vector<float> grid, const int agentPos, const int time, const float timeVal, const int rows, const int columns, const float winValue) {
     float reward = 0;
     
     reward += grid[agentPos];
