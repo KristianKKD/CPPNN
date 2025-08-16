@@ -1,23 +1,22 @@
 #include "shared.hpp"
 #include <chrono>
 
-string ReplaceAll(string input, string find, string replaceWith);
+void ReplaceAll(string& input, const vector<string> findTexts, const string newText);
 
-void Log(string msg) {
-	msg = ReplaceAll(msg, "\n", " "); //remove common characters which would disrupt the logging
-	msg = ReplaceAll(msg, "\r", " ");
+void Log(const string msg) {
+	string msgCopy = msg;
+	ReplaceAll(msgCopy, {"\n", "\r"}, " "); //remove common characters which would disrupt the logging
 
-	std::cout << msg << std::endl;
+	std::cout << msgCopy << std::endl;
 }
 
-int Error(string msg) {
-    msg = "ERROR: " + msg;
-	Log(msg);
+int Error(const string msg) {
+	Log("ERROR: " + msg);
     return 0;
 }
 
 std::chrono::high_resolution_clock::time_point startTime;
-void StopTimer(string printText) {
+void StopTimer(const string printText) {
 	std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
 

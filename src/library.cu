@@ -9,16 +9,16 @@ std::uniform_real_distribution<> distribution(0, 1);
 std::random_device rd;
 std::mt19937 gen(rd()); 
 
-float Library::RandomValue(float multiplier) { //generate a value between 0 and 1
+float Library::RandomValue(const float multiplier) { //generate a value between 0 and 1
     return (distribution(generator) * multiplier);
 }
 
-float Library::RandomSignedValue(float multiplier) {
+float Library::RandomSignedValue(const float multiplier) {
     float rand = Library::RandomValue(multiplier);
     return (Library::RandomValue() < 0.5f) ? -rand : rand;
 }
 
-float Library::MSE(float* preds, float* targets, int arrSize) {
+float Library::MSE(const float* preds, const float* targets, int arrSize) {
     float sum = 0;
     for (int i = 0; i < arrSize; i++) {
         float diff = (preds[i] - targets[i]);
@@ -31,7 +31,7 @@ float Library::MSE(float* preds, float* targets, int arrSize) {
     return sum;
 }
 
-float Library::MAE(float* preds, float* targets, int arrSize) {
+float Library::MAE(const float* preds, const float* targets, const int arrSize) {
     float sum = 0.0f;
     for (int i = 0; i < arrSize; i++)
         sum += std::abs(preds[i] - targets[i]);
@@ -42,7 +42,7 @@ float Library::MAE(float* preds, float* targets, int arrSize) {
     return sum;
 }
 
-void Library::Softmax(float* values, int arrSize) {
+void Library::Softmax(float* values, const int arrSize) {
     float* exp = new float[arrSize];
     float expSum = 0.0f;
     for (int i = 0; i < arrSize; i++) {
@@ -57,12 +57,12 @@ void Library::Softmax(float* values, int arrSize) {
     delete exp;
 }
 
-int Library::SampleDistribution(float* probabilities, int arrSize) { //return index of probability chosen, selected based on weighted chance
+int Library::SampleDistribution(const float* probabilities, const int arrSize) { //return index of probability chosen, selected based on weighted chance
     std::discrete_distribution<int> dist(probabilities, probabilities + arrSize);
     return dist(gen);
 }
 
-void Library::Normalize(float* arr, int arrSize, int startingPos) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
+void Library::Normalize(float* arr, const int arrSize, const int startingPos) { //TODO, IMPLEMENT NORMALIZATION ON GPU?
      //calc mean
      float sum = 0.0f;
      for (int sumIndex = 0; sumIndex < arrSize; sumIndex++)
@@ -93,10 +93,15 @@ void Library::Normalize(float* arr, int arrSize, int startingPos) { //TODO, IMPL
      }
 }
 
-float Library::SumVector(float* arr, int arrSize) {
+float Library::SumVector(const float* arr, const int arrSize) {
     float sum = 0;
     for (int i = 0; i < arrSize; i++)
         sum += arr[i];
 
     return sum;
+}
+
+void CalculateError(float* results, const float* preds, const float* targets, const int arrSize) {
+    for (int lossIndex = 0; lossIndex < arrSize; lossIndex++)
+        results[lossIndex] = preds[lossIndex] - targets[lossIndex];
 }
