@@ -1,8 +1,13 @@
 #pragma once
 
-#include <vector>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
+
+#include <stdlib.h>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #define LIMITLAYERCOUNT 1024 //for now, static limit of 1024 layers
 #define THREADSPERBLOCK 256
@@ -25,7 +30,7 @@ public:
     ~NeuralNetwork();
     NeuralNetwork& operator=(const NeuralNetwork& net); //copy the weights and biases of the network
     void SetInitMultipliers(const float weightInitMultiplier = 1, const float biasInitMultiplier = 1); //settings for build init
-    void SetGradientClipping(const float weightClipping); //settings for backprop min/max vals
+    void SetGradientClipping(const float gradientClipping); //settings for backprop min/max vals
     void SetGradientRegularization(const float gradientMultiplier); //settings for backprop delta multipliers
     void SetActivationFunction(const ActivationType type);
     void AddLayer(const int size, const bool normalized = false); //create a node layer (excluding input)
@@ -42,7 +47,7 @@ public:
     OutputType outType = DefaultActivated;
     float weightMult = 1; //multiplies during random init
     float biasMult = 1;
-    float weightClipping = -1; //applied during backprop to stop changes too large, -1 = off
+    float gradientClipping = -1; //applied during backprop to stop changes too large, -1 = off
     float gradientRegMult = -1; //applied when applying gradient deltas, -1 = off
     ActivationType activation = Sigmoid;
 
@@ -61,7 +66,8 @@ public:
     float* biases; //base node value
     float* activatedOutputs; //activated output values of nodes
     std::vector<float> preActivatedOutputs; //outputs of nodes before activation function
-    std::vector<float> weightDeltas; //accumulated changes from backpropogation per weight
+    std::vector<float> weightGradients; //accumulated changes from backpropogation per weight
+    std::vector<float> biasGradients; //accumulated changes from backpropogation per weight
    
     //we can save some time by calculating some things early
     int largestLayerSize = 0;

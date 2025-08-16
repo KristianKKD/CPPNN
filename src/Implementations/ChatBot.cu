@@ -115,6 +115,7 @@ void TrainChatbot(string mapPath, string dataPath) {
 
     //neural network options
     net.SetGradientRegularization(0.01);
+    net.SetGradientClipping(0.5);
 
     //initialize network
     net.Build();

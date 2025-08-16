@@ -23,8 +23,8 @@ set(SOURCES
     src/stringtech.cpp
     src/unittests.cu
 
-    src/Implementations/PPOGridWorld.cu
-    src/Implementations/ChatBot.cu
+    # src/Implementations/PPOGridWorld.cu
+    # src/Implementations/ChatBot.cu
 )
 
 #executable + sources
