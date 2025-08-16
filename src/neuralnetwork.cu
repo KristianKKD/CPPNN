@@ -1,5 +1,5 @@
-#include "library.cuh"
 #include "neuralnetwork.cuh"
+#include "library.hpp"
 
 #define CUDACHECK(call) {                                                        \
         cudaError_t err = call;                                                  \

@@ -1,7 +1,4 @@
-#include <shared.hpp>
-#include <library.cuh>
-#include <algorithm>
-#include <cmath>
+#include "library.hpp"
 #include <random>
 
 std::mt19937 generator(Library::randomSeed);
@@ -101,7 +98,7 @@ float Library::SumVector(const float* arr, const int arrSize) {
     return sum;
 }
 
-void CalculateError(float* results, const float* preds, const float* targets, const int arrSize) {
+void Library::CalculateError(float* results, const float* preds, const float* targets, const int arrSize) {
     for (int lossIndex = 0; lossIndex < arrSize; lossIndex++)
         results[lossIndex] = preds[lossIndex] - targets[lossIndex];
 }
