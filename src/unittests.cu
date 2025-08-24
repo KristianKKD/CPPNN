@@ -202,13 +202,15 @@ void TestBackPropogation() {
     const int hiddenCount = 8;
     const int hiddenSize = 8;
     const int outputSize = 10;
-    const int learningIterations = 2000;
-    const float learningRate = 0.05;
+    const int learningIterations = 5000;
+    const float learningRate = 0.0001;
+    const int batches = 10;
 
     //create network
-    NeuralNetwork nn(inputSize, NeuralNetwork::OutputType::DefaultActivated);
+    NeuralNetwork nn(inputSize, NeuralNetwork::OutputType::Activated);
     nn.SetGradientClipping(1);
     nn.SetGradientRegularization(0.01);
+    nn.SetActivationFunction(NeuralNetwork::ActivationType::Tanh);
     for (int i = 0; i < hiddenCount; i++)
         nn.AddLayer(hiddenSize, true);
     nn.AddLayer(outputSize);
@@ -231,7 +233,7 @@ void TestBackPropogation() {
 
     nn.FeedForward(inputsArr, outputsArr);
     float initialScore = Library::MSE(outputsArr, targets, outputSize);
-    Log("Initial score: " + to_string(initialScore));
+    Log("Initial error: " + to_string(initialScore));
 
     for (int i = 0; i < learningIterations; i++) {
         nn.FeedForward(inputsArr, outputsArr);
@@ -244,12 +246,13 @@ void TestBackPropogation() {
         }
 
         nn.Backpropagate(loss.data());
-        nn.ApplyGradients(learningRate, 1);
+        if (i % batches == 0)
+            nn.ApplyGradients(learningRate, batches);
         float newScore = Library::MSE(outputsArr, targets, outputSize);
         if (i % 100 == 0)
-            Log("Iteration " + to_string(i) + ": " + to_string(newScore));
+            Log("Iteration " + to_string(i) + " error: " + to_string(newScore));
     }
 
-    nn.PrintNetwork();
+    //nn.PrintNetwork();
 }
 

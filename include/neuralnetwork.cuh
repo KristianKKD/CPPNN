@@ -16,7 +16,7 @@ class NeuralNetwork {
 public:
     enum OutputType{
         Raw,
-        DefaultActivated,
+        Activated,
         Softmax,
     };
     
@@ -26,7 +26,7 @@ public:
         Tanh
     };
 
-    NeuralNetwork(int inputSize, OutputType type = DefaultActivated);
+    NeuralNetwork(int inputSize, OutputType type = Activated);
     ~NeuralNetwork();
     NeuralNetwork& operator=(const NeuralNetwork& net); //copy the weights and biases of the network
     void SetInitMultipliers(const float weightInitMultiplier = 1, const float biasInitMultiplier = 1); //settings for build init
@@ -44,7 +44,7 @@ public:
     void ApplyGradients(const float learningRate, const int batches);
 
     //options
-    OutputType outType = DefaultActivated;
+    OutputType outType = Activated;
     float weightMult = 1; //multiplies during random init
     float biasMult = 1;
     float gradientClipping = -1; //applied during backprop to stop changes too large, -1 = off

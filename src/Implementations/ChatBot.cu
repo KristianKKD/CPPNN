@@ -8,12 +8,12 @@
 
 extern std::mt19937 generator;
 
-string ReadFile(string path);
-void SaveEmbeddings(std::map<string, int> wordMap, string path);
-//std::map LoadEmbeddings(string path);
-bool CheckFileExists(string path);
+string ReadFile(const string path);
+void SaveEmbeddings(const std::map<string, int> wordMap, const string path);
+std::map<string, int> LoadEmbeddings(const string path);
+bool CheckFileExists(const string path);
 
-bool IsDelimiter(char c) {
+bool IsDelimiter(const char c) {
     const int delimiterCount = 4;
     char delimiters[delimiterCount] = {' ', '\n', '/', ','};
 
@@ -24,7 +24,7 @@ bool IsDelimiter(char c) {
     return false;
 }
 
-string GetNextWord(string text) {
+string GetNextWord(const string text) {
     string word = "";
     for (int textIndex = 0; textIndex < text.length(); textIndex++) {
         char c = text[textIndex];
@@ -38,7 +38,7 @@ string GetNextWord(string text) {
     return word;
 }
 
-vector<string> SplitWords(string data) {
+vector<string> SplitWords(const string data) {
     vector<string> words;
 
     int index = 0;
@@ -53,8 +53,7 @@ vector<string> SplitWords(string data) {
     return words;
 }
 
-
-std::map<string, int> EmbedWordsFromVector(vector<string> words) {
+std::map<string, int> EmbedWordsFromVector(const vector<string> words) {
     std::map<string, int> wordMap = {};
 
     for (int i = 0; i < words.size(); i++) {
@@ -67,26 +66,28 @@ std::map<string, int> EmbedWordsFromVector(vector<string> words) {
     return wordMap;
 }
 
-void TrainChatbot(string mapPath, string dataPath) {
+void TrainChatbot(const string mapPath, const string dataPath, const bool loadMap) {
     Log("Training chatbot...");
 
     //load training file
-    string data = ReadFile(dataPath);
+    string data;
+    if (!loadMap)
+        data = ReadFile(dataPath);
     Log("Loaded for trianing: " + dataPath);
 
-
+    
     //create word mappings from word to value
     Log("Loading word embeddings...");
     vector<string> words;
     std::map<string, int> wordMap = {};
 
-    // if (CheckFileExists(mapPath))
-    //     wordMap = LoadEmbeddings(mapPath);
-    // else {
+    if (loadMap && CheckFileExists(mapPath))
+        wordMap = LoadEmbeddings(mapPath);
+    else {
         words = SplitWords(data);
         wordMap = EmbedWordsFromVector(words);
         SaveEmbeddings(wordMap, mapPath);
-    // }
+    }
 
     int datasetSize = words.size();
     int wordCount = wordMap.size();

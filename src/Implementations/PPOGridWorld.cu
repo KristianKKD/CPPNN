@@ -58,7 +58,7 @@ void GridWorld() {
     const int columns = 6;
     const int gridSize = rows * columns;
     const float loseVal = -50;
-    const float winVal = 25;
+    const float winVal = 200;
     const float generalVal = 0;
     const float timeVal = 1;
     const int drawDelay = -100; //draw the grid every n training iterations
@@ -80,27 +80,27 @@ void GridWorld() {
     const int vBatchSize = 5; //iterations between updating the gradients
 
     //greed
-    const float greedChanceStart = 0.3;
+    const float greedChanceStart = 0.2;
     float greedChance = greedChanceStart;
-    float greedStep = 0.025;
+    float greedStep = 0.025; //make it more greedy over time so we choose the better move more often
 
     //learning hyper params
-    const int learningIterations = 50000;
-    const float learningRate = 0.0001;
+    const int learningIterations = 2000;
+    const float learningRate = 0.01;
     const int timeCutoff = 15; //max steps per try 
 
-    //create policy network
+    //create policy network - selects the move to make
     NeuralNetwork policyNet(pInputs, NeuralNetwork::OutputType::Softmax); //softmax for probability of selection of move
     policyNet.SetActivationFunction(NeuralNetwork::ActivationType::Tanh);
     policyNet.SetGradientClipping(.1);
-    policyNet.SetGradientRegularization(0.01);
+    policyNet.SetGradientRegularization(0.1);
     policyNet.SetInitMultipliers(0.1, 0.1);
     for (int i = 0; i < pHiddenLayers; i++)
         policyNet.AddLayer(pHiddenSize, true);
     policyNet.AddLayer(pOutputs);
     policyNet.Build();
 
-    //create value network
+    //create value network - predicts the reward of a state
     NeuralNetwork valueNet(vInputs, NeuralNetwork::OutputType::Raw);
     for (int i = 0; i < vHiddenLayers; i++)
         valueNet.AddLayer(vHiddenSize, false);
@@ -112,10 +112,10 @@ void GridWorld() {
     valueNet.Build();
 
     //create policy network output arr
-    vector<float> pOutputsArr(pOutputs);
+    vector<float> pOutputsArr(pOutputs, 0);
 
     //create value network output arr
-    vector<float> vOutputsArr(vOutputs);
+    vector<float> vOutputsArr(vOutputs, 0);
 
     NeuralNetwork oldPolicy = policyNet;
 
@@ -152,16 +152,16 @@ void GridWorld() {
             Library::Normalize(normalizedState.data(), gridSize);
 
             //get probability distribution of moves
-            policyNet.FeedForward(normalizedState.data(), pOutputsArr.data());
-            valueNet.FeedForward(normalizedState.data(), vOutputsArr.data());
+            policyNet.FeedForward(normalizedState.data(), pOutputsArr.data()); //predicted move to make
+            valueNet.FeedForward(normalizedState.data(), vOutputsArr.data()); //predicted reward of the chosen move
 
             //select a move based on the probabilities
             int chosenMove = Library::SampleDistribution(pOutputsArr.data(), pOutputs);
 
-            //greedy choice
+            //to avoid greedy choices every time, we will sometimes choose a random move
             if (rand() / float(RAND_MAX) < greedChance)
                 chosenMove = rand() % pOutputs;
-            greedChance -= greedStep;
+            greedChance -= greedStep; //become more greedy over time
 
             //save this choice
             chosenProbability.push_back(pOutputsArr[chosenMove]);
@@ -198,11 +198,11 @@ void GridWorld() {
 
             //train the value network
             float output = vOutputsArr[0];
-            float loss = output - reward;
+            float loss = reward - output;
             valueNet.Backpropagate(&loss);
             if (time % vBatchSize == 0)
                 valueNet.ApplyGradients(learningRate, vBatchSize);
-            if (epoch % 200 == 0 && (grid[newPos] == loseVal || grid[newPos] == winVal))
+            if (epoch % 100 == 0 && (grid[newPos] == loseVal || grid[newPos] == winVal))
                 Log("Epoch:" + to_string(epoch) + "/" + to_string(learningIterations) +
                 ", Time:" + to_string(time) + "/" + to_string(timeCutoff) + ", ValueLoss:" + to_string(loss) +
                 ", PolicyReward:" + to_string(Library::SumVector(rewards.data(), rewards.size())));
@@ -224,15 +224,16 @@ void GridWorld() {
 
             //calculate advantage
             float predicatedValue = vOutputsArr[0];
+            //float temporalResidue = rewards[i] + (discountFactor * valueOfNextState) - valueOfCurrentState);
             float advantage = rewards[i] - predicatedValue;
 
             //compare old policy prediction
             oldPolicy.FeedForward(normalizedState.data(), pOutputsArr.data());
             float oldProbability = pOutputsArr[chosenOptionIndex[i]];
             float newProbability = chosenProbability[i];
-            float ratio = newProbability/oldProbability;
+            float ratio = newProbability / (oldProbability + EPSILON); //EPSILON to prevent div by 0
 
-            float clippedLoss = std::min(ratio * advantage, std::clamp(ratio, 1- learningRate, 1 + learningRate) * advantage);
+            float clippedLoss = std::min(ratio * advantage, std::clamp(ratio, 1 - learningRate, 1 + learningRate) * advantage);
             loss[chosenOptionIndex[i]] += clippedLoss;
         }
 

@@ -7,8 +7,8 @@ void TestBackPropogation();
 
 int main() {
     Log("CPPNN - Kristian's neural network framework!");
-    //GridWorld();
-    TestBackPropogation();
+    GridWorld();
+    //TestBackPropogation();
     //TestPerformance();
 
     Log("Finished!");
