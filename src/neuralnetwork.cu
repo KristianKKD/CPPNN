@@ -286,12 +286,12 @@ void NeuralNetwork::SetBiases(const float* hostBiases) {
     printf("Applied pre-generated biases to neural network!\n");
 }
 
-void NeuralNetwork::RandomGradientDescent(const int changeCount) {
+void NeuralNetwork::StochasticGradientDescent(const int changeCount, const float learningRate) {
     //make changeCount changes to a random weight
     for (int i = 0; i < changeCount; i++) {
         long long randIndex = std::round(Library::RandomValue(this->weightCount - 1));
 
-        float randChange = Library::RandomSignedValue();
+        float randChange = Library::RandomSignedValue() * learningRate;
 
         float* val = new float;
         *val = this->weights[randIndex] + randChange;

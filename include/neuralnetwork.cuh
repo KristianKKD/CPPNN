@@ -37,7 +37,7 @@ public:
     void Build(); //initialize all the values needed for training
     void FeedForward(const float* inputArr, float* outputArr); //output
     void PrintNetwork();
-    void RandomGradientDescent(const int changeCount);
+    void StochasticGradientDescent(const int changeCount, const float learningRate);
     void SetWeights(const float* hostWeights);
     void SetBiases(const float* hostBiases);
     void Backpropagate(const float* loss);
