@@ -2,16 +2,16 @@
 #include <iomanip>
 
 class GridWorld {
-private:
+public:
     int width;
     int height;
     vector<char> grid;
+    vector<char> initialGrid;
     int agentX, agentY;
     int targetX, targetY;
 
-public:
     GridWorld(const vector<char>& initialGrid, int w, int h):
-        width(w), height(h), grid(initialGrid), agentX(-1), agentY(-1), targetX(-1), targetY(-1) {
+        width(w), height(h), grid(initialGrid), initialGrid(initialGrid), agentX(-1), agentY(-1), targetX(-1), targetY(-1) {
         
         if (grid.size() != width * height)
             Error("GridWorld: Grid size doesn't match dimensions");
@@ -35,7 +35,7 @@ public:
             Error("GridWorld: No target found in grid");
     }
     
-    void print() const {
+    void Print() const {
         std::cout << "\n";
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -47,7 +47,7 @@ public:
         std::cout << "\n";
     }
     
-    bool moveAgent(int dx, int dy) {
+    bool MoveAgent(int dx, int dy) {
         int newX = agentX + dx;
         int newY = agentY + dy;
         
@@ -73,43 +73,32 @@ public:
         return true;
     }
     
-    bool isGoalReached() const {
-        return agentX == targetX && agentY == targetY;
+    void Reset() {
+        grid = initialGrid;
+        
+        // Re-find agent and target positions
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++) {
+                char cell = grid[y * width + x];
+                if (cell == '0') {
+                    agentX = x;
+                    agentY = y;
+                } else if (cell == 'X') {
+                    targetX = x;
+                    targetY = y;
+                }
+        }
     }
-    
-    int getWidth() const { return width; }
-    int getHeight() const { return height; }
-    int getAgentX() const { return agentX; }
-    int getAgentY() const { return agentY; }
-    int getTargetX() const { return targetX; }
-    int getTargetY() const { return targetY; }
 };
 
-void RunGridWorld() {
-    vector<char> grid = {
-        '|', '|', '|', '|', '|',
-        '|', '0', '-', '-', '|',
-        '|', '-', '|', '-', '|',
-        '|', '-', '-', 'X', '|',
-        '|', '|', '|', '|', '|'
-    };
+// void RunGridWorld() {
+//     vector<char> grid = {
+//         '|', '|', '|', '|', '|',
+//         '|', '0', '-', '-', '|',
+//         '|', '-', '|', '-', '|',
+//         '|', '-', '-', 'X', '|',
+//         '|', '|', '|', '|', '|'
+//     };
     
-    GridWorld world = GridWorld(grid, 5, 5);
-    
-    Log("Initial GridWorld:");
-    world.print();
-    
-    // Example moves
-    world.moveAgent(1, 0);  // Move right
-    world.print();
-    
-    world.moveAgent(0, 1);  // Move down
-    world.print();
-    
-    world.moveAgent(1, 0);  // Move right
-    world.print();
-    
-    if (world.isGoalReached()) {
-        Log("Goal reached!");
-    }
-}
+//     GridWorld world = GridWorld(grid, 5, 5);
+// }
