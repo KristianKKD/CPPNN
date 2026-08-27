@@ -54,6 +54,11 @@ void Library::Softmax(float* values, const int arrSize) {
     delete exp;
 }
 
+void Library::Threshold(float* values, const int arrSize, const float binaryThreshold) {
+    for (int i = 0; i < arrSize; i++)
+        values[i] = (values[i] > binaryThreshold) ? 1 : 0;
+}
+
 int Library::SampleDistribution(const float* probabilities, const int arrSize) { //return index of probability chosen, selected based on weighted chance
     std::discrete_distribution<int> dist(probabilities, probabilities + arrSize);
     return dist(gen);

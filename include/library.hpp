@@ -8,6 +8,7 @@ namespace Library {
     float MSE(const float* preds, const float* targets, const int arrSize); //return scalar metric for error between two arrays
     float MAE(const float* preds, const float* targets, const int arrSize);
     void Softmax(float* values, const int arrSize);
+    void Threshold(float* values, const int arrSize, const float binaryThreshold);
     int SampleDistribution(const float* probabilities, const int arrSize); //return index of probability chosen, selected based on weighted chance
     void Normalize(float* arr, const int arrSize, const int startingPos = 0); //overwrite the array data with normalized data between the ranges provided
     float SumVector(const float* arr, const int arrSize);

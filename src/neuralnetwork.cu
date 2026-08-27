@@ -65,7 +65,7 @@ NeuralNetwork& NeuralNetwork::operator=(const NeuralNetwork& net) {
     CUDACHECK(cudaMemcpy(this->weights, net.weights, this->weightCount * sizeof(float), cudaMemcpyDeviceToDevice));
     CUDACHECK(cudaMemcpy(this->biases, net.biases, this->biasCount * sizeof(float), cudaMemcpyDeviceToDevice));
 
-    printf("Copying neural network!\n");
+    //printf("Copying neural network!\n");
     return *this;
 }
 
@@ -105,7 +105,7 @@ void NeuralNetwork::AddLayer(const int size, const bool normalized) {
     this->normLayer[this->layerCount] = normalized;
     this->layerCount++;
     this->nodeCount += size;
-    printf("Added neural network layer of size: %d\n", size);
+    //printf("Added neural network layer of size: %d\n", size);
 }
 
 __global__ void Sum(float* activatedOutputs, const float* weights, 
@@ -201,7 +201,7 @@ void NeuralNetwork::Build() {
     this->largestLayerWeightCount = largestLayerWeightCount;
 
     CUDACHECK(cudaDeviceSynchronize()); //finish operations
-    printf("Neural network built and ready for use!\n");
+    printf("Neural network built and ready for use with %I64d weights, %I64d biases, and %I64d nodes, totalling to %I64d params!\n", this->weightCount, this->biasCount, this->nodeCount, this->weightCount + this->biasCount);
 }
 
 void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
@@ -221,8 +221,10 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
     CUDACHECK(cudaDeviceSynchronize());
 
     //activate the input layer
-    ActivateLayer<<<inputBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->layerSizes[0], 0, this->activation); 
-    CUDACHECK(cudaDeviceSynchronize());
+    // ActivateLayer<<<inputBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, this->layerSizes[0], 0, this->activation); 
+    // CUDACHECK(cudaDeviceSynchronize());
+
+    //TODO: Add option to automatically normalize the input layer
 
     //iterate over the nodes, saving all of their values into activatedOutputs, fn(sum * weights) + bias to calculate the next layer outs
     long long usedNodes = 0;
@@ -249,17 +251,22 @@ void NeuralNetwork::FeedForward(const float* inputArr, float* outputArr) {
         std::copy(this->activatedOutputs + usedNodes, this->activatedOutputs + usedNodes + nextLayerSize, this->preActivatedOutputs.data() + usedNodes);
         
         //activate the next layer's outputs
-        if (layerIndex == this->layerCount - 2 && this->outType == OutputType::DefaultActivated)
+        if (layerIndex == this->layerCount - 2 && this->outType == OutputType::Activated)
             ActivateLayer<<<activationBlocksNeeded, THREADSPERBLOCK>>>(this->activatedOutputs, nextLayerSize, usedNodes, this->activation); 
 
         CUDACHECK(cudaDeviceSynchronize());
     }
 
     //output by copying the contents of the nodes in the output layer into the arr
+    // debugging stuff (to see the values more easily)
+    // std::vector<float> testin(inputArr, inputArr + this->layerSizes[0]);
+    // std::vector<float> testout(this->activatedOutputs, this->activatedOutputs + nodeCount);
     int outputSize = this->layerSizes[this->layerCount - 1];
     for (int i = 0; i < outputSize; i++) {
-        // std::vector<float> test(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
         float val = this->activatedOutputs[this->nodeCount - outputSize + i];
+        if (std::isnan(val))
+            throw std::runtime_error("Output value is NaN");
+
         outputArr[i] = val;
     }
 
@@ -279,12 +286,12 @@ void NeuralNetwork::SetBiases(const float* hostBiases) {
     printf("Applied pre-generated biases to neural network!\n");
 }
 
-void NeuralNetwork::RandomGradientDescent(const int changeCount) {
+void NeuralNetwork::StochasticGradientDescent(const int changeCount, const float learningRate) {
     //make changeCount changes to a random weight
     for (int i = 0; i < changeCount; i++) {
         long long randIndex = std::round(Library::RandomValue(this->weightCount - 1));
 
-        float randChange = Library::RandomSignedValue();
+        float randChange = Library::RandomSignedValue() * learningRate;
 
         float* val = new float;
         *val = this->weights[randIndex] + randChange;
@@ -313,7 +320,7 @@ void NeuralNetwork::ApplyGradients(const float learningRate, const int batches =
             return (void)std::runtime_error("Weight change out of range (weightGradient=" + std::to_string(weightGradient) + ")");
 
         if (this->gradientRegMult != 0)
-            weightChange = weightChange + this->gradientRegMult * this->weights[weightIndex];
+            weightChange += this->gradientRegMult * this->weights[weightIndex];
 
         this->weights[weightIndex] -= weightChange;
     }
@@ -342,7 +349,7 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
     int outputSize = this->layerSizes[this->layerCount - 1];
     std::vector<float> nodeError(this->nodeCount, 0);
 
-    // //debugging stuff (to see the values more easily)
+    // debugging stuff (to see the values more easily)
     // vector<float> lossDEBUG(loss, loss + outputSize);
     // vector<float> activatedDEBUG(this->activatedOutputs, this->activatedOutputs + this->nodeCount);
     // vector<float> weightsDEBUG(this->weights, this->weights + this->weightCount);
@@ -350,7 +357,19 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
     //apply the loss to the output nodes (for hidden node error calculations)
     for (int i = 0; i < outputSize; i++) {
         int index = this->nodeCount - this->layerSizes[this->layerCount - 1] + i;
-        nodeError[index] = loss[i];
+        if (isnan(loss[i]))
+            throw std::runtime_error("Loss value is NaN");
+
+        float activated = this->activatedOutputs[index];
+        float der = 1.0f;
+
+        //only need to calculate derivative if activated output
+        if (this->outType == OutputType::Activated) {
+            der = activated;
+            DerActivationFunction(&der, this->activation);
+        }
+        
+        nodeError[index] = loss[i] * der;
     }
 
     int usedNodes = outputSize;
@@ -398,14 +417,20 @@ void NeuralNetwork::Backpropagate(const float* loss) { //assuming that this is c
             float inputVal = this->activatedOutputs[inputIndex];
             float outputError = nodeError[outputIndex]; 
 
-            float weightGradient = std::clamp(inputVal * outputError, -this->gradientClipping, this->gradientClipping);
-            float biasGradient = std::clamp(outputError, -this->gradientClipping, this->gradientClipping);
+            float weightGradient = inputVal * outputError;
+            float biasGradient = outputError;
+            if (this->gradientClipping > 0) {
+                weightGradient = std::clamp(weightGradient, -this->gradientClipping, this->gradientClipping);
+                biasGradient = std::clamp(biasGradient, -this->gradientClipping, this->gradientClipping);
+            }
 
             if (isnan(weightGradient + this->weightGradients[targetWeightIndex]) || isinf(weightGradient))
                 throw std::runtime_error("Weights exploded");
-
+                
             this->weightGradients[targetWeightIndex] += weightGradient;
-            this->biasGradients[inputIndex] += biasGradient; //TODO: CONFIRM THIS IS THE CORRECT INDEX AND FORMULA
+            int biasArrayIndex = inputIndex - this->layerSizes[0];
+            if (biasArrayIndex >= 0 && biasArrayIndex < this->biasCount)
+                this->biasGradients[biasArrayIndex] += biasGradient;
         }
 
         //indexing shenanigans
