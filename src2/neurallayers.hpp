@@ -1,30 +1,43 @@
 #pragma once
 
+#include <vector>
+
+using std::vector;
+
 class Layer { // Abstract class for network components
 public:
     size_t layerSize;
+    
+    size_t weightSize;
+    size_t valueSize;
 
-    virtual void activate(const float* inputs, const size_t inputSize) const = 0;
+    vector<float> weights;
+    vector<float> values;
+
+
+    virtual void activate(const float* inputs, const size_t inputSize) = 0;
+
 protected:
-    float* weights;
-    float* values;
-    float* bias;
-
-    virtual ~Layer() = default;
+    //virtual ~Layer() = default;
     //virtual Layer& operator=(const Layer& origin) = 0; 
 };
 
-class Dense: public Layer {
+class Dense: public Layer { // Main "Neural Network" layer
 public:
     size_t depth;
 
+    size_t biasSize;
+
+    vector<float> bias;
+
+
     Dense(const size_t layerSize, const size_t depth);
     ~Dense();
-    void activate(const float* inputs, const size_t inputSize) const override;
-    void activate(const float* inputs, const size_t inputSize, float* weights, float* values, size_t layerSize, size_t depth) const;
+    void activate(const float* inputs, const size_t inputSize) override;
+    void activate(const float* inputs, const size_t inputSize, float* weights, float* values, float* bias, const size_t layerSize, const size_t depth);
 };
 
-class ActivationLayer: Layer {
+class ActivationLayer: Layer { // Non-linearity layer
 public:
     enum ActivationType {
         ReLU,
@@ -35,8 +48,7 @@ public:
     ActivationType activationType = ReLU;
 
     ActivationLayer(size_t layerSize, ActivationType activationType);
-    void activate(const float* inputs, const size_t inputSize) const override;
-    void ActivationLayer::activate(const float* inputs, const size_t inputSize, float* values, const size_t layerSize, const ActivationType activationType) const;
-
+    void activate(const float* inputs, const size_t inputSize) override;
+    void activate(const float* inputs, const size_t inputSize, float* values, const size_t layerSize, const ActivationType activationType) const;
 
 };

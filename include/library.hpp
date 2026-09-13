@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Library {
-    constexpr EPSILON 1e-7 //tiny value to prevent divide by zero errors
+    constexpr float EPSILON = 1e-7f; //tiny value to prevent divide by zero errors
     const static unsigned int randomSeed = 2;
     const static unsigned int gpuDevice = 0;
 
