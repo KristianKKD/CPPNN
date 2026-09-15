@@ -1,5 +1,8 @@
+#include "library.hpp"
 #include "neurallayers.hpp"
 #include <iostream>
+
+inline void activationFunction(float* value, const ActivationLayer::ActivationType type);
 
 ActivationLayer::ActivationLayer(size_t layerSize, ActivationType activationType) {
     if (layerSize < 1)
@@ -19,8 +22,8 @@ ActivationLayer::ActivationLayer(size_t layerSize, ActivationType activationType
     this->values = vector<float>(valueSize, 0);
 }
 
-void ActivationLayer::activate(const float* inputs, const size_t inputSize) const {
-    activate(inputs, inputSize, this->values, this->layerSize, this->activationType);
+void ActivationLayer::activate(const float* inputs, const size_t inputSize) {
+    activate(inputs, inputSize, this->values.data(), this->layerSize, this->activationType);
 }
 
 void ActivationLayer::activate(const float* inputs, const size_t inputSize, float* values, const size_t layerSize, const ActivationType activationType) const {

@@ -37,7 +37,7 @@ public:
     void activate(const float* inputs, const size_t inputSize, float* weights, float* values, float* bias, const size_t layerSize, const size_t depth);
 };
 
-class ActivationLayer: Layer { // Non-linearity layer
+class ActivationLayer: public Layer { // Non-linearity layer
 public:
     enum ActivationType {
         ReLU,
