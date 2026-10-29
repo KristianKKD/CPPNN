@@ -236,7 +236,7 @@ void GridWorld() {
             oldPolicy.FeedForward(normalizedState.data(), pOutputsArr.data());
             float oldProbability = pOutputsArr[chosenOptionIndex[i]];
             float newProbability = chosenProbability[i];
-            float ratio = newProbability / (oldProbability + EPSILON); //EPSILON to prevent div by 0
+            float ratio = newProbability / (oldProbability + Library::EPSILON); //EPSILON to prevent div by 0
 
             float clippedLoss = std::min(ratio * advantage, std::clamp(ratio, 1 - learningRate, 1 + learningRate) * advantage);
             loss[chosenOptionIndex[i]] += clippedLoss;

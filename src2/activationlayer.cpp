@@ -27,8 +27,10 @@ void ActivationLayer::activate(const float* inputs, const size_t inputSize) {
 }
 
 void ActivationLayer::activate(const float* inputs, const size_t inputSize, float* values, const size_t layerSize, const ActivationType activationType) const {
-    for (size_t valueIndex = 0; valueIndex < layerSize; valueIndex++)
+    for (size_t valueIndex = 0; valueIndex < layerSize; valueIndex++) {
+        values[valueIndex] = inputs[valueIndex];
         activationFunction(values + valueIndex, activationType);
+    }
 }
 
 inline void activationFunction(float* value, const ActivationLayer::ActivationType type) {
@@ -44,3 +46,4 @@ inline void activationFunction(float* value, const ActivationLayer::ActivationTy
             break;
     }
 }
+

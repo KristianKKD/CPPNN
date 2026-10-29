@@ -9,7 +9,7 @@ public:
 
     NeuralNetwork();
 
-    float* Predict(const float* inputs, const size_t inputSize) const;
-    void Learn();
-    void AddLayer(std::unique_ptr<Layer> l);
+    float* predict(const float* inputs, const size_t inputSize) const;
+    void learn();
+    void addLayer(std::unique_ptr<Layer> l);
 };

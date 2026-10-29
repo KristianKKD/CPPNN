@@ -4,16 +4,23 @@ NeuralNetwork::NeuralNetwork () {
     this->layers = vector<std::unique_ptr<Layer>>();
 }
 
-float* NeuralNetwork::Predict(const float* inputs, const size_t inputSize) const {
-    for (const std::unique_ptr<Layer>& l : this->layers)
-        l->activate(inputs, inputSize);
-    return this->layers[layers.size()-1]->values.data();
+float* NeuralNetwork::predict(const float* inputs, const size_t inputSize) const {
+    const float* prev = inputs;
+    size_t prevSize = inputSize;
+
+    for (const std::unique_ptr<Layer>& l : this->layers) {
+        l->activate(prev, prevSize);
+        prev = l->output();   // Output feeds into next layer
+        prevSize = l->layerSize;
+    }
+
+    return const_cast<float*>(this->layers.back()->output());
 }
 
-void NeuralNetwork::Learn() {
+void NeuralNetwork::learn() {
 
 }
 
-void NeuralNetwork::AddLayer(std::unique_ptr<Layer> l) {
+void NeuralNetwork::addLayer(std::unique_ptr<Layer> l) {
     this->layers.push_back(std::move(l));
 }

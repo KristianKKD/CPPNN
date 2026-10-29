@@ -70,7 +70,7 @@ void Library::Normalize(float* arr, const int arrSize, const int startingPos) { 
      for (int sumIndex = 0; sumIndex < arrSize; sumIndex++)
          sum += arr[startingPos + sumIndex];
      if (sum == 0)
-         sum += EPSILON;
+         sum += Library::EPSILON;
      float mean = sum/(float)arrSize;
 
      //calc std
@@ -80,14 +80,14 @@ void Library::Normalize(float* arr, const int arrSize, const int startingPos) { 
          variance += (val - mean) * (val - mean);
      }
      if (variance == 0.0f)
-         variance += EPSILON;
+         variance += Library::EPSILON;
      float std = std::sqrt(variance/(float)arrSize);
 
      for (int normIndex = 0; normIndex < arrSize; normIndex++) {
          float val = arr[startingPos + normIndex];
          float newVal = val - mean;
          if (newVal == 0.0f)
-             newVal += EPSILON;
+             newVal += Library::EPSILON;
          
          newVal = (newVal/std);
          arr[startingPos + normIndex] = newVal;

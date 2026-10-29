@@ -146,7 +146,7 @@ void TestFeedForward() {
     float expectedOutputs[outputSize] = { out7, out8, out9 };
     for (int i = 0; i < outputSize; i++) {
         float diff = std::abs(outputsArr[i] - expectedOutputs[i]);
-        if (diff > EPSILON) {
+        if (diff > Library::EPSILON) {
             std::cerr << "TestFeedForward FAILED at output index " << i
                       << ". Expected: " << expectedOutputs[i]
                       << ", Got: " << outputsArr[i] << std::endl;

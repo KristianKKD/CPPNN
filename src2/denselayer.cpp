@@ -69,5 +69,4 @@ void Dense::activate(const float* inputs, const size_t inputSize, float* weights
             values[layerSize * layerIndex + outNodeIndex] = sum;
         }
     }
-    
 }

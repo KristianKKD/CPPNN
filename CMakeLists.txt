@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.18)
 #name
 project(CPPNN LANGUAGES CXX CUDA)
 
+find_package(CUDAToolkit REQUIRED)
+
 #standards
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +34,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 #include directories
 target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_link_libraries(${PROJECT_NAME} PRIVATE CUDA::cudart)
 
 #to prevent conflicts, set flags to use the correct dll
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD") #release

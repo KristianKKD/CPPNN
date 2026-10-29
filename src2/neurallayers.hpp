@@ -15,8 +15,8 @@ public:
     vector<float> values;
 
 
-    virtual void activate(const float* inputs, const size_t inputSize) = 0;
-
+    virtual void activate(const float* inputs, const size_t inputSize) = 0; // Pure abstract, needs to be implemented for all layers
+    const float* output() const { return this->values.data() + (this->values.size() - this->layerSize); }
 protected:
     //virtual ~Layer() = default;
     //virtual Layer& operator=(const Layer& origin) = 0; 
@@ -50,5 +50,4 @@ public:
     ActivationLayer(size_t layerSize, ActivationType activationType);
     void activate(const float* inputs, const size_t inputSize) override;
     void activate(const float* inputs, const size_t inputSize, float* values, const size_t layerSize, const ActivationType activationType) const;
-
 };
